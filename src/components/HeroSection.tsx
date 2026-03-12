@@ -114,7 +114,7 @@ const HeroSection = () => (
             <Button variant="hero" size="lg">Book gratis demo</Button>
             <a href="#hvordan"><Button variant="hero-outline" size="lg">Les mer</Button></a>
           </motion.div>
-          <motion.div variants={fadeUp} className="mt-8 flex items-center gap-5">
+          <motion.div variants={fadeUp} className="mt-12 flex items-center gap-5">
             <div className="flex -space-x-3">
               {avatars.map((src, i) => (
                 <img key={i} src={src} alt="Kunde" className="w-10 h-10 rounded-full border-2 border-background object-cover" />
