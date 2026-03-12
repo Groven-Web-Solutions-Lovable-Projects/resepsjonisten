@@ -114,7 +114,7 @@ const TestimonialCarousel = () => {
       <div className="relative max-w-3xl mx-auto">
         {/* Card */}
         <div className="relative overflow-hidden rounded-2xl bg-secondary/30 border border-border/50 p-8 md:p-12 min-h-[280px] flex items-center">
-          <Quote className="absolute top-6 left-6 w-10 h-10 text-primary/15" />
+          
 
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
