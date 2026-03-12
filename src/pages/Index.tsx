@@ -23,8 +23,8 @@ const Index = () => {
       <WhyChooseSection />
       <PricingSection />
       <FAQSection />
-      <ContactFormSection />
       <FinalCTASection />
+      <ContactFormSection />
       <Footer />
     </div>
   );
