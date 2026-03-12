@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Playfair Display"', 'serif'],
+        heading: ['"Nunito"', 'sans-serif'],
         body: ['"DM Sans"', 'sans-serif'],
       },
       colors: {
