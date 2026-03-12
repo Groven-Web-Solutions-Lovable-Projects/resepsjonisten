@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Star } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/hero-receptionist.jpg";
