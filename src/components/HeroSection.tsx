@@ -26,7 +26,7 @@ const Navbar = () => {
         <img src={logo} alt="Resepsjonisten logo" className="h-10" />
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((l) => (
             <a key={l.href} href={l.href} className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">
               {l.label}
@@ -40,7 +40,7 @@ const Navbar = () => {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
+          className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
           aria-label="Meny"
         >
           {open ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
@@ -55,7 +55,7 @@ const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden border-t border-border"
+            className="lg:hidden overflow-hidden border-t border-border"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
               {navLinks.map((l) => (
@@ -117,7 +117,7 @@ const HeroSection = () => (
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative hidden lg:block"
+          className="relative"
         >
           <div className="relative rounded-2xl overflow-hidden shadow-elevated">
             <img src={heroImg} alt="Profesjonell resepsjonist" className="w-full h-auto object-cover" />
