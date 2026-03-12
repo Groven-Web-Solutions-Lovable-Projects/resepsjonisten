@@ -108,9 +108,26 @@ const HeroSection = () => (
             <Button variant="hero" size="lg">Book gratis demo</Button>
             <a href="#hvordan"><Button variant="hero-outline" size="lg">Les mer</Button></a>
           </motion.div>
-          <motion.p variants={fadeUp} className="mt-4 text-sm text-muted-foreground">
-            Rask oppstart · Ingen ansettelse nødvendig · Profesjonell kundebehandling
-          </motion.p>
+          <motion.div variants={fadeUp} className="mt-8 flex items-center gap-5">
+            <div className="flex -space-x-2">
+              {["bg-primary", "bg-accent", "bg-primary/80", "bg-accent/80"].map((bg, i) => (
+                <div key={i} className={`w-9 h-9 rounded-full ${bg} border-2 border-background flex items-center justify-center text-xs font-bold text-primary-foreground`}>
+                  {["ME", "SL", "AN", "KH"][i]}
+                </div>
+              ))}
+            </div>
+            <div>
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-accent text-accent" />
+                ))}
+                <span className="ml-1 text-sm font-bold text-foreground">5.0</span>
+              </div>
+              <p className="text-sm text-muted-foreground font-medium">
+                Betrodd av <span className="text-foreground font-bold">30+</span> fornøyde bedrifter
+              </p>
+            </div>
+          </motion.div>
         </motion.div>
 
         <motion.div
