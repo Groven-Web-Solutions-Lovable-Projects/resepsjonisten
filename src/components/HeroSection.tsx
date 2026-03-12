@@ -117,7 +117,7 @@ const HeroSection = () => (
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative hidden lg:block"
+          className="relative"
         >
           <div className="relative rounded-2xl overflow-hidden shadow-elevated">
             <img src={heroImg} alt="Profesjonell resepsjonist" className="w-full h-auto object-cover" />
