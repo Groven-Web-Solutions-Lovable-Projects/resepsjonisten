@@ -115,11 +115,9 @@ const HeroSection = () => (
             <a href="#hvordan"><Button variant="hero-outline" size="lg">Les mer</Button></a>
           </motion.div>
           <motion.div variants={fadeUp} className="mt-8 flex items-center gap-5">
-            <div className="flex -space-x-2">
-              {["bg-primary", "bg-accent", "bg-primary/80", "bg-accent/80"].map((bg, i) => (
-                <div key={i} className={`w-9 h-9 rounded-full ${bg} border-2 border-background flex items-center justify-center text-xs font-bold text-primary-foreground`}>
-                  {["ME", "SL", "AN", "KH"][i]}
-                </div>
+            <div className="flex -space-x-3">
+              {avatars.map((src, i) => (
+                <img key={i} src={src} alt="Kunde" className="w-10 h-10 rounded-full border-2 border-background object-cover" />
               ))}
             </div>
             <div>
