@@ -31,7 +31,7 @@ const stagger = {
 };
 
 const HeroSection = () => (
-  <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
+  <section className="relative min-h-screen flex items-center overflow-hidden pt-28 pb-16 md:pt-20 md:pb-0">
     <div className="absolute inset-0 gradient-primary-soft" />
     <div className="absolute top-20 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
     <div className="absolute bottom-20 left-0 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
