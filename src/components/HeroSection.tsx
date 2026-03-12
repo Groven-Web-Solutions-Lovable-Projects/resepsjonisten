@@ -4,6 +4,12 @@ import { Menu, X, Star } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/hero-receptionist.jpg";
+import avatar1 from "@/assets/avatar-1.png";
+import avatar2 from "@/assets/avatar-2.png";
+import avatar3 from "@/assets/avatar-3.png";
+import avatar4 from "@/assets/avatar-4.png";
+
+const avatars = [avatar1, avatar2, avatar3, avatar4];
 
 const navLinks = [
   { href: "#tjenester", label: "Tjenester" },
@@ -109,11 +115,9 @@ const HeroSection = () => (
             <a href="#hvordan"><Button variant="hero-outline" size="lg">Les mer</Button></a>
           </motion.div>
           <motion.div variants={fadeUp} className="mt-8 flex items-center gap-5">
-            <div className="flex -space-x-2">
-              {["bg-primary", "bg-accent", "bg-primary/80", "bg-accent/80"].map((bg, i) => (
-                <div key={i} className={`w-9 h-9 rounded-full ${bg} border-2 border-background flex items-center justify-center text-xs font-bold text-primary-foreground`}>
-                  {["ME", "SL", "AN", "KH"][i]}
-                </div>
+            <div className="flex -space-x-3">
+              {avatars.map((src, i) => (
+                <img key={i} src={src} alt="Kunde" className="w-10 h-10 rounded-full border-2 border-background object-cover" />
               ))}
             </div>
             <div>
