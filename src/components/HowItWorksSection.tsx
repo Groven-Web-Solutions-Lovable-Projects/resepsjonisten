@@ -23,7 +23,7 @@ const steps = [
 ];
 
 const HowItWorksSection = () => (
-  <section className="py-24 bg-card">
+  <section id="hvordan" className="py-24 bg-card">
     <div className="container mx-auto px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}

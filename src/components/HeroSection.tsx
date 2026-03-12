@@ -106,7 +106,7 @@ const HeroSection = () => (
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
             <Button variant="hero" size="lg">Book gratis demo</Button>
-            <Button variant="hero-outline" size="lg">Les mer</Button>
+            <a href="#hvordan"><Button variant="hero-outline" size="lg">Les mer</Button></a>
           </motion.div>
           <motion.p variants={fadeUp} className="mt-4 text-sm text-muted-foreground">
             Rask oppstart · Ingen ansettelse nødvendig · Profesjonell kundebehandling
