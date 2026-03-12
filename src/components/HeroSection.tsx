@@ -1,25 +1,83 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/hero-receptionist.jpg";
 
-const Navbar = () => (
-  <motion.nav
-    initial={{ y: -20, opacity: 0 }}
-    animate={{ y: 0, opacity: 1 }}
-    className="fixed top-0 left-0 right-0 z-50 glass"
-  >
-    <div className="container mx-auto flex items-center justify-between py-4 px-4">
-      <img src={logo} alt="Resepsjonisten logo" className="h-10" />
-      <div className="hidden md:flex items-center gap-8">
-        <a href="#tjenester" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Tjenester</a>
-        <a href="#priser" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Priser</a>
-        <a href="#faq" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">FAQ</a>
-        <Button variant="hero" size="sm">Book gratis demo</Button>
+const navLinks = [
+  { href: "#tjenester", label: "Tjenester" },
+  { href: "#hvordan", label: "Hvordan det fungerer" },
+  { href: "#priser", label: "Priser" },
+  { href: "#faq", label: "FAQ" },
+  { href: "#kontakt", label: "Kontakt" },
+];
+
+const Navbar = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.nav
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="fixed top-0 left-0 right-0 z-50 glass"
+    >
+      <div className="container mx-auto flex items-center justify-between py-4 px-4">
+        <img src={logo} alt="Resepsjonisten logo" className="h-10" />
+
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((l) => (
+            <a key={l.href} href={l.href} className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">
+              {l.label}
+            </a>
+          ))}
+          <a href="#kontakt">
+            <Button variant="hero" size="sm">Book gratis demo</Button>
+          </a>
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
+          aria-label="Meny"
+        >
+          {open ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
+        </button>
       </div>
-    </div>
-  </motion.nav>
-);
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden overflow-hidden border-t border-border"
+          >
+            <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
+              {navLinks.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="text-base font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                >
+                  {l.label}
+                </a>
+              ))}
+              <a href="#kontakt" onClick={() => setOpen(false)}>
+                <Button variant="hero" size="default" className="w-full mt-2">Book gratis demo</Button>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  );
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
