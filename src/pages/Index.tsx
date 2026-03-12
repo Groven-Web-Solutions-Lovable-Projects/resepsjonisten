@@ -7,6 +7,7 @@ import BenefitsSection from "@/components/BenefitsSection";
 import WhyChooseSection from "@/components/WhyChooseSection";
 import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
+import ContactFormSection from "@/components/ContactFormSection";
 import { FinalCTASection, Footer } from "@/components/FinalCTASection";
 
 const Index = () => {
@@ -22,6 +23,7 @@ const Index = () => {
       <WhyChooseSection />
       <PricingSection />
       <FAQSection />
+      <ContactFormSection />
       <FinalCTASection />
       <Footer />
     </div>
