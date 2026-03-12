@@ -26,7 +26,7 @@ const Navbar = () => {
         <img src={logo} alt="Resepsjonisten logo" className="h-10" />
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((l) => (
             <a key={l.href} href={l.href} className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">
               {l.label}
