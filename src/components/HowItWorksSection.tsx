@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Search, PhoneForwarded, Headphones } from "lucide-react";
+import howitworksImg from "@/assets/howitworks-section.jpg";
 
 const steps = [
   {
@@ -31,12 +32,23 @@ const HowItWorksSection = () => (
         viewport={{ once: true }}
         className="text-center max-w-2xl mx-auto"
       >
+        <p className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Enkel oppstart</p>
         <h2 className="text-3xl md:text-4xl font-bold text-foreground">
           Slik kommer du <span className="gradient-text">i gang</span>
         </h2>
       </motion.div>
 
-      <div className="mt-16 grid md:grid-cols-3 gap-8 relative">
+      {/* Image banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="mt-10 rounded-2xl overflow-hidden shadow-elevated max-w-4xl mx-auto"
+      >
+        <img src={howitworksImg} alt="Sett opp viderekobling" className="w-full h-48 md:h-64 object-cover" />
+      </motion.div>
+
+      <div className="mt-14 grid md:grid-cols-3 gap-8 relative">
         {/* Connector line */}
         <div className="hidden md:block absolute top-16 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
 

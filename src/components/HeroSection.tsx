@@ -86,22 +86,22 @@ const stagger = {
 };
 
 const HeroSection = () => (
-  <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
+  <section className="relative flex items-center overflow-hidden pt-24 pb-16 md:pt-20 md:min-h-screen">
     <div className="absolute inset-0 gradient-primary-soft" />
     <div className="absolute top-20 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
     <div className="absolute bottom-20 left-0 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
     
     <div className="container mx-auto px-4 relative z-10">
-      <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-xl">
-          <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
             Mist aldri en viktig{" "}
             <span className="gradient-text">kundehenvendelse</span> igjen
           </motion.h1>
-          <motion.p variants={fadeUp} className="mt-6 text-lg text-muted-foreground leading-relaxed">
+          <motion.p variants={fadeUp} className="mt-4 md:mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
             Vi fungerer som resepsjonisten for bedriften din og svarer telefonen på dine vegne. Vi tar imot beskjeder, videresender samtaler og håndterer booking, slik at du kan fokusere på jobben din uten å bli avbrutt.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
+          <motion.div variants={fadeUp} className="mt-6 md:mt-8 flex flex-wrap gap-3 md:gap-4">
             <Button variant="hero" size="lg" asChild>
               <a href="#kontakt">Book gratis demo</a>
             </Button>
@@ -109,17 +109,16 @@ const HeroSection = () => (
               <a href="#tjenester">Les mer</a>
             </Button>
           </motion.div>
-          <motion.p variants={fadeUp} className="mt-4 text-sm text-muted-foreground">
+          <motion.p variants={fadeUp} className="mt-3 md:mt-4 text-xs md:text-sm text-muted-foreground">
             Rask oppstart · Ingen ansettelse nødvendig · Profesjonell kundebehandling
           </motion.p>
         </motion.div>
 
-        {/* Show on all screens, not just lg */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative"
+          className="relative w-full"
         >
           <div className="relative rounded-2xl overflow-hidden shadow-elevated">
             <img src={heroImg} alt="Profesjonell resepsjonist" className="w-full h-auto object-cover" />
