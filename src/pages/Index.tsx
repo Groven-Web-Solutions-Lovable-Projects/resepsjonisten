@@ -12,7 +12,7 @@ import { FinalCTASection, Footer } from "@/components/FinalCTASection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <HeroSection />
       <SocialProofSection />
