@@ -52,7 +52,8 @@ const AnimatedKr = ({ value, className }: { value: number; className?: string })
   return <span className={`tabular-nums ${className ?? ""}`}>{formatKr(animated)}</span>;
 };
 
-/** Kompakt input med tall + slider. Mobilvennlig. */
+/** Kompakt input med tall + slider. Mobilvennlig.
+ *  Bruker lokal string-state så feltet kan tømmes mens brukeren skriver. */
 const NumberSlider = ({
   label,
   suffix,
@@ -70,10 +71,34 @@ const NumberSlider = ({
   step: number;
   onChange: (v: number) => void;
 }) => {
-  const handleInput = (raw: string) => {
+  const formatted = value.toLocaleString("nb-NO").replace(/\u00A0/g, " ");
+  const [text, setText] = useState(formatted);
+  const [focused, setFocused] = useState(false);
+
+  // Synk fra ekstern verdi (f.eks. slider) når brukeren ikke aktivt skriver
+  useEffect(() => {
+    if (!focused) setText(formatted);
+  }, [formatted, focused]);
+
+  const commit = (raw: string) => {
     const cleaned = raw.replace(/\s/g, "").replace(/[^\d]/g, "");
-    const n = cleaned === "" ? 0 : Number(cleaned);
-    onChange(Math.min(max, Math.max(min, n)));
+    if (cleaned === "") {
+      onChange(min);
+      setText(min.toLocaleString("nb-NO").replace(/\u00A0/g, " "));
+      return;
+    }
+    const n = Math.min(max, Math.max(min, Number(cleaned)));
+    onChange(n);
+    setText(n.toLocaleString("nb-NO").replace(/\u00A0/g, " "));
+  };
+
+  const handleChange = (raw: string) => {
+    // La brukeren skrive fritt; oppdater verdi live hvis det finnes ett tall
+    setText(raw);
+    const cleaned = raw.replace(/\s/g, "").replace(/[^\d]/g, "");
+    if (cleaned === "") return; // ikke tving 0 mens feltet er tomt
+    const n = Math.min(max, Math.max(min, Number(cleaned)));
+    onChange(n);
   };
 
   return (
@@ -84,8 +109,16 @@ const NumberSlider = ({
           <input
             type="text"
             inputMode="numeric"
-            value={value.toLocaleString("nb-NO").replace(/\u00A0/g, " ")}
-            onChange={(e) => handleInput(e.target.value)}
+            value={text}
+            onChange={(e) => handleChange(e.target.value)}
+            onFocus={(e) => {
+              setFocused(true);
+              e.target.select();
+            }}
+            onBlur={(e) => {
+              setFocused(false);
+              commit(e.target.value);
+            }}
             className="w-24 h-9 rounded-md border border-input bg-background px-2 text-right text-sm font-semibold tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           {suffix && <span className="text-xs text-muted-foreground">{suffix}</span>}
