@@ -81,9 +81,6 @@ const NewsletterSection = () => {
                 className="w-full h-auto object-cover"
               />
             </div>
-            <div className="absolute -bottom-4 -right-4 bg-foreground text-background px-5 py-3 rounded-2xl shadow-elevated text-sm font-semibold">
-              Få tips i innboksen
-            </div>
           </motion.div>
 
           {/* Innhold + skjema */}
