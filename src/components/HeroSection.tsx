@@ -114,7 +114,6 @@ const HeroSection = () => (
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
             <a href="#kontakt"><Button variant="hero" size="xl">Book gratis demo</Button></a>
             <CallUsButton />
-            <a href="#hvordan"><Button variant="hero-outline" size="xl">Les mer</Button></a>
           </motion.div>
           <motion.div variants={fadeUp} className="mt-12 flex items-center gap-5">
             <div className="flex -space-x-3">

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Gift, CheckCircle, Clock, Sparkles } from "lucide-react";
+import { Gift, CheckCircle, Clock, Sparkles, Phone } from "lucide-react";
 import contactFormImg from "@/assets/contact-section.jpg";
 import { useState } from "react";
 
@@ -115,13 +115,29 @@ const ContactFormSection = () => {
                   <Button variant="hero" size="xl" type="submit" className="w-full">
                     Book gratis demo nå
                   </Button>
-                  <Button asChild variant="outline" size="xl" className="w-full border-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary font-semibold">
-                    <a href="tel:+4700000000" aria-label="Ring oss">
-                      Ring oss
-                    </a>
-                  </Button>
                   <p className="text-xs text-muted-foreground text-center">Ingen bindingstid · Svar innen 24 timer</p>
                 </form>
+
+                {/* Alternativ: ring oss direkte */}
+                <div className="mt-6 pt-6 border-t border-border">
+                  <a
+                    href="tel:+4700000000"
+                    aria-label="Ring oss direkte"
+                    className="group flex items-center gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors"
+                  >
+                    <div className="w-11 h-11 rounded-full gradient-primary flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-5 h-5 text-primary-foreground" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold">
+                        Foretrekker du å snakke direkte?
+                      </p>
+                      <p className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+                        Ring oss på +47 00 00 00 00
+                      </p>
+                    </div>
+                  </a>
+                </div>
               </div>
             )}
           </motion.div>
