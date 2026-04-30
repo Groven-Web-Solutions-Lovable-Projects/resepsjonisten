@@ -23,22 +23,52 @@ const steps = [
 ];
 
 const HowItWorksSection = () => (
-  <section id="hvordan" className="py-24 bg-card">
-    <div className="container mx-auto px-4">
+  <section
+    id="hvordan"
+    className="relative py-24 overflow-hidden"
+    style={{
+      background:
+        "radial-gradient(120% 80% at 50% 100%, hsl(276 60% 18%) 0%, hsl(270 55% 10%) 55%, hsl(270 60% 6%) 100%)",
+    }}
+  >
+    <div
+      className="absolute inset-0 opacity-[0.06] pointer-events-none"
+      style={{
+        backgroundImage:
+          "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
+        backgroundSize: "32px 32px",
+      }}
+    />
+    <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-primary/30 blur-3xl pointer-events-none" />
+    <div className="absolute bottom-10 right-10 w-72 h-72 rounded-full bg-accent/20 blur-3xl pointer-events-none" />
+
+    <div className="container mx-auto px-4 relative z-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="text-center max-w-2xl mx-auto"
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-          Slik kommer du <span className="gradient-text">i gang</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold mb-4 border border-white/15">
+          Slik fungerer det
+        </div>
+        <h2 className="text-3xl md:text-5xl font-bold text-white">
+          Slik kommer du{" "}
+          <span
+            className="bg-clip-text text-transparent"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(310 80% 75%) 100%)",
+            }}
+          >
+            i gang
+          </span>
         </h2>
       </motion.div>
 
-      <div className="mt-16 grid md:grid-cols-3 gap-8 relative">
+      <div className="mt-20 grid md:grid-cols-3 gap-10 md:gap-6 relative">
         {/* Connector line */}
-        <div className="hidden md:block absolute top-16 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+        <div className="hidden md:block absolute top-10 left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
         {steps.map((step, i) => (
           <motion.div
@@ -49,12 +79,14 @@ const HowItWorksSection = () => (
             transition={{ delay: i * 0.2 }}
             className="relative text-center"
           >
-            <div className="relative z-10 w-20 h-20 rounded-full gradient-primary mx-auto flex items-center justify-center shadow-glow">
-              <step.icon className="w-8 h-8 text-primary-foreground" />
+            <div className="relative z-10 w-20 h-20 mx-auto flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-glow">
+              <step.icon className="w-8 h-8 text-white" strokeWidth={1.75} />
             </div>
-            <span className="inline-block mt-4 text-xs font-bold text-accent uppercase tracking-wider">{step.num}</span>
-            <h3 className="mt-2 text-xl font-bold text-foreground">{step.title}</h3>
-            <p className="mt-3 text-muted-foreground leading-relaxed">{step.desc}</p>
+            <span className="inline-block mt-5 text-[10px] font-mono text-white/50 uppercase tracking-[0.2em]">
+              Steg {step.num}
+            </span>
+            <h3 className="mt-2 text-xl font-bold text-white">{step.title}</h3>
+            <p className="mt-3 text-white/60 leading-relaxed">{step.desc}</p>
           </motion.div>
         ))}
       </div>

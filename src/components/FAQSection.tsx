@@ -30,39 +30,60 @@ const faqs = [
 ];
 
 const FAQSection = () => (
-  <section id="faq" className="py-24 bg-background">
-    <div className="container mx-auto px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center max-w-2xl mx-auto"
-      >
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-          Ofte stilte <span className="gradient-text">spørsmål</span>
-        </h2>
-      </motion.div>
+  <section
+    id="faq"
+    className="relative py-24 overflow-hidden"
+    style={{ background: "hsl(36 40% 96%)" }}
+  >
+    <div className="container mx-auto px-4 relative z-10">
+      <div className="grid lg:grid-cols-12 gap-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="lg:col-span-5 lg:sticky lg:top-24 self-start"
+        >
+          <span className="inline-block text-xs font-mono uppercase tracking-[0.2em] text-primary mb-4">
+            — FAQ
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-[1.05] tracking-tight">
+            Ofte stilte <span className="gradient-text">spørsmål</span>
+          </h2>
+          <p className="mt-5 text-muted-foreground leading-relaxed">
+            Finner du ikke svaret du leter etter? Ta kontakt med oss – vi svarer gjerne på alt du lurer på.
+          </p>
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
-        className="mt-12 max-w-2xl mx-auto"
-      >
-        <Accordion type="single" collapsible className="space-y-3">
-          {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="bg-card rounded-xl px-6 border-none shadow-sm">
-              <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                {faq.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                {faq.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="lg:col-span-7"
+        >
+          <Accordion type="single" collapsible className="border-t border-foreground/15">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`item-${i}`}
+                className="border-b border-foreground/15 px-0"
+              >
+                <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5 text-base md:text-lg">
+                  <span className="flex items-baseline gap-4">
+                    <span className="text-xs font-mono text-muted-foreground/60">
+                      0{i + 1}
+                    </span>
+                    {faq.q}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground pl-10 pb-5">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
+      </div>
     </div>
   </section>
 );
