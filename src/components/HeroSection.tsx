@@ -16,6 +16,7 @@ const navLinks = [
   { href: "#tjenester", label: "Tjenester" },
   { href: "#bransjer", label: "Bransjer" },
   { href: "#hvordan", label: "Slik fungerer det" },
+  { href: "#tapt-samtale", label: "Hva taper du?" },
   { href: "#priser", label: "Priser" },
 ];
 
