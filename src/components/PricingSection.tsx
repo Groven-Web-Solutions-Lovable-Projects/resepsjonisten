@@ -1,10 +1,17 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Clock, Mail, MessageSquare, Share2, Mic, PhoneForwarded, Zap } from "lucide-react";
+import { Sparkles, Mic, PhoneForwarded, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import {
   PRICING,
@@ -14,39 +21,45 @@ import {
   type PricingConfig,
 } from "@/lib/pricing";
 
-type OptionGroupProps<T extends number> = {
-  value: T;
-  options: readonly { value: number; label: string; price: number }[];
-  onChange: (v: T) => void;
-};
+type NumberOption = { value: number; label: string; price: number };
 
-const OptionGroup = <T extends number>({ value, options, onChange }: OptionGroupProps<T>) => (
-  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-    {options.map((opt) => {
-      const active = opt.value === value;
-      return (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value as T)}
-          className={cn(
-            "rounded-md border px-2.5 py-1.5 text-xs text-left transition-all",
-            active
-              ? "border-primary bg-primary/5 shadow-sm"
-              : "border-border bg-card hover:border-primary/40",
-          )}
-        >
-          <div className="font-semibold text-foreground leading-tight">{opt.label}</div>
-          <div className="text-[11px] text-muted-foreground leading-tight mt-0.5">
-            {opt.price === 0 ? "Inkl." : `+${formatKr(opt.price)}`}
-          </div>
-        </button>
-      );
-    })}
+const formatOption = (o: NumberOption) =>
+  `${o.label}${o.price > 0 ? ` · +${formatKr(o.price)}/mnd` : " · inkludert"}`;
+
+const SelectField = ({
+  label,
+  value,
+  options,
+  onChange,
+  helper,
+}: {
+  label: string;
+  value: number;
+  options: readonly NumberOption[];
+  onChange: (v: number) => void;
+  helper?: string;
+}) => (
+  <div className="space-y-1.5">
+    <div className="flex items-baseline justify-between gap-2">
+      <Label className="text-sm font-medium text-foreground">{label}</Label>
+      {helper && <span className="text-xs text-muted-foreground">{helper}</span>}
+    </div>
+    <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
+      <SelectTrigger className="h-11">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((o) => (
+          <SelectItem key={o.value} value={String(o.value)}>
+            {formatOption(o)}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   </div>
 );
 
-const ToggleRow = ({
+const InlineToggle = ({
   icon: Icon,
   title,
   price,
@@ -59,12 +72,17 @@ const ToggleRow = ({
   checked: boolean;
   onChange: (v: boolean) => void;
 }) => (
-  <label className="flex items-center justify-between gap-3 rounded-md border border-border bg-background px-3 py-2 cursor-pointer hover:border-primary/40 transition-colors">
+  <label
+    className={cn(
+      "flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2.5 cursor-pointer transition-colors",
+      checked ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
+    )}
+  >
     <div className="flex items-center gap-2.5 min-w-0">
       <Icon className="w-4 h-4 text-primary shrink-0" />
       <div className="min-w-0">
-        <div className="text-sm font-semibold text-foreground truncate">{title}</div>
-        <div className="text-[11px] text-muted-foreground">+{formatKr(price)}/mnd</div>
+        <div className="text-sm font-medium text-foreground truncate">{title}</div>
+        <div className="text-xs text-muted-foreground">+{formatKr(price)}/mnd</div>
       </div>
     </div>
     <Switch checked={checked} onCheckedChange={onChange} />
@@ -79,7 +97,7 @@ const PricingSection = () => {
     setConfig((c) => ({ ...c, [key]: value }));
 
   return (
-    <section id="priser" className="py-16 bg-card">
+    <section id="priser" className="py-20 bg-card">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -87,25 +105,28 @@ const PricingSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             Bygg din egen <span className="gradient-text">pakke</span>
           </h2>
-          <p className="mt-2 text-muted-foreground">
-            Velg det du trenger og se prisen oppdatere seg i sanntid. Du betaler bare for det du faktisk bruker.
+          <p className="mt-3 text-muted-foreground">
+            Velg det du trenger og se prisen i sanntid. Du betaler bare for det du faktisk bruker.
           </p>
         </motion.div>
 
-        <div className="mt-8 grid lg:grid-cols-5 gap-6 items-start">
+        <div className="mt-10 max-w-5xl mx-auto grid lg:grid-cols-5 gap-6 items-start">
           {/* Konfigurator */}
-          <div className="lg:col-span-3 space-y-3">
-            {/* Åpningstider */}
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-primary" />
-                  <Label className="text-sm font-semibold">Åpningstider per dag</Label>
-                </div>
-                <div className="text-base font-bold text-foreground tabular-nums">{config.hours} t</div>
+          <div className="lg:col-span-3 rounded-2xl border border-border bg-background p-5 sm:p-6 space-y-5">
+            {/* Åpningstider – slider */}
+            <div>
+              <div className="flex items-baseline justify-between gap-2 mb-2">
+                <Label className="text-sm font-medium text-foreground">Åpningstider per dag</Label>
+                <span className="text-sm font-semibold text-foreground tabular-nums">
+                  {config.hours} t {config.hours > PRICING.baseHours && (
+                    <span className="text-xs font-normal text-muted-foreground">
+                      · +{formatKr((config.hours - PRICING.baseHours) * PRICING.extraHourPrice)}/mnd
+                    </span>
+                  )}
+                </span>
               </div>
               <Slider
                 min={PRICING.hoursMin}
@@ -114,106 +135,78 @@ const PricingSection = () => {
                 value={[config.hours]}
                 onValueChange={([v]) => update("hours", v)}
               />
-              <div className="text-[11px] text-muted-foreground mt-1.5">
-                8 t inkludert, deretter +{formatKr(PRICING.extraHourPrice)}/mnd per time
+              <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
+                <span>{PRICING.hoursMin} t</span>
+                <span>{PRICING.hoursMax} t</span>
               </div>
             </div>
 
-            {/* E-post */}
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Mail className="w-4 h-4 text-primary" />
-                <Label className="text-sm font-semibold">{PRICING.email.label}</Label>
-              </div>
-              <OptionGroup
+            {/* Dropdowns – 2 kolonner på sm+ */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <SelectField
+                label={PRICING.email.label}
                 value={config.email}
                 options={PRICING.email.options}
                 onChange={(v) => update("email", v)}
               />
-            </div>
-
-            {/* SMS */}
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <MessageSquare className="w-4 h-4 text-primary" />
-                <Label className="text-sm font-semibold">{PRICING.sms.label}</Label>
-              </div>
-              <OptionGroup
+              <SelectField
+                label={PRICING.sms.label}
                 value={config.sms}
                 options={PRICING.sms.options}
                 onChange={(v) => update("sms", v)}
               />
-            </div>
-
-            {/* Sosiale medier */}
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="flex items-center gap-2">
-                  <Share2 className="w-4 h-4 text-primary" />
-                  <Label className="text-sm font-semibold">{PRICING.social.label}</Label>
-                </div>
-                <span className="text-[11px] text-muted-foreground">{PRICING.social.helper}</span>
-              </div>
-              <OptionGroup
+              <SelectField
+                label={PRICING.social.label}
+                helper={PRICING.social.helper}
                 value={config.social}
                 options={PRICING.social.options}
                 onChange={(v) => update("social", v)}
               />
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium text-foreground">Bindingstid</Label>
+                <Select
+                  value={String(config.contractMonths)}
+                  onValueChange={(v) => update("contractMonths", Number(v))}
+                >
+                  <SelectTrigger className="h-11">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRICING.contracts.map((c) => (
+                      <SelectItem key={c.months} value={String(c.months)}>
+                        {c.label} {c.discount > 0 ? `· −${Math.round(c.discount * 100)} % rabatt` : "· ingen rabatt"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Tilleggsvalg */}
-            <div className="grid sm:grid-cols-3 gap-2">
-              <ToggleRow
-                icon={Mic}
-                title={PRICING.recording.label}
-                price={PRICING.recording.price}
-                checked={config.recording}
-                onChange={(v) => update("recording", v)}
-              />
-              <ToggleRow
-                icon={PhoneForwarded}
-                title={PRICING.forwarding.label}
-                price={PRICING.forwarding.price}
-                checked={config.forwarding}
-                onChange={(v) => update("forwarding", v)}
-              />
-              <ToggleRow
-                icon={Zap}
-                title="AI 24/7"
-                price={PRICING.ai247.price}
-                checked={config.ai247}
-                onChange={(v) => update("ai247", v)}
-              />
-            </div>
-
-            {/* Bindingstid */}
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <Label className="text-sm font-semibold">Bindingstid</Label>
-                <span className="text-[11px] text-muted-foreground">Lengre binding = høyere rabatt</span>
-              </div>
-              <div className="grid grid-cols-4 gap-1.5">
-                {PRICING.contracts.map((c) => {
-                  const active = c.months === config.contractMonths;
-                  return (
-                    <button
-                      key={c.months}
-                      type="button"
-                      onClick={() => update("contractMonths", c.months)}
-                      className={cn(
-                        "rounded-md border px-2 py-1.5 text-xs transition-all",
-                        active
-                          ? "border-primary bg-primary/5 shadow-sm"
-                          : "border-border bg-card hover:border-primary/40",
-                      )}
-                    >
-                      <div className="font-semibold text-foreground leading-tight">{c.label}</div>
-                      <div className="text-[11px] text-muted-foreground leading-tight mt-0.5">
-                        {c.discount === 0 ? "0 %" : `−${Math.round(c.discount * 100)} %`}
-                      </div>
-                    </button>
-                  );
-                })}
+            <div>
+              <Label className="text-sm font-medium text-foreground">Tilleggstjenester</Label>
+              <div className="mt-2 grid sm:grid-cols-3 gap-2">
+                <InlineToggle
+                  icon={Mic}
+                  title="Lydopptak"
+                  price={PRICING.recording.price}
+                  checked={config.recording}
+                  onChange={(v) => update("recording", v)}
+                />
+                <InlineToggle
+                  icon={PhoneForwarded}
+                  title="Samtaleoverføring"
+                  price={PRICING.forwarding.price}
+                  checked={config.forwarding}
+                  onChange={(v) => update("forwarding", v)}
+                />
+                <InlineToggle
+                  icon={Zap}
+                  title="AI 24/7"
+                  price={PRICING.ai247.price}
+                  checked={config.ai247}
+                  onChange={(v) => update("ai247", v)}
+                />
               </div>
             </div>
           </div>
@@ -223,19 +216,19 @@ const PricingSection = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2 lg:sticky lg:top-24 rounded-xl gradient-primary text-primary-foreground p-5 shadow-glow"
+            className="lg:col-span-2 lg:sticky lg:top-24 rounded-2xl gradient-primary text-primary-foreground p-6 shadow-glow"
           >
-            <div className="flex items-center gap-2 text-xs font-medium opacity-90">
-              <Sparkles className="w-3.5 h-3.5" /> Din pakke
+            <div className="flex items-center gap-2 text-sm font-medium opacity-90">
+              <Sparkles className="w-4 h-4" /> Din pakke
             </div>
 
-            <ul className="mt-3 space-y-1 max-h-48 overflow-y-auto pr-1">
+            <ul className="mt-3 space-y-1.5 text-sm">
               {result.lines.map((line) => (
                 <li
                   key={line.label}
-                  className="flex items-start justify-between gap-3 text-xs"
+                  className="flex items-start justify-between gap-3"
                 >
-                  <span className="opacity-95 truncate">{line.label}</span>
+                  <span className="opacity-95">{line.label}</span>
                   <span className="font-semibold tabular-nums whitespace-nowrap">
                     {formatKr(line.amount)}
                   </span>
@@ -243,36 +236,39 @@ const PricingSection = () => {
               ))}
             </ul>
 
-            <div className="mt-3 pt-3 border-t border-primary-foreground/20 space-y-0.5 text-xs">
+            <div className="mt-4 pt-4 border-t border-primary-foreground/20 space-y-1 text-sm">
               <div className="flex justify-between opacity-90">
                 <span>Subtotal</span>
                 <span className="tabular-nums">{formatKr(result.subtotal)}/mnd</span>
               </div>
               {result.discountRate > 0 && (
                 <div className="flex justify-between opacity-90">
-                  <span>Rabatt ({Math.round(result.discountRate * 100)} %)</span>
+                  <span>Bindingsrabatt ({Math.round(result.discountRate * 100)} %)</span>
                   <span className="tabular-nums">−{formatKr(result.discountAmount)}/mnd</span>
                 </div>
               )}
             </div>
 
-            <div className="mt-3 pt-3 border-t border-primary-foreground/20">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[11px] uppercase tracking-wider opacity-80">Månedspris</span>
-                <div>
-                  <span className="text-2xl font-bold tabular-nums">{formatKr(result.monthly)}</span>
-                  <span className="text-xs opacity-90">/mnd</span>
-                </div>
+            <div className="mt-4 pt-4 border-t border-primary-foreground/20">
+              <div className="text-xs uppercase tracking-wider opacity-80">Din månedspris</div>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-3xl font-bold tabular-nums">{formatKr(result.monthly)}</span>
+                <span className="text-sm opacity-90">/mnd</span>
               </div>
-              <div className="text-[11px] opacity-80 mt-1 text-right">
-                Total {result.contractMonths} mnd: <span className="font-semibold">{formatKr(result.contractTotal)}</span>
+              <div className="text-xs opacity-80 mt-1.5">
+                Total over {result.contractMonths} mnd:{" "}
+                <span className="font-semibold">{formatKr(result.contractTotal)}</span>
               </div>
             </div>
 
-            <Button asChild variant="hero-outline" className="mt-4 w-full h-10 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+            <Button
+              asChild
+              variant="hero-outline"
+              className="mt-5 w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+            >
               <a href="#kontakt">Book gratis demo</a>
             </Button>
-            <p className="text-[10px] opacity-75 text-center mt-2">
+            <p className="text-[11px] opacity-75 text-center mt-2">
               Eks. mva. Ingen oppstartskostnad.
             </p>
           </motion.aside>
