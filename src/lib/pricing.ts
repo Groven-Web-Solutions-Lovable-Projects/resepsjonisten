@@ -7,6 +7,24 @@ export const PRICING = {
   baseHours: 8,
   hoursMin: 8,
   hoursMax: 24,
+  descriptions: {
+    hours:
+      "Velg hvor mange timer per dag AI-resepsjonisten skal være tilgjengelig for å besvare anrop. Standard kontortid er 8 timer (f.eks. 08:00–16:00). Ønsker du utvidet tilgjengelighet, kan du øke antall timer. Pris justeres automatisk etter valgt åpningstid.",
+    email:
+      "Velg estimert antall e-poster vi skal besvare på vegne av deg per måned. Vi leser, vurderer og besvarer henvendelsene profesjonelt slik at kundene dine får raske svar. Velger du 0, er e-postbesvarelse ikke inkludert.",
+    sms:
+      "Velg estimert antall SMS vi skal håndtere per måned – både utgående (f.eks. bekreftelser, påminnelser) og innkommende meldinger fra dine kunder. Velger du 0, er SMS-håndtering ikke inkludert.",
+    social:
+      "Velg antall meldinger fra Facebook, TikTok og Instagram vi skal besvare per måned. Vi sørger for at kundehenvendelser i sosiale medier blir besvart raskt og profesjonelt – uansett kanal. Antallet gjelder samlet på tvers av alle plattformer.",
+    recording:
+      "Aktiver lydopptak av samtaler for kvalitetssikring, opplæring og dokumentasjon. Alle opptak håndteres i tråd med GDPR, og kunder informeres ved samtalens start. Nyttig for virksomheter som vil dokumentere avtaler eller forbedre kundeservicen over tid.",
+    forwarding:
+      "Aktiver muligheten for å overføre viktige samtaler videre til riktig person i din virksomhet. Vi vurderer henvendelsen og setter samtalen direkte over til deg eller en kollega når det er nødvendig – så ingen viktige saker faller mellom to stoler.",
+    ai247:
+      "Aktiver tilgjengelighet døgnet rundt – også på kvelder, netter, helger og helligdager. Vår AI-resepsjonist tar imot anrop og henvendelser når kontoret ditt er stengt, slik at du aldri går glipp av en kunde. Anbefalt for virksomheter med kunder som forventer rask respons utenom vanlig arbeidstid.",
+    contract:
+      "Velg avtaleperioden som passer din virksomhet best. Lengre bindingstid gir lavere månedspris:\n\n• 1 måned: ingen binding, full fleksibilitet\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt (vår mest populære)\n• 24 måneder: 15 % rabatt – beste pris",
+  },
   email: {
     label: "E-post per måned",
     options: [
