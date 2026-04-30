@@ -50,7 +50,7 @@ const FinalCTASection = () => (
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <a href="#kontakt">
             <Button
-              size="lg"
+              size="xl"
               className="bg-white text-primary hover:bg-white/90 font-bold text-base px-8 shadow-elevated"
             >
               Book gratis demo
@@ -59,7 +59,7 @@ const FinalCTASection = () => (
           </a>
           <a href="#priser">
             <Button
-              size="lg"
+              size="xl"
               variant="outline"
               className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:text-white font-semibold text-base px-8"
             >

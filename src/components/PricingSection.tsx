@@ -368,6 +368,7 @@ const PricingSection = () => {
             <Button
               asChild
               variant="hero-outline"
+              size="xl"
               className="mt-5 w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
             >
               <a href="#kontakt">Book gratis demo</a>

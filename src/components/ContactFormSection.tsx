@@ -112,7 +112,7 @@ const ContactFormSection = () => {
                     <label className="text-sm font-medium text-foreground mb-1.5 block">Melding</label>
                     <Textarea placeholder="Fortell oss litt om bedriften din og hva du trenger hjelp med..." rows={4} className="bg-background" />
                   </div>
-                  <Button variant="hero" size="lg" type="submit" className="w-full">
+                  <Button variant="hero" size="xl" type="submit" className="w-full">
                     Book gratis demo nå
                   </Button>
                   <p className="text-xs text-muted-foreground text-center">Ingen bindingstid · Svar innen 24 timer</p>
