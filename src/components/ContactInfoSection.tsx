@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { Phone, Mail, MapPin, ArrowUpRight, Navigation, Building2 } from "lucide-react";
 
 const ADDRESS = "Høvikveien 2A, 1363 Høvik";
 const PHONE = "+47 972 51 000";
@@ -94,16 +94,80 @@ const ContactInfoSection = () => (
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="lg:col-span-3 rounded-2xl overflow-hidden border border-border shadow-elevated bg-card min-h-[360px]"
+          className="lg:col-span-3 rounded-2xl overflow-hidden border border-border shadow-elevated bg-card flex flex-col"
         >
-          <iframe
-            src={MAP_EMBED_SRC}
-            title={`Kart som viser ${ADDRESS}`}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-            className="w-full h-full min-h-[360px] border-0"
-          />
+          {/* Header-stripe */}
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-border bg-card">
+            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
+              <Building2 className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold">
+                Her har vi kontor
+              </p>
+              <p className="text-sm font-bold text-foreground truncate">
+                Resepsjonisten.no · {ADDRESS}
+              </p>
+            </div>
+          </div>
+
+          {/* Kart med flytende pin */}
+          <div className="relative flex-1 min-h-[340px]">
+            <iframe
+              src={MAP_EMBED_SRC}
+              title={`Kart som viser ${ADDRESS}`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full border-0"
+            />
+
+            {/* Flytende info-kort */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="absolute top-4 left-4 max-w-[260px] bg-card/95 backdrop-blur-sm rounded-xl shadow-elevated border border-border p-4 pointer-events-none"
+            >
+              <div className="flex items-start gap-3">
+                <div className="relative flex-shrink-0">
+                  <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center shadow-glow">
+                    <MapPin className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-primary animate-ping" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
+                    Vårt kontor
+                  </p>
+                  <p className="text-sm font-bold text-foreground leading-tight mt-0.5">
+                    Resepsjonisten.no
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-snug">
+                    {ADDRESS}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Footer-CTA */}
+          <a
+            href={MAP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-between gap-3 px-5 py-4 border-t border-border bg-card hover:bg-secondary/50 transition-colors"
+          >
+            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Navigation className="w-4 h-4 text-primary" />
+              Få veibeskrivelse
+            </div>
+            <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors flex items-center gap-1">
+              Åpne i Google Maps
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </a>
         </motion.div>
       </div>
     </div>
