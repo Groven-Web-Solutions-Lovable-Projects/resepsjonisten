@@ -74,93 +74,61 @@ const StatCard = ({ stat, index, start }: { stat: Stat; index: number; start: bo
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={start ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="group relative"
     >
       {/* Soft hover halo */}
-      <div className="pointer-events-none absolute -inset-2 rounded-[28px] bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.25),transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl" />
+      <div className="pointer-events-none absolute -inset-3 rounded-[28px] bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.18),transparent_65%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl" />
 
-      <div
-        className="relative h-full rounded-3xl p-[1px] overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(180deg, hsl(0 0% 100% / 0.08) 0%, hsl(0 0% 100% / 0.02) 50%, hsl(0 0% 100% / 0.08) 100%)",
-        }}
-      >
+      <div className="relative h-full rounded-2xl bg-card border border-border shadow-elevated p-7 sm:p-8 overflow-hidden transition-transform duration-500 group-hover:-translate-y-1">
+        {/* Soft gradient corner wash */}
         <div
-          className="relative h-full rounded-[calc(1.5rem-1px)] p-7 sm:p-8 overflow-hidden"
+          className="absolute -top-24 -right-24 w-56 h-56 rounded-full opacity-40 blur-3xl pointer-events-none"
           style={{
             background:
-              "radial-gradient(120% 100% at 0% 0%, hsl(276 60% 18%) 0%, hsl(270 50% 10%) 50%, hsl(270 60% 6%) 100%)",
+              "radial-gradient(circle, hsl(var(--accent) / 0.25) 0%, transparent 70%)",
           }}
-        >
-          {/* Grid pattern overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.07] mix-blend-screen pointer-events-none"
-            style={{
-              backgroundImage:
-                "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-            }}
-          />
+        />
 
-          {/* Animated accent orb */}
-          <div
-            className="absolute -top-20 -right-20 w-56 h-56 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-700"
-            style={{
-              background:
-                "radial-gradient(circle, hsl(var(--accent) / 0.55) 0%, transparent 70%)",
-            }}
-          />
+        {/* Top hairline */}
+        <div className="absolute top-0 left-7 right-7 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
-          {/* Top hairline */}
-          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-          <div className="relative">
-            {/* Icon row */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-xl bg-white/10 blur-md" />
-                <div className="relative inline-flex items-center justify-center w-11 h-11 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15 text-white">
-                  <Icon className="w-5 h-5" strokeWidth={1.75} />
-                </div>
-              </div>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-white/40 font-mono">
-                0{index + 1}
-              </span>
+        <div className="relative">
+          {/* Icon row */}
+          <div className="flex items-center justify-between mb-7">
+            <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary border border-primary/15">
+              <Icon className="w-5 h-5" strokeWidth={1.75} />
             </div>
-
-            {/* Number */}
-            <div className="flex items-baseline gap-1.5">
-              {stat.prefix && (
-                <span className="text-2xl sm:text-3xl font-light text-white/60 tabular-nums">
-                  {stat.prefix}
-                </span>
-              )}
-              <span
-                className="text-5xl sm:text-6xl font-bold tabular-nums leading-none tracking-tight text-white"
-                style={{
-                  textShadow: "0 0 40px hsl(var(--accent) / 0.35)",
-                }}
-              >
-                {text}
-              </span>
-              {stat.suffix && (
-                <span className="text-xl sm:text-2xl font-medium text-white/70 tabular-nums">
-                  {stat.suffix}
-                </span>
-              )}
-            </div>
-
-            {/* Accent underline */}
-            <div className="mt-5 h-px w-12 bg-gradient-to-r from-accent to-transparent group-hover:w-24 transition-all duration-500" />
-
-            {/* Label */}
-            <p className="mt-4 text-base font-semibold text-white">{stat.label}</p>
-            <p className="mt-1 text-xs text-white/50">{stat.hint}</p>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 font-mono">
+              0{index + 1}
+            </span>
           </div>
+
+          {/* Number */}
+          <div className="flex items-baseline gap-1.5">
+            {stat.prefix && (
+              <span className="text-2xl sm:text-3xl font-light text-muted-foreground tabular-nums">
+                {stat.prefix}
+              </span>
+            )}
+            <span className="gradient-text text-5xl sm:text-6xl font-extrabold tabular-nums leading-none tracking-tight">
+              {text}
+            </span>
+            {stat.suffix && (
+              <span className="text-xl sm:text-2xl font-semibold text-foreground/70 tabular-nums">
+                {stat.suffix}
+              </span>
+            )}
+          </div>
+
+          {/* Accent underline */}
+          <div className="mt-5 h-px w-12 bg-gradient-to-r from-primary via-accent to-transparent group-hover:w-24 transition-all duration-500" />
+
+          {/* Label */}
+          <p className="mt-4 text-base font-semibold text-foreground">{stat.label}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{stat.hint}</p>
         </div>
       </div>
     </motion.div>
@@ -173,7 +141,6 @@ const ResultsSection = () => {
 
   return (
     <section id="resultater" className="relative py-24 overflow-hidden bg-background">
-      {/* Subtle backdrop */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.06),transparent_60%)]" />
 
       <div className="container mx-auto px-4 relative z-10">
