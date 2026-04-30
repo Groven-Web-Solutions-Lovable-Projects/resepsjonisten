@@ -1,18 +1,13 @@
 import { Navbar, HeroSection } from "@/components/HeroSection";
-import SocialProofSection from "@/components/SocialProofSection";
-import ResultsSection from "@/components/ResultsSection";
+import ProofSection from "@/components/ProofSection";
 import ProblemSection from "@/components/ProblemSection";
-import ServicesSection from "@/components/ServicesSection";
-import IndustriesSection from "@/components/IndustriesSection";
-import HowItWorksSection from "@/components/HowItWorksSection";
-import BenefitsSection from "@/components/BenefitsSection";
-import WhyChooseSection from "@/components/WhyChooseSection";
 import LostCallsCalculator from "@/components/LostCallsCalculator";
+import ServicesSection from "@/components/ServicesSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import IndustriesSection from "@/components/IndustriesSection";
+import WhyUsSection from "@/components/WhyUsSection";
 import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
-import ContactFormSection from "@/components/ContactFormSection";
-import ContactInfoSection from "@/components/ContactInfoSection";
-import NewsletterSection from "@/components/NewsletterSection";
 import { FinalCTASection, Footer } from "@/components/FinalCTASection";
 
 const Index = () => {
@@ -20,21 +15,16 @@ const Index = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <HeroSection />
-      <ResultsSection />
-      <SocialProofSection />
+      <ProofSection />
       <ProblemSection />
-      <ServicesSection />
-      <IndustriesSection />
-      <HowItWorksSection />
-      <BenefitsSection />
-      <WhyChooseSection />
       <LostCallsCalculator />
+      <ServicesSection />
+      <HowItWorksSection />
+      <IndustriesSection />
+      <WhyUsSection />
       <PricingSection />
       <FAQSection />
       <FinalCTASection />
-      <ContactFormSection />
-      <ContactInfoSection />
-      <NewsletterSection />
       <Footer />
     </div>
   );
