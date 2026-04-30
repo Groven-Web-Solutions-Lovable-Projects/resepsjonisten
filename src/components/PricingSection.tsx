@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Mic, PhoneForwarded, Zap, Clock } from "lucide-react";
+import { Sparkles, Mic, PhoneForwarded, Zap, Clock, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -21,6 +22,31 @@ import {
   type PricingConfig,
 } from "@/lib/pricing";
 
+/** Info-knapp som åpner popover med fyldigere forklaring. Klikkbar på alle enheter. */
+const InfoTip = ({ title, text }: { title: string; text: string }) => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <button
+        type="button"
+        aria-label={`Mer informasjon om ${title}`}
+        onClick={(e) => e.preventDefault()}
+        className="inline-flex items-center justify-center w-5 h-5 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Info className="w-4 h-4" />
+      </button>
+    </PopoverTrigger>
+    <PopoverContent
+      side="top"
+      align="start"
+      className="w-72 sm:w-80 text-sm"
+      onClick={(e) => e.preventDefault()}
+    >
+      <div className="font-semibold text-foreground mb-1">{title}</div>
+      <p className="text-muted-foreground text-sm whitespace-pre-line leading-relaxed">{text}</p>
+    </PopoverContent>
+  </Popover>
+);
+
 type NumberOption = { value: number; label: string; price: number };
 
 /** Tekst i dropdown-listen: viser "Ingen" alene, ellers "Etikett · +pris/mnd". */
@@ -33,12 +59,14 @@ const triggerLabel = (o: NumberOption) => o.label;
 const SelectField = ({
   label,
   helper,
+  info,
   value,
   options,
   onChange,
 }: {
   label: string;
   helper?: string;
+  info?: string;
   value: number;
   options: readonly NumberOption[];
   onChange: (v: number) => void;
@@ -47,7 +75,10 @@ const SelectField = ({
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-2">
-        <Label className="text-sm font-medium text-foreground">{label}</Label>
+        <div className="flex items-center gap-1.5">
+          <Label className="text-sm font-medium text-foreground">{label}</Label>
+          {info && <InfoTip title={label} text={info} />}
+        </div>
         {helper && <span className="text-xs text-muted-foreground">{helper}</span>}
       </div>
       <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
@@ -79,6 +110,7 @@ const AddonRow = ({
   icon: Icon,
   title,
   desc,
+  info,
   price,
   checked,
   onChange,
@@ -86,6 +118,7 @@ const AddonRow = ({
   icon: typeof Mic;
   title: string;
   desc: string;
+  info?: string;
   price: number;
   checked: boolean;
   onChange: (v: boolean) => void;
@@ -106,7 +139,14 @@ const AddonRow = ({
         <Icon className={cn("w-4 h-4", checked ? "text-primary-foreground" : "text-muted-foreground")} />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-medium text-foreground">{title}</div>
+        <div className="flex items-center gap-1.5">
+          <div className="text-sm font-medium text-foreground">{title}</div>
+          {info && (
+            <span onClick={(e) => e.preventDefault()}>
+              <InfoTip title={title} text={info} />
+            </span>
+          )}
+        </div>
         <div className="text-xs text-muted-foreground">{desc}</div>
       </div>
     </div>
@@ -154,6 +194,7 @@ const PricingSection = () => {
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary" />
                   <Label className="text-sm font-medium text-foreground">Åpningstider per dag</Label>
+                  <InfoTip title="Åpningstider per dag" text={PRICING.descriptions.hours} />
                 </div>
                 <div className="text-right">
                   <div className="text-base font-semibold text-foreground tabular-nums">{config.hours} timer</div>
@@ -183,12 +224,14 @@ const PricingSection = () => {
             <section className="grid sm:grid-cols-2 gap-4">
               <SelectField
                 label={PRICING.email.label}
+                info={PRICING.descriptions.email}
                 value={config.email}
                 options={PRICING.email.options}
                 onChange={(v) => update("email", v)}
               />
               <SelectField
                 label={PRICING.sms.label}
+                info={PRICING.descriptions.sms}
                 value={config.sms}
                 options={PRICING.sms.options}
                 onChange={(v) => update("sms", v)}
@@ -196,12 +239,16 @@ const PricingSection = () => {
               <SelectField
                 label="Sosiale medier per måned"
                 helper="FB, IG, TikTok"
+                info={PRICING.descriptions.social}
                 value={config.social}
                 options={PRICING.social.options}
                 onChange={(v) => update("social", v)}
               />
               <div className="space-y-1.5">
-                <Label className="text-sm font-medium text-foreground">Bindingstid</Label>
+                <div className="flex items-center gap-1.5">
+                  <Label className="text-sm font-medium text-foreground">Bindingstid</Label>
+                  <InfoTip title="Bindingstid" text={PRICING.descriptions.contract} />
+                </div>
                 <Select
                   value={String(config.contractMonths)}
                   onValueChange={(v) => update("contractMonths", Number(v))}
@@ -245,6 +292,7 @@ const PricingSection = () => {
                   icon={Mic}
                   title="Lydopptak av samtaler"
                   desc="For kvalitetssikring og dokumentasjon"
+                  info={PRICING.descriptions.recording}
                   price={PRICING.recording.price}
                   checked={config.recording}
                   onChange={(v) => update("recording", v)}
@@ -253,6 +301,7 @@ const PricingSection = () => {
                   icon={PhoneForwarded}
                   title="Samtaleoverføring"
                   desc="Send viktige samtaler videre til riktig person"
+                  info={PRICING.descriptions.forwarding}
                   price={PRICING.forwarding.price}
                   checked={config.forwarding}
                   onChange={(v) => update("forwarding", v)}
@@ -261,6 +310,7 @@ const PricingSection = () => {
                   icon={Zap}
                   title="AI utenom åpningstid (24/7)"
                   desc="Vi svarer kundene dine døgnet rundt"
+                  info={PRICING.descriptions.ai247}
                   price={PRICING.ai247.price}
                   checked={config.ai247}
                   onChange={(v) => update("ai247", v)}
