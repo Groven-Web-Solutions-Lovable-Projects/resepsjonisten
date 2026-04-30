@@ -29,7 +29,7 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border shadow-sm"
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-4">
-        <img src={logo} alt="Resepsjonisten logo" className="h-10" />
+        <img src={logo} alt="Resepsjonisten logo" className="h-8 lg:h-10" />
 
         {/* Desktop */}
         <div className="hidden lg:flex items-center gap-8">
