@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Star } from "lucide-react";
+import { Menu, X, Star, Phone, Sparkles, ArrowRight } from "lucide-react";
 import { useState } from "react";
-import CallUsButton from "@/components/CallUsButton";
+import CallUsButton, { PHONE_NUMBER } from "@/components/CallUsButton";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/hero-receptionist.jpg";
 import avatar1 from "@/assets/avatar-1.png";
@@ -14,10 +14,9 @@ const avatars = [avatar1, avatar2, avatar3, avatar4];
 
 const navLinks = [
   { href: "#tjenester", label: "Tjenester" },
-  { href: "#hvordan", label: "Hvordan det fungerer" },
+  { href: "#bransjer", label: "Bransjer" },
+  { href: "#hvordan", label: "Slik fungerer det" },
   { href: "#priser", label: "Priser" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#kontakt", label: "Kontakt" },
 ];
 
 const Navbar = () => {
@@ -39,19 +38,43 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
-          <a href="#kontakt">
-            <Button variant="hero" size="sm">Book gratis demo</Button>
-          </a>
+          <div className="flex items-center gap-3">
+            <Button asChild variant="outline" size="sm" className="border-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary font-semibold">
+              <a href={`tel:${PHONE_NUMBER}`} aria-label="Ring oss">
+                <Phone className="w-4 h-4" />
+                Ring oss
+              </a>
+            </Button>
+            <a href="#kontakt">
+              <Button variant="hero" size="sm">
+                <Sparkles className="w-4 h-4" />
+                Book gratis demo
+              </Button>
+            </a>
+          </div>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
-          aria-label="Meny"
-        >
-          {open ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
-        </button>
+        {/* Mobile + tablet */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="border-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary font-semibold"
+          >
+            <a href={`tel:${PHONE_NUMBER}`} aria-label="Ring oss">
+              <Phone className="w-4 h-4" />
+              Ring oss
+            </a>
+          </Button>
+          <button
+            onClick={() => setOpen(!open)}
+            className="p-2 rounded-lg hover:bg-secondary transition-colors"
+            aria-label="Meny"
+          >
+            {open ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -62,21 +85,30 @@ const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden border-t border-border"
+            className="lg:hidden overflow-hidden border-t border-border bg-background"
           >
-            <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
-              {navLinks.map((l) => (
-                <a
+            <div className="container mx-auto px-4 py-6 flex flex-col gap-2">
+              {navLinks.map((l, i) => (
+                <motion.a
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="text-base font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="group flex items-center justify-between gap-3 px-4 py-4 rounded-xl bg-secondary/40 hover:bg-primary/10 border border-transparent hover:border-primary/30 transition-all"
                 >
-                  {l.label}
-                </a>
+                  <span className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {l.label}
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </motion.a>
               ))}
-              <a href="#kontakt" onClick={() => setOpen(false)}>
-                <Button variant="hero" size="default" className="w-full mt-2">Book gratis demo</Button>
+              <a href="#kontakt" onClick={() => setOpen(false)} className="mt-3">
+                <Button variant="hero" size="lg" className="w-full">
+                  <Sparkles className="w-4 h-4" />
+                  Book gratis demo
+                </Button>
               </a>
             </div>
           </motion.div>
