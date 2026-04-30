@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Mic, PhoneForwarded, Zap } from "lucide-react";
+import { Sparkles, Mic, PhoneForwarded, Zap, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -23,69 +23,99 @@ import {
 
 type NumberOption = { value: number; label: string; price: number };
 
-const formatOption = (o: NumberOption) =>
-  `${o.label}${o.price > 0 ? ` · +${formatKr(o.price)}/mnd` : " · inkludert"}`;
+/** Tekst i dropdown-listen: viser "Ingen" alene, ellers "Etikett · +pris/mnd". */
+const optionRowLabel = (o: NumberOption) =>
+  o.value === 0 ? o.label : `${o.label} · +${formatKr(o.price)}/mnd`;
+
+/** Tekst i selve trigger-feltet: kortere — bare valget. */
+const triggerLabel = (o: NumberOption) => o.label;
 
 const SelectField = ({
   label,
+  helper,
   value,
   options,
   onChange,
-  helper,
 }: {
   label: string;
+  helper?: string;
   value: number;
   options: readonly NumberOption[];
   onChange: (v: number) => void;
-  helper?: string;
-}) => (
-  <div className="space-y-1.5">
-    <div className="flex items-baseline justify-between gap-2">
-      <Label className="text-sm font-medium text-foreground">{label}</Label>
-      {helper && <span className="text-xs text-muted-foreground">{helper}</span>}
+}) => {
+  const current = options.find((o) => o.value === value) ?? options[0];
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-baseline justify-between gap-2">
+        <Label className="text-sm font-medium text-foreground">{label}</Label>
+        {helper && <span className="text-xs text-muted-foreground">{helper}</span>}
+      </div>
+      <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
+        <SelectTrigger className="h-11">
+          <SelectValue>
+            <span className="flex items-center gap-2">
+              <span className="font-medium">{triggerLabel(current)}</span>
+              {current.price > 0 && (
+                <span className="text-xs text-muted-foreground">
+                  +{formatKr(current.price)}/mnd
+                </span>
+              )}
+            </span>
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((o) => (
+            <SelectItem key={o.value} value={String(o.value)}>
+              {optionRowLabel(o)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
-    <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
-      <SelectTrigger className="h-11">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {options.map((o) => (
-          <SelectItem key={o.value} value={String(o.value)}>
-            {formatOption(o)}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  </div>
-);
+  );
+};
 
-const InlineToggle = ({
+const AddonRow = ({
   icon: Icon,
   title,
+  desc,
   price,
   checked,
   onChange,
 }: {
   icon: typeof Mic;
   title: string;
+  desc: string;
   price: number;
   checked: boolean;
   onChange: (v: boolean) => void;
 }) => (
   <label
     className={cn(
-      "flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2.5 cursor-pointer transition-colors",
+      "flex items-center justify-between gap-4 rounded-lg border bg-background p-3 cursor-pointer transition-colors",
       checked ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
     )}
   >
-    <div className="flex items-center gap-2.5 min-w-0">
-      <Icon className="w-4 h-4 text-primary shrink-0" />
-      <div className="min-w-0">
-        <div className="text-sm font-medium text-foreground truncate">{title}</div>
-        <div className="text-xs text-muted-foreground">+{formatKr(price)}/mnd</div>
+    <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div
+        className={cn(
+          "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+          checked ? "gradient-primary" : "bg-muted",
+        )}
+      >
+        <Icon className={cn("w-4 h-4", checked ? "text-primary-foreground" : "text-muted-foreground")} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-sm font-medium text-foreground">{title}</div>
+        <div className="text-xs text-muted-foreground">{desc}</div>
       </div>
     </div>
-    <Switch checked={checked} onCheckedChange={onChange} />
+    <div className="flex items-center gap-3 shrink-0">
+      <span className="text-sm font-semibold text-foreground tabular-nums hidden sm:inline">
+        +{formatKr(price)}
+      </span>
+      <Switch checked={checked} onCheckedChange={onChange} />
+    </div>
   </label>
 );
 
@@ -95,6 +125,8 @@ const PricingSection = () => {
 
   const update = <K extends keyof PricingConfig>(key: K, value: PricingConfig[K]) =>
     setConfig((c) => ({ ...c, [key]: value }));
+
+  const extraHours = Math.max(0, config.hours - PRICING.baseHours);
 
   return (
     <section id="priser" className="py-20 bg-card">
@@ -115,18 +147,22 @@ const PricingSection = () => {
 
         <div className="mt-10 max-w-5xl mx-auto grid lg:grid-cols-5 gap-6 items-start">
           {/* Konfigurator */}
-          <div className="lg:col-span-3 rounded-2xl border border-border bg-background p-5 sm:p-6 space-y-5">
-            {/* Åpningstider – slider */}
-            <div>
-              <div className="flex items-baseline justify-between gap-2 mb-2">
-                <Label className="text-sm font-medium text-foreground">Åpningstider per dag</Label>
-                <span className="text-sm font-semibold text-foreground tabular-nums">
-                  {config.hours} t {config.hours > PRICING.baseHours && (
-                    <span className="text-xs font-normal text-muted-foreground">
-                      · +{formatKr((config.hours - PRICING.baseHours) * PRICING.extraHourPrice)}/mnd
-                    </span>
+          <div className="lg:col-span-3 rounded-2xl border border-border bg-background p-5 sm:p-6 space-y-6">
+            {/* Åpningstider */}
+            <section>
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-primary" />
+                  <Label className="text-sm font-medium text-foreground">Åpningstider per dag</Label>
+                </div>
+                <div className="text-right">
+                  <div className="text-base font-semibold text-foreground tabular-nums">{config.hours} timer</div>
+                  {extraHours > 0 && (
+                    <div className="text-xs text-muted-foreground">
+                      +{formatKr(extraHours * PRICING.extraHourPrice)}/mnd
+                    </div>
                   )}
-                </span>
+                </div>
               </div>
               <Slider
                 min={PRICING.hoursMin}
@@ -136,13 +172,15 @@ const PricingSection = () => {
                 onValueChange={([v]) => update("hours", v)}
               />
               <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
-                <span>{PRICING.hoursMin} t</span>
-                <span>{PRICING.hoursMax} t</span>
+                <span>8 t (inkludert)</span>
+                <span>24 t</span>
               </div>
-            </div>
+            </section>
 
-            {/* Dropdowns – 2 kolonner på sm+ */}
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="border-t border-border" />
+
+            {/* Volum-dropdowns */}
+            <section className="grid sm:grid-cols-2 gap-4">
               <SelectField
                 label={PRICING.email.label}
                 value={config.email}
@@ -156,8 +194,8 @@ const PricingSection = () => {
                 onChange={(v) => update("sms", v)}
               />
               <SelectField
-                label={PRICING.social.label}
-                helper={PRICING.social.helper}
+                label="Sosiale medier per måned"
+                helper="FB, IG, TikTok"
                 value={config.social}
                 options={PRICING.social.options}
                 onChange={(v) => update("social", v)}
@@ -169,46 +207,66 @@ const PricingSection = () => {
                   onValueChange={(v) => update("contractMonths", Number(v))}
                 >
                   <SelectTrigger className="h-11">
-                    <SelectValue />
+                    <SelectValue>
+                      {(() => {
+                        const c = PRICING.contracts.find((x) => x.months === config.contractMonths)!;
+                        return (
+                          <span className="flex items-center gap-2">
+                            <span className="font-medium">{c.label}</span>
+                            {c.discount > 0 && (
+                              <span className="text-xs text-muted-foreground">
+                                −{Math.round(c.discount * 100)} % rabatt
+                              </span>
+                            )}
+                          </span>
+                        );
+                      })()}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {PRICING.contracts.map((c) => (
                       <SelectItem key={c.months} value={String(c.months)}>
-                        {c.label} {c.discount > 0 ? `· −${Math.round(c.discount * 100)} % rabatt` : "· ingen rabatt"}
+                        {c.label}
+                        {c.discount > 0 ? ` · −${Math.round(c.discount * 100)} % rabatt` : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </section>
+
+            <div className="border-t border-border" />
 
             {/* Tilleggsvalg */}
-            <div>
+            <section>
               <Label className="text-sm font-medium text-foreground">Tilleggstjenester</Label>
-              <div className="mt-2 grid sm:grid-cols-3 gap-2">
-                <InlineToggle
+              <div className="mt-2 space-y-2">
+                <AddonRow
                   icon={Mic}
-                  title="Lydopptak"
+                  title="Lydopptak av samtaler"
+                  desc="For kvalitetssikring og dokumentasjon"
                   price={PRICING.recording.price}
                   checked={config.recording}
                   onChange={(v) => update("recording", v)}
                 />
-                <InlineToggle
+                <AddonRow
                   icon={PhoneForwarded}
                   title="Samtaleoverføring"
+                  desc="Send viktige samtaler videre til riktig person"
                   price={PRICING.forwarding.price}
                   checked={config.forwarding}
                   onChange={(v) => update("forwarding", v)}
                 />
-                <InlineToggle
+                <AddonRow
                   icon={Zap}
-                  title="AI 24/7"
+                  title="AI utenom åpningstid (24/7)"
+                  desc="Vi svarer kundene dine døgnet rundt"
                   price={PRICING.ai247.price}
                   checked={config.ai247}
                   onChange={(v) => update("ai247", v)}
                 />
               </div>
-            </div>
+            </section>
           </div>
 
           {/* Oppsummering */}
@@ -224,10 +282,7 @@ const PricingSection = () => {
 
             <ul className="mt-3 space-y-1.5 text-sm">
               {result.lines.map((line) => (
-                <li
-                  key={line.label}
-                  className="flex items-start justify-between gap-3"
-                >
+                <li key={line.label} className="flex items-start justify-between gap-3">
                   <span className="opacity-95">{line.label}</span>
                   <span className="font-semibold tabular-nums whitespace-nowrap">
                     {formatKr(line.amount)}
