@@ -66,12 +66,10 @@ const ContactInfoSection = () => (
           viewport={{ once: true }}
           className="lg:col-span-2 space-y-4"
         >
-          {items.map(({ icon: Icon, label, value, href, external }) => (
+          {items.map(({ icon: Icon, label, value, href }) => (
             <a
               key={label}
               href={href}
-              target={external ? "_blank" : undefined}
-              rel={external ? "noopener noreferrer" : undefined}
               className="group flex items-start gap-4 p-5 rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-elevated transition-all"
             >
               <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
