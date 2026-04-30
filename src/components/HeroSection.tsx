@@ -22,6 +22,21 @@ const navLinks = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return;
+    e.preventDefault();
+    setOpen(false);
+    const id = href.slice(1);
+    // Vent til menyen kollapser, så scroll til seksjonen
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.replaceState(null, "", href);
+      }
+    }, 320);
+  };
+
   return (
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
@@ -92,7 +107,7 @@ const Navbar = () => {
                 <motion.a
                   key={l.href}
                   href={l.href}
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => handleNavClick(e, l.href)}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
@@ -104,7 +119,11 @@ const Navbar = () => {
                   <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </motion.a>
               ))}
-              <a href="#kontakt" onClick={() => setOpen(false)} className="mt-3">
+              <a
+                href="#kontakt"
+                onClick={(e) => handleNavClick(e, "#kontakt")}
+                className="mt-3"
+              >
                 <Button variant="hero" size="lg" className="w-full">
                   <Sparkles className="w-4 h-4" />
                   Book gratis demo
