@@ -1,5 +1,17 @@
 import { motion } from "framer-motion";
-import { Phone, ArrowRightLeft, MessageSquare, Filter, CalendarCheck, Package } from "lucide-react";
+import {
+  Phone,
+  ArrowRightLeft,
+  MessageSquare,
+  Filter,
+  CalendarCheck,
+  Package,
+  Clock,
+  Mail,
+  Smartphone,
+  Share2,
+  Mic,
+} from "lucide-react";
 
 const services = [
   { icon: Phone, title: "Besvare innkommende telefoner", desc: "Vi svarer profesjonelt på vegne av din bedrift." },
@@ -8,6 +20,11 @@ const services = [
   { icon: Filter, title: "Filtrere henvendelser", desc: "Vi sorterer og prioriterer henvendelsene for deg." },
   { icon: CalendarCheck, title: "Håndtere booking og timebestillinger", desc: "Vi booker avtaler direkte i din kalender." },
   { icon: Package, title: "Håndtere bestillinger", desc: "Bestillinger i større løsninger administreres effektivt." },
+  { icon: Clock, title: "AI utenom åpningstid", desc: "Vi er tilgjengelig 24/7, også når kontoret er stengt." },
+  { icon: Mail, title: "E-postbesvarelse", desc: "Vi besvarer kundehenvendelser via e-post raskt og profesjonelt." },
+  { icon: Smartphone, title: "SMS-håndtering", desc: "Vi sender og mottar SMS på vegne av deg." },
+  { icon: Share2, title: "Sosiale medier", desc: "Vi svarer på henvendelser fra Facebook, TikTok og Instagram." },
+  { icon: Mic, title: "Lydopptak av samtaler", desc: "Alle samtaler kan tas opp for kvalitet og dokumentasjon." },
 ];
 
 const ServicesSection = () => (
@@ -20,10 +37,10 @@ const ServicesSection = () => (
         className="text-center max-w-3xl mx-auto"
       >
         <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-          Vi tar telefonen for deg — <span className="gradient-text">profesjonelt og effektivt</span>
+          Komplett kundeservice — <span className="gradient-text">manuell og AI i ett</span>
         </h2>
         <p className="mt-4 text-muted-foreground text-lg">
-          Resepsjonisten.no fungerer som en ekstern resepsjonist for bedriften din. Vi svarer på innkommende telefoner og sørger for at kundene dine blir møtt profesjonelt hver gang.
+          Resepsjonisten.no dekker alle kanaler — telefon, e-post, SMS og sosiale medier. Vi kombinerer dyktige medarbeidere med smart AI, slik at kundene dine alltid blir møtt profesjonelt, døgnet rundt.
         </p>
       </motion.div>
 
