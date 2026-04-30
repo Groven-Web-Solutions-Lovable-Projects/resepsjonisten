@@ -111,8 +111,8 @@ const HeroSection = () => (
             Vi fungerer som resepsjonisten for bedriften din og svarer telefonen på dine vegne. Vi tar imot beskjeder, videresender samtaler og håndterer booking, slik at du kan fokusere på jobben din uten å bli avbrutt.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
-            <a href="#kontakt"><Button variant="hero" size="lg">Book gratis demo</Button></a>
-            <a href="#hvordan"><Button variant="hero-outline" size="lg">Les mer</Button></a>
+            <a href="#kontakt"><Button variant="hero" size="xl">Book gratis demo</Button></a>
+            <a href="#hvordan"><Button variant="hero-outline" size="xl">Les mer</Button></a>
           </motion.div>
           <motion.div variants={fadeUp} className="mt-12 flex items-center gap-5">
             <div className="flex -space-x-3">
@@ -128,7 +128,7 @@ const HeroSection = () => (
                 <span className="ml-1 text-sm font-bold text-foreground">5.0</span>
               </div>
               <p className="text-sm text-muted-foreground font-medium">
-                Betrodd av <span className="text-foreground font-bold">30+</span> fornøyde bedrifter
+                <span className="text-foreground font-bold">10 000+</span> besvarte kundesamtaler
               </p>
             </div>
           </motion.div>
