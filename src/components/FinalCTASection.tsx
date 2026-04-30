@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone, Mail, MapPin } from "lucide-react";
 import CallUsButton from "@/components/CallUsButton";
+import logo from "@/assets/logo.png";
 
 const FinalCTASection = () => (
   <section
@@ -74,12 +75,97 @@ const FinalCTASection = () => (
   </section>
 );
 
+const quickLinks = [
+  { label: "Tjenester", href: "#tjenester" },
+  { label: "Slik fungerer det", href: "#slik-fungerer-det" },
+  { label: "Priser", href: "#priser" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Kontakt", href: "#kontakt-oss" },
+];
+
 const Footer = () => (
-  <footer className="py-10 bg-foreground">
-    <div className="container mx-auto px-4 text-center">
-      <p className="text-background/60 text-sm">
-        © {new Date().getFullYear()} Resepsjonisten.no — Din Resepsjonist 24/7
-      </p>
+  <footer className="bg-foreground text-background">
+    <div className="container mx-auto px-4 py-14">
+      <div className="grid gap-10 md:grid-cols-3">
+        {/* Logo + tagline */}
+        <div className="space-y-4">
+          <img
+            src={logo}
+            alt="Resepsjonisten logo"
+            className="h-10 brightness-0 invert"
+          />
+          <p className="text-sm text-background/60 leading-relaxed max-w-xs">
+            Din eksterne resepsjonist 24/7. Vi tar telefonen, booker timer og
+            sørger for at ingen henvendelser går tapt.
+          </p>
+        </div>
+
+        {/* Hurtiglenker */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-background/50 mb-4">
+            Hurtiglenker
+          </p>
+          <ul className="space-y-2.5 text-sm">
+            {quickLinks.map(({ label, href }) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  className="text-background/80 hover:text-background transition-colors"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Kontakt + bedriftsinfo */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-background/50 mb-4">
+            Kontakt
+          </p>
+          <ul className="space-y-2.5 text-sm">
+            <li>
+              <a
+                href="tel:+4797251000"
+                className="flex items-center gap-2 text-background/80 hover:text-background transition-colors"
+              >
+                <Phone className="w-4 h-4 text-background/50" />
+                +47 972 51 000
+              </a>
+            </li>
+            <li>
+              <a
+                href="mailto:kontakt@resepsjonisten.no"
+                className="flex items-center gap-2 text-background/80 hover:text-background transition-colors"
+              >
+                <Mail className="w-4 h-4 text-background/50" />
+                kontakt@resepsjonisten.no
+              </a>
+            </li>
+            <li className="flex items-start gap-2 text-background/80">
+              <MapPin className="w-4 h-4 text-background/50 mt-0.5 flex-shrink-0" />
+              <span>Lundekroken 34, 1396 Billingstad</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Bunnstripe */}
+      <div className="mt-12 pt-6 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-background/50">
+        <p>
+          © {new Date().getFullYear()} Resepsjonisten AS · Org.nr 936 065 619 ·
+          MVA-registrert
+        </p>
+        <a
+          href="https://virksomhet.brreg.no/nb/oppslag/enheter/936065619"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-background transition-colors"
+        >
+          Brønnøysundregistrene
+        </a>
+      </div>
     </div>
   </footer>
 );
