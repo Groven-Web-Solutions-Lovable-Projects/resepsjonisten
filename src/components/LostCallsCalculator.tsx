@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { PhoneOff, TrendingDown, CalendarDays, ArrowRight } from "lucide-react";
+import { PhoneOff, TrendingDown, CalendarDays, ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -254,17 +254,30 @@ const LostCallsCalculator = () => {
               <p className="text-sm opacity-95 mb-3">
                 Slutt å tape penger på ubesvarte anrop. Vår AI-resepsjonist svarer kundene dine – døgnet rundt.
               </p>
-              <Button
-                asChild
-                size="xl"
-                variant="secondary"
-                className="w-full bg-background text-primary hover:bg-background/90 font-semibold"
-              >
-                <a href="#kontakt">
-                  Book gratis demo
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </a>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  asChild
+                  size="xl"
+                  variant="secondary"
+                  className="flex-1 bg-background text-primary hover:bg-background/90 font-semibold"
+                >
+                  <a href="#kontakt">
+                    Book gratis demo
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="xl"
+                  variant="outline"
+                  className="flex-1 bg-transparent border-white/40 text-white hover:bg-white/10 hover:text-white font-semibold"
+                >
+                  <a href="tel:+4700000000" aria-label="Ring oss">
+                    <Phone className="w-4 h-4" />
+                    Ring oss
+                  </a>
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>

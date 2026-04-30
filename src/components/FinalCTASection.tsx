@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import CallUsButton from "@/components/CallUsButton";
 
 const FinalCTASection = () => (
   <section
@@ -57,6 +58,7 @@ const FinalCTASection = () => (
               <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </a>
+          <CallUsButton tone="onDark" />
           <a href="#priser">
             <Button
               size="xl"
