@@ -153,7 +153,7 @@ const LostCallsCalculator = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-destructive/10 text-destructive text-xs font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
             <TrendingDown className="w-3.5 h-3.5" />
             Hva koster det å ikke svare?
           </div>
