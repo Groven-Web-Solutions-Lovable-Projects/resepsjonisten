@@ -8,6 +8,7 @@ import IndustriesSection from "@/components/IndustriesSection";
 import WhyUsSection from "@/components/WhyUsSection";
 import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
+import NewsletterSection from "@/components/NewsletterSection";
 import { FinalCTASection, Footer } from "@/components/FinalCTASection";
 
 const Index = () => {
@@ -25,6 +26,7 @@ const Index = () => {
       <PricingSection />
       <FAQSection />
       <FinalCTASection />
+      <NewsletterSection />
       <Footer />
     </div>
   );
