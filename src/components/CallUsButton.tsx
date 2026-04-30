@@ -2,7 +2,7 @@ import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export const PHONE_NUMBER = "+4700000000";
+export const PHONE_NUMBER = "+4797251000";
 export const PHONE_DISPLAY = "Ring oss";
 
 type Props = {

@@ -379,7 +379,7 @@ const PricingSection = () => {
               size="xl"
               className="mt-2 w-full bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
             >
-              <a href="tel:+4700000000" aria-label="Ring oss">
+              <a href="tel:+4797251000" aria-label="Ring oss">
                 Ring oss
               </a>
             </Button>

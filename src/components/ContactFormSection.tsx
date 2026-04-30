@@ -121,7 +121,7 @@ const ContactFormSection = () => {
                 {/* Alternativ: ring oss direkte */}
                 <div className="mt-6 pt-6 border-t border-border">
                   <a
-                    href="tel:+4700000000"
+                    href="tel:+4797251000"
                     aria-label="Ring oss direkte"
                     className="group flex items-center gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors"
                   >
@@ -133,7 +133,7 @@ const ContactFormSection = () => {
                         Foretrekker du å snakke direkte?
                       </p>
                       <p className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                        Ring oss på +47 00 00 00 00
+                        Ring oss på +47 972 51 000
                       </p>
                     </div>
                   </a>
