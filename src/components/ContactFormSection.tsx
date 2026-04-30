@@ -115,6 +115,11 @@ const ContactFormSection = () => {
                   <Button variant="hero" size="xl" type="submit" className="w-full">
                     Book gratis demo nå
                   </Button>
+                  <Button asChild variant="outline" size="xl" className="w-full border-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary font-semibold">
+                    <a href="tel:+4700000000" aria-label="Ring oss">
+                      Ring oss
+                    </a>
+                  </Button>
                   <p className="text-xs text-muted-foreground text-center">Ingen bindingstid · Svar innen 24 timer</p>
                 </form>
               </div>
