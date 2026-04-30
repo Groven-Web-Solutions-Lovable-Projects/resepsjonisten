@@ -1,4 +1,5 @@
 import { Navbar, HeroSection } from "@/components/HeroSection";
+import HashScroller from "@/components/HashScroller";
 import ProofSection from "@/components/ProofSection";
 import ProblemSection from "@/components/ProblemSection";
 import LostCallsCalculator from "@/components/LostCallsCalculator";
@@ -14,6 +15,7 @@ import { FinalCTASection, Footer } from "@/components/FinalCTASection";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
+      <HashScroller />
       <Navbar />
       <HeroSection />
       <ProofSection />
