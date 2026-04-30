@@ -29,7 +29,11 @@ const InfoTip = ({ title, text }: { title: string; text: string }) => (
       <button
         type="button"
         aria-label={`Mer informasjon om ${title}`}
-        onClick={(e) => e.preventDefault()}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
         className="inline-flex items-center justify-center w-5 h-5 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <Info className="w-4 h-4" />
@@ -39,7 +43,7 @@ const InfoTip = ({ title, text }: { title: string; text: string }) => (
       side="top"
       align="start"
       className="w-72 sm:w-80 text-sm"
-      onClick={(e) => e.preventDefault()}
+      onClick={(e) => e.stopPropagation()}
     >
       <div className="font-semibold text-foreground mb-1">{title}</div>
       <p className="text-muted-foreground text-sm whitespace-pre-line leading-relaxed">{text}</p>
@@ -142,9 +146,7 @@ const AddonRow = ({
         <div className="flex items-center gap-1.5">
           <div className="text-sm font-medium text-foreground">{title}</div>
           {info && (
-            <span onClick={(e) => e.preventDefault()}>
-              <InfoTip title={title} text={info} />
-            </span>
+            <InfoTip title={title} text={info} />
           )}
         </div>
         <div className="text-xs text-muted-foreground">{desc}</div>
