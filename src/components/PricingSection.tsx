@@ -373,6 +373,16 @@ const PricingSection = () => {
             >
               <a href="#kontakt">Book gratis demo</a>
             </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="xl"
+              className="mt-2 w-full bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+            >
+              <a href="tel:+4700000000" aria-label="Ring oss">
+                Ring oss
+              </a>
+            </Button>
             <p className="text-[11px] opacity-75 text-center mt-2">
               Eks. mva. Ingen oppstartskostnad.
             </p>
