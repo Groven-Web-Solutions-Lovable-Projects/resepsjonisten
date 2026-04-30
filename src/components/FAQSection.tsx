@@ -20,10 +20,6 @@ const faqs = [
     a: "Ved oppstart går vi gjennom bedriften din, hvordan du vil ha samtaler håndtert, og hvilke instrukser vi skal følge.",
   },
   {
-    q: "Har dere bindingstid?",
-    a: "Standardpakkene har ingen bindingstid, men én måneds oppsigelsestid.",
-  },
-  {
     q: "Hvor raskt kan vi komme i gang?",
     a: "Oppstart kan skje svært raskt — bedriften din kan være operativ innen én time.",
   },
