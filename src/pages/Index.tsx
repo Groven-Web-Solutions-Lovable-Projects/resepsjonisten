@@ -11,6 +11,7 @@ import LostCallsCalculator from "@/components/LostCallsCalculator";
 import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
 import ContactFormSection from "@/components/ContactFormSection";
+import NewsletterSection from "@/components/NewsletterSection";
 import { FinalCTASection, Footer } from "@/components/FinalCTASection";
 
 const Index = () => {
@@ -31,6 +32,7 @@ const Index = () => {
       <FAQSection />
       <FinalCTASection />
       <ContactFormSection />
+      <NewsletterSection />
       <Footer />
     </div>
   );
