@@ -10,20 +10,19 @@ import {
   Sparkle,
   Truck,
   Anchor,
-  ArrowUpRight,
 } from "lucide-react";
 
 const industries = [
-  { slug: "eiendom", name: "Eiendom", icon: Building2 },
-  { slug: "legesenter", name: "Legesenter", icon: Stethoscope },
-  { slug: "tannlege", name: "Tannlege", icon: Smile },
-  { slug: "bilverksted", name: "Bilverksted", icon: Wrench },
-  { slug: "restaurant", name: "Restaurant", icon: UtensilsCrossed },
-  { slug: "frisor", name: "Frisør", icon: Scissors },
-  { slug: "skjonnhetssalong", name: "Skjønnhetssalong", icon: Sparkles },
-  { slug: "rengjoring", name: "Rengjøring", icon: Sparkle },
-  { slug: "transport", name: "Transport", icon: Truck },
-  { slug: "bat", name: "Båt", icon: Anchor },
+  { name: "Eiendom", icon: Building2 },
+  { name: "Legesenter", icon: Stethoscope },
+  { name: "Tannlege", icon: Smile },
+  { name: "Bilverksted", icon: Wrench },
+  { name: "Restaurant", icon: UtensilsCrossed },
+  { name: "Frisør", icon: Scissors },
+  { name: "Skjønnhetssalong", icon: Sparkles },
+  { name: "Rengjøring", icon: Sparkle },
+  { name: "Transport", icon: Truck },
+  { name: "Båt", icon: Anchor },
 ];
 
 const IndustriesSection = () => {
@@ -53,38 +52,21 @@ const IndustriesSection = () => {
           {industries.map((industry, i) => {
             const Icon = industry.icon;
             return (
-              <motion.a
-                key={industry.slug}
-                href={`/bransjer/${industry.slug}`}
+              <motion.div
+                key={industry.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative rounded-2xl bg-card border border-border p-5 sm:p-6 shadow-sm hover:shadow-elevated hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                className="relative rounded-2xl bg-card border border-border p-5 sm:p-6 shadow-sm overflow-hidden"
               >
-                {/* hover wash */}
-                <div
-                  className="absolute -top-16 -right-16 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-500 pointer-events-none"
-                  style={{
-                    background:
-                      "radial-gradient(circle, hsl(var(--accent) / 0.35) 0%, transparent 70%)",
-                  }}
-                />
-
-                <div className="relative flex items-start justify-between">
-                  <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary border border-primary/15 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors duration-300">
-                    <Icon className="w-5 h-5" strokeWidth={1.75} />
-                  </div>
-                  <ArrowUpRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-300" />
+                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary border border-primary/15">
+                  <Icon className="w-5 h-5" strokeWidth={1.75} />
                 </div>
-
-                <p className="relative mt-5 text-base font-semibold text-foreground">
+                <p className="mt-5 text-base font-semibold text-foreground">
                   {industry.name}
                 </p>
-                <span className="relative mt-1 inline-block text-xs text-muted-foreground group-hover:text-primary transition-colors">
-                  Se løsning →
-                </span>
-              </motion.a>
+              </motion.div>
             );
           })}
         </div>
