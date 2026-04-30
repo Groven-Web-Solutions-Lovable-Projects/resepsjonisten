@@ -27,8 +27,10 @@ const industries = [
 
 const IndustriesSection = () => {
   return (
-    <section id="bransjer" className="relative py-24 overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(var(--accent)/0.06),transparent_60%)]" />
+    <section id="bransjer" className="relative py-24 overflow-hidden">
+      <div className="absolute inset-0 gradient-primary-soft" />
+      <div className="absolute top-10 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
+      <div className="absolute bottom-10 left-0 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
