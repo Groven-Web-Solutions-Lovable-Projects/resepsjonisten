@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Star } from "lucide-react";
 import { useState } from "react";
+import CallUsButton from "@/components/CallUsButton";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/hero-receptionist.jpg";
 import avatar1 from "@/assets/avatar-1.png";
@@ -112,6 +113,7 @@ const HeroSection = () => (
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
             <a href="#kontakt"><Button variant="hero" size="xl">Book gratis demo</Button></a>
+            <CallUsButton />
             <a href="#hvordan"><Button variant="hero-outline" size="xl">Les mer</Button></a>
           </motion.div>
           <motion.div variants={fadeUp} className="mt-12 flex items-center gap-5">
