@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, ArrowUpRight, Navigation, Building2 } from "lucide-react";
+import { Phone, Mail, ArrowUpRight, Navigation, Building2, FileText } from "lucide-react";
 
 const ADDRESS = "Høvikveien 2A, 1363 Høvik";
 const PHONE = "+47 972 51 000";
@@ -27,13 +27,14 @@ const items = [
     value: EMAIL,
     href: `mailto:${EMAIL}`,
   },
-  {
-    icon: MapPin,
-    label: "Besøksadresse",
-    value: ADDRESS,
-    href: MAP_LINK,
-    external: true,
-  },
+];
+
+const companyDetails = [
+  { label: "Firmanavn", value: "Resepsjonisten AS" },
+  { label: "Organisasjonsnummer", value: "936 065 619" },
+  { label: "Selskapsform", value: "Aksjeselskap (AS)" },
+  { label: "MVA-registrert", value: "Ja" },
+  { label: "Forretningsadresse", value: "Lundekroken 34, 1396 Billingstad" },
 ];
 
 const ContactInfoSection = () => (
@@ -87,6 +88,45 @@ const ContactInfoSection = () => (
               <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
             </a>
           ))}
+
+          {/* Firmainformasjon */}
+          <div className="p-5 rounded-2xl bg-card border border-border">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
+                <FileText className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold">
+                  Firmainformasjon
+                </p>
+                <p className="text-base font-bold text-foreground">
+                  Offisielle opplysninger
+                </p>
+              </div>
+            </div>
+            <dl className="space-y-2.5">
+              {companyDetails.map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="flex items-start justify-between gap-4 text-sm border-b border-border/60 pb-2 last:border-0 last:pb-0"
+                >
+                  <dt className="text-muted-foreground">{label}</dt>
+                  <dd className="font-semibold text-foreground text-right">
+                    {value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <a
+              href="https://virksomhet.brreg.no/nb/oppslag/enheter/936065619"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+            >
+              Se i Brønnøysundregistrene
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </motion.div>
 
         {/* Kart */}
