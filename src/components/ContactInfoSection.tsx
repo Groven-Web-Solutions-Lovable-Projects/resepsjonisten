@@ -111,7 +111,7 @@ const ContactInfoSection = () => (
             </div>
           </div>
 
-          {/* Kart med flytende pin */}
+          {/* Kart */}
           <div className="relative flex-1 min-h-[340px]">
             <iframe
               src={MAP_EMBED_SRC}
@@ -121,35 +121,6 @@ const ContactInfoSection = () => (
               allowFullScreen
               className="absolute inset-0 w-full h-full border-0"
             />
-
-            {/* Flytende info-kort */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="absolute top-4 left-4 max-w-[260px] bg-card/95 backdrop-blur-sm rounded-xl shadow-elevated border border-border p-4 pointer-events-none"
-            >
-              <div className="flex items-start gap-3">
-                <div className="relative flex-shrink-0">
-                  <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center shadow-glow">
-                    <MapPin className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-primary animate-ping" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
-                    Vårt kontor
-                  </p>
-                  <p className="text-sm font-bold text-foreground leading-tight mt-0.5">
-                    Resepsjonisten.no
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5 leading-snug">
-                    {ADDRESS}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
           </div>
 
           {/* Footer-CTA */}
