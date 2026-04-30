@@ -3,8 +3,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Clock, CheckCircle, Phone, Mail, MapPin } from "lucide-react";
+import { Sparkles, Clock, CheckCircle, Phone, Mail, MapPin, Send } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { z } from "zod";
+import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const perks = [
   { icon: Clock, text: "30 min uforpliktende gjennomgang" },
@@ -186,12 +189,6 @@ const FinalCTASection = () => {
 
 /* ─── Footer med kontaktinfo, hurtiglenker, kart og nyhetsbrev ─── */
 
-import { useState as useNewsletterState } from "react";
-import { z } from "zod";
-import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { Send } from "lucide-react";
-
 const emailSchema = z
   .string()
   .trim()
@@ -213,9 +210,9 @@ const quickLinks = [
 ];
 
 const NewsletterInline = () => {
-  const [email, setEmail] = useNewsletterState("");
-  const [loading, setLoading] = useNewsletterState(false);
-  const [done, setDone] = useNewsletterState(false);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
