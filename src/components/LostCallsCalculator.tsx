@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { PhoneOff, TrendingDown, CalendarDays, ArrowRight } from "lucide-react";
+import { PhoneOff, TrendingDown, CalendarDays, ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
