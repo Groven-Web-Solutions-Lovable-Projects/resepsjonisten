@@ -256,7 +256,7 @@ const LostCallsCalculator = () => {
               </p>
               <Button
                 asChild
-                size="lg"
+                size="xl"
                 variant="secondary"
                 className="w-full bg-background text-primary hover:bg-background/90 font-semibold"
               >
