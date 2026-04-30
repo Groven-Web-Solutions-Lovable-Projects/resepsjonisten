@@ -29,10 +29,7 @@ const InfoTip = ({ title, text }: { title: string; text: string }) => (
       <button
         type="button"
         aria-label={`Mer informasjon om ${title}`}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
+        onClick={(e) => e.stopPropagation()}
         onPointerDown={(e) => e.stopPropagation()}
         className="inline-flex items-center justify-center w-5 h-5 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
@@ -127,9 +124,9 @@ const AddonRow = ({
   checked: boolean;
   onChange: (v: boolean) => void;
 }) => (
-  <label
+  <div
     className={cn(
-      "flex items-center justify-between gap-4 rounded-lg border bg-background p-3 cursor-pointer transition-colors",
+      "flex items-center justify-between gap-4 rounded-lg border bg-background p-3 transition-colors",
       checked ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
     )}
   >
@@ -156,9 +153,9 @@ const AddonRow = ({
       <span className="text-sm font-semibold text-foreground tabular-nums hidden sm:inline">
         +{formatKr(price)}
       </span>
-      <Switch checked={checked} onCheckedChange={onChange} />
+      <Switch checked={checked} onCheckedChange={onChange} aria-label={title} />
     </div>
-  </label>
+  </div>
 );
 
 const PricingSection = () => {
