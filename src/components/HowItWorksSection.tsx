@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { Search, PhoneForwarded, Headphones } from "lucide-react";
+import { Search, PhoneForwarded, Headphones, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import CallUsButton from "@/components/CallUsButton";
 
 const steps = [
   {
@@ -90,6 +92,22 @@ const HowItWorksSection = () => (
           </motion.div>
         ))}
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.3 }}
+        className="mt-16 flex flex-wrap justify-center gap-4"
+      >
+        <a href="#kontakt">
+          <Button variant="hero" size="xl">
+            Book gratis demo
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+        </a>
+        <CallUsButton tone="onDark" />
+      </motion.div>
     </div>
   </section>
 );
