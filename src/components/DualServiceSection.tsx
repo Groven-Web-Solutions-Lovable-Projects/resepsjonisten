@@ -292,6 +292,8 @@ const DualServiceSection = () => {
             <video
               ref={videoRef}
               src={VIDEO_SRC}
+              poster="/videos/manuell-kundeservice-poster.jpg"
+              preload="metadata"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: "43% center" }}
               playsInline
