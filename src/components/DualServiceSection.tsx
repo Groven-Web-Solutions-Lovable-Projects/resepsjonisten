@@ -125,15 +125,19 @@ const AIVisualizer = ({
       ctx.globalCompositeOperation = "lighter";
       for (let i = 0; i < POINTS; i++) {
         const p = points[i];
-        // Organic deformation – noise-like surface displacement
-        const n =
-          Math.sin(p.x * 4 + t * 1.5) * 0.5 +
-          Math.cos(p.y * 5 - t * 1.1) * 0.5 +
-          Math.sin(p.z * 3 + t * 1.8) * 0.5;
-        const disp =
-          1 +
-          n * (0.04 + amp * 0.08) +
-          amp * 0.35 * (0.5 + 0.5 * Math.sin(t * 2.5 + i * 0.015));
+        // Smooth breathing – uniform inflate/deflate driven by amplitude
+        const breathe = 1 + amp * 0.18 + Math.sin(t * 1.2) * 0.015;
+
+        // Concentric ripple traveling from top pole down to bottom pole.
+        // Using p.y (latitude) makes the wave wrap cleanly around the sphere
+        // instead of producing chaotic per-point spikes.
+        const ripple = Math.sin(p.y * 6 - t * 2.2) * (0.012 + amp * 0.06);
+
+        // A second slow ripple along longitude for subtle organic variation.
+        const longitude = Math.atan2(p.z, p.x);
+        const swirl = Math.sin(longitude * 3 + t * 0.8) * (0.008 + amp * 0.025);
+
+        const disp = breathe + ripple + swirl;
         let x = p.x * disp;
         let y = p.y * disp;
         let z = p.z * disp;
