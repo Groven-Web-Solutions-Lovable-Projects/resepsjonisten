@@ -34,6 +34,22 @@ const AIVisualizer = ({
     resize();
     window.addEventListener("resize", resize);
 
+    // Pause animation when canvas is offscreen
+    let visible = true;
+    const io = new IntersectionObserver(
+      (entries) => {
+        visible = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0.05 },
+    );
+    io.observe(canvas);
+
+    // Pause when tab is hidden
+    const onVisibility = () => {
+      // no-op flag; the rAF loop checks document.hidden too
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     const dataArray = analyser
       ? new Uint8Array(analyser.frequencyBinCount)
       : null;
@@ -52,14 +68,25 @@ const AIVisualizer = ({
     let t = 0;
     let amp = 0.15;
     let ampTarget = 0.15;
+    const FRAME_MS = 1000 / 30; // 30 fps cap
+    let lastTime = 0;
 
-    const render = () => {
+    const render = (now: number) => {
+      rafRef.current = requestAnimationFrame(render);
+
+      if (!visible || document.hidden) {
+        lastTime = now;
+        return;
+      }
+      if (now - lastTime < FRAME_MS) return;
+      lastTime = now;
+
       t += 0.006;
       const w = canvas.width;
       const h = canvas.height;
 
       // Soft trail – fade previous frame instead of clearing fully (glow effect)
-      ctx.fillStyle = "rgba(8, 4, 18, 0.28)";
+      ctx.fillStyle = "rgba(6, 3, 14, 0.32)";
       ctx.fillRect(0, 0, w, h);
 
       // Audio-driven amplitude
@@ -68,11 +95,11 @@ const AIVisualizer = ({
         let sum = 0;
         const lows = Math.floor(dataArray.length * 0.4);
         for (let i = 0; i < lows; i++) sum += dataArray[i];
-        ampTarget = 0.05 + (sum / lows / 255) * 0.85;
+        ampTarget = 0.05 + (sum / lows / 255) * 1.6;
       } else {
         ampTarget = 0.08 + (Math.sin(t * 0.9) + 1) * 0.04;
       }
-      amp += (ampTarget - amp) * 0.15;
+      amp += (ampTarget - amp) * 0.2;
 
       const cx = w / 2;
       const cy = h / 2;
@@ -80,17 +107,17 @@ const AIVisualizer = ({
 
       // Background radial glow
       const bgGrad = ctx.createRadialGradient(cx, cy, baseR * 0.2, cx, cy, baseR * 2);
-      bgGrad.addColorStop(0, "rgba(80, 40, 200, 0.18)");
-      bgGrad.addColorStop(0.5, "rgba(40, 20, 120, 0.08)");
+      bgGrad.addColorStop(0, "rgba(60, 30, 150, 0.12)");
+      bgGrad.addColorStop(0.5, "rgba(30, 15, 90, 0.05)");
       bgGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = bgGrad;
       ctx.beginPath();
       ctx.arc(cx, cy, baseR * 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Rotation
-      const rotY = t * 0.4;
-      const rotX = Math.sin(t * 0.25) * 0.35;
+      // Rotation – speeds up slightly with amplitude
+      const rotY = t * (0.4 + amp * 0.6);
+      const rotX = Math.sin(t * 0.25) * 0.35 + amp * 0.15;
       const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
 
@@ -100,10 +127,13 @@ const AIVisualizer = ({
         const p = points[i];
         // Organic deformation – noise-like surface displacement
         const n =
-          Math.sin(p.x * 4 + t * 1.2) * 0.5 +
-          Math.cos(p.y * 5 - t * 0.9) * 0.5 +
-          Math.sin(p.z * 3 + t * 1.5) * 0.5;
-        const disp = 1 + n * 0.04 + amp * 0.18 * (0.6 + 0.4 * Math.sin(t * 2 + i * 0.01));
+          Math.sin(p.x * 4 + t * 1.5) * 0.5 +
+          Math.cos(p.y * 5 - t * 1.1) * 0.5 +
+          Math.sin(p.z * 3 + t * 1.8) * 0.5;
+        const disp =
+          1 +
+          n * (0.04 + amp * 0.08) +
+          amp * 0.35 * (0.5 + 0.5 * Math.sin(t * 2.5 + i * 0.015));
         let x = p.x * disp;
         let y = p.y * disp;
         let z = p.z * disp;
@@ -120,28 +150,27 @@ const AIVisualizer = ({
         const sx = cx + x1 * baseR * persp;
         const sy = cy + y2 * baseR * persp;
 
-        // Depth-based color & size
+        // Depth-based color & size – softer/dimmer overall
         const depth = (z2 + 1) / 2; // 0 back .. 1 front
-        const size = (0.4 + depth * 1.6) * dpr;
+        const size = (0.35 + depth * 1.4) * dpr;
 
-        // Color: deep blue at back -> magenta/cyan highlights at front
-        const hue = 230 + depth * 60 + Math.sin(t + i * 0.02) * 8;
-        const light = 35 + depth * 45;
-        const alpha = 0.25 + depth * 0.65;
+        const hue = 235 + depth * 45 + Math.sin(t + i * 0.02) * 6;
+        const light = 25 + depth * 30;
+        const alpha = 0.18 + depth * 0.42;
 
-        ctx.fillStyle = `hsla(${hue}, 95%, ${light}%, ${alpha})`;
+        ctx.fillStyle = `hsla(${hue}, 80%, ${light}%, ${alpha})`;
         ctx.beginPath();
         ctx.arc(sx, sy, size, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.globalCompositeOperation = "source-over";
-
-      rafRef.current = requestAnimationFrame(render);
     };
     rafRef.current = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", onVisibility);
+      io.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [analyser, playing]);
