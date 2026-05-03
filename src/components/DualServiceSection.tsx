@@ -293,7 +293,7 @@ const DualServiceSection = () => {
             className="relative rounded-2xl overflow-hidden shadow-elevated aspect-[4/5] sm:aspect-square md:aspect-[4/5] group"
             style={{
               background:
-                "radial-gradient(circle at 50% 50%, hsl(276 52% 18%), hsl(270 30% 8%))",
+                "radial-gradient(circle at 50% 50%, hsl(260 50% 10%), hsl(260 40% 4%) 70%, #050210 100%)",
             }}
           >
             <audio
