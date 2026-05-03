@@ -122,11 +122,11 @@ const AIVisualizer = ({
       const PRIMARY = "276, 60%, 55%"; // purple
       const ACCENT = "310, 80%, 65%"; // magenta
 
-      // 1. Soft outer glow that pulses with amplitude
-      const glowR = sphereR * (1.45 + amp * 0.3);
-      const glowGrad = ctx.createRadialGradient(cx, cy, sphereR * 0.6, cx, cy, glowR);
-      glowGrad.addColorStop(0, `hsla(${ACCENT}, ${0.18 + amp * 0.25})`);
-      glowGrad.addColorStop(0.55, `hsla(${PRIMARY}, ${0.08 + amp * 0.12})`);
+      // 1. Soft outer glow that pulses with amplitude (subtle)
+      const glowR = sphereR * (1.25 + amp * 0.18);
+      const glowGrad = ctx.createRadialGradient(cx, cy, sphereR * 0.75, cx, cy, glowR);
+      glowGrad.addColorStop(0, `hsla(${ACCENT}, ${0.07 + amp * 0.1})`);
+      glowGrad.addColorStop(0.55, `hsla(${PRIMARY}, ${0.03 + amp * 0.05})`);
       glowGrad.addColorStop(1, "hsla(276, 60%, 30%, 0)");
       ctx.fillStyle = glowGrad;
       ctx.beginPath();
@@ -176,8 +176,8 @@ const AIVisualizer = ({
       const rimWidth = (3 + amp * 6) * dpr;
       ctx.lineWidth = rimWidth;
       ctx.strokeStyle = `hsla(${ACCENT}, ${0.55 + amp * 0.4})`;
-      ctx.shadowColor = `hsla(${ACCENT}, ${0.7 + amp * 0.3})`;
-      ctx.shadowBlur = (14 + amp * 28) * dpr;
+      ctx.shadowColor = `hsla(${ACCENT}, ${0.35 + amp * 0.2})`;
+      ctx.shadowBlur = (5 + amp * 12) * dpr;
       ctx.beginPath();
       ctx.arc(cx, cy, sphereR, 0, Math.PI * 2);
       ctx.stroke();
