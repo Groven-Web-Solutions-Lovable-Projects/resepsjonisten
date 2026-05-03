@@ -38,94 +38,103 @@ const AIVisualizer = ({
       ? new Uint8Array(analyser.frequencyBinCount)
       : null;
 
+    // Pre-generate point distribution on a unit sphere using Fibonacci lattice
+    const POINTS = 2200;
+    const points: { x: number; y: number; z: number }[] = [];
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < POINTS; i++) {
+      const y = 1 - (i / (POINTS - 1)) * 2;
+      const r = Math.sqrt(1 - y * y);
+      const theta = golden * i;
+      points.push({ x: Math.cos(theta) * r, y, z: Math.sin(theta) * r });
+    }
+
     let t = 0;
+    let amp = 0.15;
+    let ampTarget = 0.15;
+
     const render = () => {
-      t += 0.015;
+      t += 0.006;
       const w = canvas.width;
       const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
 
-      let amp = 0.25;
+      // Soft trail – fade previous frame instead of clearing fully (glow effect)
+      ctx.fillStyle = "rgba(8, 4, 18, 0.28)";
+      ctx.fillRect(0, 0, w, h);
+
+      // Audio-driven amplitude
       if (analyser && dataArray && playing) {
         analyser.getByteFrequencyData(dataArray);
         let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-        amp = 0.2 + (sum / dataArray.length / 255) * 1.2;
+        const lows = Math.floor(dataArray.length * 0.4);
+        for (let i = 0; i < lows; i++) sum += dataArray[i];
+        ampTarget = 0.05 + (sum / lows / 255) * 0.85;
       } else {
-        amp = 0.3 + Math.sin(t * 1.5) * 0.08;
+        ampTarget = 0.08 + (Math.sin(t * 0.9) + 1) * 0.04;
       }
+      amp += (ampTarget - amp) * 0.15;
 
       const cx = w / 2;
       const cy = h / 2;
-      const baseR = Math.min(w, h) * 0.18;
+      const baseR = Math.min(w, h) * 0.32;
 
-      // Outer glow rings
-      for (let r = 0; r < 4; r++) {
-        const radius = baseR + r * baseR * 0.35 * (1 + amp * 0.4);
-        const grad = ctx.createRadialGradient(cx, cy, radius * 0.3, cx, cy, radius);
-        grad.addColorStop(0, `hsla(276, 60%, 50%, ${0.18 - r * 0.04})`);
-        grad.addColorStop(1, `hsla(310, 70%, 55%, 0)`);
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Central pulsing orb
-      const orbR = baseR * (0.85 + amp * 0.35);
-      const orbGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, orbR);
-      orbGrad.addColorStop(0, `hsla(310, 80%, 70%, 0.95)`);
-      orbGrad.addColorStop(0.6, `hsla(276, 60%, 45%, 0.7)`);
-      orbGrad.addColorStop(1, `hsla(276, 52%, 28%, 0)`);
-      ctx.fillStyle = orbGrad;
+      // Background radial glow
+      const bgGrad = ctx.createRadialGradient(cx, cy, baseR * 0.2, cx, cy, baseR * 2);
+      bgGrad.addColorStop(0, "rgba(80, 40, 200, 0.18)");
+      bgGrad.addColorStop(0.5, "rgba(40, 20, 120, 0.08)");
+      bgGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = bgGrad;
       ctx.beginPath();
-      ctx.arc(cx, cy, orbR, 0, Math.PI * 2);
+      ctx.arc(cx, cy, baseR * 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Frequency bars in a circle
-      const bars = 64;
-      const barBaseR = baseR * 1.4;
-      for (let i = 0; i < bars; i++) {
-        const angle = (i / bars) * Math.PI * 2 + t * 0.3;
-        let v: number;
-        if (analyser && dataArray && playing) {
-          v = dataArray[Math.floor((i / bars) * dataArray.length)] / 255;
-        } else {
-          v = (Math.sin(t * 2 + i * 0.4) + 1) / 2 * 0.4 + 0.1;
-        }
-        const barLen = baseR * 0.5 + v * baseR * 1.4;
-        const x1 = cx + Math.cos(angle) * barBaseR;
-        const y1 = cy + Math.sin(angle) * barBaseR;
-        const x2 = cx + Math.cos(angle) * (barBaseR + barLen);
-        const y2 = cy + Math.sin(angle) * (barBaseR + barLen);
+      // Rotation
+      const rotY = t * 0.4;
+      const rotX = Math.sin(t * 0.25) * 0.35;
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
 
-        const lineGrad = ctx.createLinearGradient(x1, y1, x2, y2);
-        lineGrad.addColorStop(0, `hsla(276, 60%, 55%, 0.9)`);
-        lineGrad.addColorStop(1, `hsla(310, 80%, 65%, 0.2)`);
-        ctx.strokeStyle = lineGrad;
-        ctx.lineWidth = 2 * dpr;
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-      }
+      // Render each point with deformation
+      ctx.globalCompositeOperation = "lighter";
+      for (let i = 0; i < POINTS; i++) {
+        const p = points[i];
+        // Organic deformation – noise-like surface displacement
+        const n =
+          Math.sin(p.x * 4 + t * 1.2) * 0.5 +
+          Math.cos(p.y * 5 - t * 0.9) * 0.5 +
+          Math.sin(p.z * 3 + t * 1.5) * 0.5;
+        const disp = 1 + n * 0.04 + amp * 0.18 * (0.6 + 0.4 * Math.sin(t * 2 + i * 0.01));
+        let x = p.x * disp;
+        let y = p.y * disp;
+        let z = p.z * disp;
 
-      // Floating particles
-      const particles = 24;
-      for (let i = 0; i < particles; i++) {
-        const a = (i / particles) * Math.PI * 2 + t * 0.6;
-        const dist = baseR * 2.2 + Math.sin(t * 1.2 + i) * baseR * 0.4 * amp;
-        const px = cx + Math.cos(a) * dist;
-        const py = cy + Math.sin(a) * dist;
-        const pr = (1.5 + Math.sin(t * 3 + i) * 1.5) * dpr * (0.6 + amp);
-        ctx.fillStyle = i % 2 === 0
-          ? `hsla(310, 80%, 70%, 0.85)`
-          : `hsla(276, 60%, 60%, 0.85)`;
+        // Rotate Y
+        const x1 = x * cosY + z * sinY;
+        const z1 = -x * sinY + z * cosY;
+        // Rotate X
+        const y2 = y * cosX - z1 * sinX;
+        const z2 = y * sinX + z1 * cosX;
+
+        // Project
+        const persp = 1 / (1.6 - z2 * 0.5);
+        const sx = cx + x1 * baseR * persp;
+        const sy = cy + y2 * baseR * persp;
+
+        // Depth-based color & size
+        const depth = (z2 + 1) / 2; // 0 back .. 1 front
+        const size = (0.4 + depth * 1.6) * dpr;
+
+        // Color: deep blue at back -> magenta/cyan highlights at front
+        const hue = 230 + depth * 60 + Math.sin(t + i * 0.02) * 8;
+        const light = 35 + depth * 45;
+        const alpha = 0.25 + depth * 0.65;
+
+        ctx.fillStyle = `hsla(${hue}, 95%, ${light}%, ${alpha})`;
         ctx.beginPath();
-        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.arc(sx, sy, size, 0, Math.PI * 2);
         ctx.fill();
       }
+      ctx.globalCompositeOperation = "source-over";
 
       rafRef.current = requestAnimationFrame(render);
     };
