@@ -1,6 +1,7 @@
 import { Navbar, HeroSection } from "@/components/HeroSection";
 import HashScroller from "@/components/HashScroller";
 import ProofSection from "@/components/ProofSection";
+import DualServiceSection from "@/components/DualServiceSection";
 import ProblemSection from "@/components/ProblemSection";
 import LostCallsCalculator from "@/components/LostCallsCalculator";
 import ServicesSection from "@/components/ServicesSection";
@@ -18,6 +19,7 @@ const Index = () => {
       <HashScroller />
       <Navbar />
       <HeroSection />
+      <DualServiceSection />
       <ProofSection />
       <ProblemSection />
       <LostCallsCalculator />
