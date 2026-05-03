@@ -293,6 +293,7 @@ const DualServiceSection = () => {
               ref={videoRef}
               src={VIDEO_SRC}
               className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: "65% center" }}
               playsInline
               onEnded={() => setActive("none")}
               onPause={() => active === "video" && setActive("none")}
