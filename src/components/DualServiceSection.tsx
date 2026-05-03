@@ -54,16 +54,25 @@ const AIVisualizer = ({
       ? new Uint8Array(analyser.frequencyBinCount)
       : null;
 
-    // Pre-generate point distribution on a unit sphere using Fibonacci lattice
-    const POINTS = 2200;
+    // Build a lat/long grid of points on a unit sphere — gives the
+    // structured dotted-grid look from the reference image.
+    const LAT = 44;
+    const LON = 64;
     const points: { x: number; y: number; z: number }[] = [];
-    const golden = Math.PI * (3 - Math.sqrt(5));
-    for (let i = 0; i < POINTS; i++) {
-      const y = 1 - (i / (POINTS - 1)) * 2;
-      const r = Math.sqrt(1 - y * y);
-      const theta = golden * i;
-      points.push({ x: Math.cos(theta) * r, y, z: Math.sin(theta) * r });
+    for (let i = 1; i < LAT; i++) {
+      const phi = (i / LAT) * Math.PI; // 0 .. PI (poles)
+      const sinPhi = Math.sin(phi);
+      const cosPhi = Math.cos(phi);
+      for (let j = 0; j < LON; j++) {
+        const theta = (j / LON) * Math.PI * 2;
+        points.push({
+          x: Math.cos(theta) * sinPhi,
+          y: cosPhi,
+          z: Math.sin(theta) * sinPhi,
+        });
+      }
     }
+    const POINTS = points.length;
 
     let t = 0;
     let amp = 0.15;
@@ -81,93 +90,105 @@ const AIVisualizer = ({
       if (now - lastTime < FRAME_MS) return;
       lastTime = now;
 
-      t += 0.006;
+      t += 0.008;
       const w = canvas.width;
       const h = canvas.height;
 
-      // Soft trail – fade previous frame instead of clearing fully (glow effect)
-      ctx.fillStyle = "rgba(6, 3, 14, 0.32)";
-      ctx.fillRect(0, 0, w, h);
+      // Clear fully – the dotted grid look needs crisp dots, not trails
+      ctx.clearRect(0, 0, w, h);
 
-      // Audio-driven amplitude
+      // Audio-driven amplitude – use full spectrum so every part of the
+      // voice (consonants, sibilance, vowels) clearly drives the sphere.
       if (analyser && dataArray && playing) {
         analyser.getByteFrequencyData(dataArray);
         let sum = 0;
-        const lows = Math.floor(dataArray.length * 0.4);
-        for (let i = 0; i < lows; i++) sum += dataArray[i];
-        ampTarget = 0.05 + (sum / lows / 255) * 1.6;
+        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+        const avg = sum / dataArray.length / 255; // 0..1
+        ampTarget = Math.min(1.4, avg * 3.0);
       } else {
-        ampTarget = 0.08 + (Math.sin(t * 0.9) + 1) * 0.04;
+        // gentle idle breathing
+        ampTarget = 0.06 + (Math.sin(t * 1.1) + 1) * 0.03;
       }
-      amp += (ampTarget - amp) * 0.2;
+      // fast attack so the sphere visibly jumps with each syllable
+      amp += (ampTarget - amp) * (ampTarget > amp ? 0.45 : 0.12);
 
       const cx = w / 2;
       const cy = h / 2;
-      const baseR = Math.min(w, h) * 0.32;
+      // The sphere expands directly with the voice – clearly visible.
+      const baseR = Math.min(w, h) * 0.26;
+      const sphereR = baseR * (1 + amp * 0.32);
 
-      // Background radial glow
-      const bgGrad = ctx.createRadialGradient(cx, cy, baseR * 0.2, cx, cy, baseR * 2);
-      bgGrad.addColorStop(0, "rgba(60, 30, 150, 0.12)");
-      bgGrad.addColorStop(0.5, "rgba(30, 15, 90, 0.05)");
-      bgGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = bgGrad;
+      // Brand colors
+      const PRIMARY = "276, 60%, 55%"; // purple
+      const ACCENT = "310, 80%, 65%"; // magenta
+
+      // 1. Soft outer glow that pulses with amplitude
+      const glowR = sphereR * (1.45 + amp * 0.3);
+      const glowGrad = ctx.createRadialGradient(cx, cy, sphereR * 0.6, cx, cy, glowR);
+      glowGrad.addColorStop(0, `hsla(${ACCENT}, ${0.18 + amp * 0.25})`);
+      glowGrad.addColorStop(0.55, `hsla(${PRIMARY}, ${0.08 + amp * 0.12})`);
+      glowGrad.addColorStop(1, "hsla(276, 60%, 30%, 0)");
+      ctx.fillStyle = glowGrad;
       ctx.beginPath();
-      ctx.arc(cx, cy, baseR * 2, 0, Math.PI * 2);
+      ctx.arc(cx, cy, glowR, 0, Math.PI * 2);
       ctx.fill();
 
-      // Rotation – speeds up slightly with amplitude
-      const rotY = t * (0.4 + amp * 0.6);
-      const rotX = Math.sin(t * 0.25) * 0.35 + amp * 0.15;
+      // 2. Rotation – slow base + slight push from voice
+      const rotY = t * (0.35 + amp * 0.4);
+      const rotX = Math.sin(t * 0.2) * 0.28;
       const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
 
-      // Render each point with deformation
+      // 3. Dotted grid points
       ctx.globalCompositeOperation = "lighter";
       for (let i = 0; i < POINTS; i++) {
         const p = points[i];
-        // Smooth breathing – uniform inflate/deflate driven by amplitude
-        const breathe = 1 + amp * 0.18 + Math.sin(t * 1.2) * 0.015;
-
-        // Concentric ripple traveling from top pole down to bottom pole.
-        // Using p.y (latitude) makes the wave wrap cleanly around the sphere
-        // instead of producing chaotic per-point spikes.
-        const ripple = Math.sin(p.y * 6 - t * 2.2) * (0.012 + amp * 0.06);
-
-        // A second slow ripple along longitude for subtle organic variation.
-        const longitude = Math.atan2(p.z, p.x);
-        const swirl = Math.sin(longitude * 3 + t * 0.8) * (0.008 + amp * 0.025);
-
-        const disp = breathe + ripple + swirl;
-        let x = p.x * disp;
-        let y = p.y * disp;
-        let z = p.z * disp;
 
         // Rotate Y
-        const x1 = x * cosY + z * sinY;
-        const z1 = -x * sinY + z * cosY;
+        const x1 = p.x * cosY + p.z * sinY;
+        const z1 = -p.x * sinY + p.z * cosY;
         // Rotate X
-        const y2 = y * cosX - z1 * sinX;
-        const z2 = y * sinX + z1 * cosX;
+        const y2 = p.y * cosX - z1 * sinX;
+        const z2 = p.y * sinX + z1 * cosX;
 
-        // Project
-        const persp = 1 / (1.6 - z2 * 0.5);
-        const sx = cx + x1 * baseR * persp;
-        const sy = cy + y2 * baseR * persp;
+        const persp = 1 / (1.7 - z2 * 0.45);
+        const sx = cx + x1 * sphereR * persp;
+        const sy = cy + y2 * sphereR * persp;
 
-        // Depth-based color & size – softer/dimmer overall
         const depth = (z2 + 1) / 2; // 0 back .. 1 front
-        const size = (0.35 + depth * 1.4) * dpr;
+        const dotR = (0.55 + depth * 1.1) * dpr;
 
-        const hue = 235 + depth * 45 + Math.sin(t + i * 0.02) * 6;
-        const light = 25 + depth * 30;
-        const alpha = 0.18 + depth * 0.42;
+        // Front-facing dots are bright magenta, back-facing fade to deep purple
+        const isFront = z2 > 0;
+        const hue = isFront ? 305 : 270;
+        const sat = 75;
+        const light = isFront ? 55 + depth * 18 : 28 + depth * 14;
+        const alpha = (isFront ? 0.55 : 0.22) * (0.5 + depth * 0.5);
 
-        ctx.fillStyle = `hsla(${hue}, 80%, ${light}%, ${alpha})`;
+        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${alpha})`;
         ctx.beginPath();
-        ctx.arc(sx, sy, size, 0, Math.PI * 2);
+        ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.globalCompositeOperation = "source-over";
+
+      // 4. Bright glowing rim — pulses with the voice
+      const rimWidth = (3 + amp * 6) * dpr;
+      ctx.lineWidth = rimWidth;
+      ctx.strokeStyle = `hsla(${ACCENT}, ${0.55 + amp * 0.4})`;
+      ctx.shadowColor = `hsla(${ACCENT}, ${0.7 + amp * 0.3})`;
+      ctx.shadowBlur = (14 + amp * 28) * dpr;
+      ctx.beginPath();
+      ctx.arc(cx, cy, sphereR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner rim accent
+      ctx.lineWidth = 1.5 * dpr;
+      ctx.strokeStyle = `hsla(0, 0%, 100%, ${0.25 + amp * 0.4})`;
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(cx, cy, sphereR * 0.995, 0, Math.PI * 2);
+      ctx.stroke();
     };
     rafRef.current = requestAnimationFrame(render);
 
