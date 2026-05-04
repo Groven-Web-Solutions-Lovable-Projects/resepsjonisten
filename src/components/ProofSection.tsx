@@ -209,19 +209,23 @@ const TestimonialCarousel = () => {
 const CompanyMarquee = () => {
   const doubled = [...companies, ...companies];
   return (
-    <div className="overflow-hidden relative max-w-full">
-      <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[hsl(270_55%_10%)] to-transparent z-10" />
-      <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[hsl(270_55%_10%)] to-transparent z-10" />
+    <div className="overflow-hidden relative max-w-full py-2">
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[hsl(270_55%_10%)] via-[hsl(270_55%_10%)]/80 to-transparent z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[hsl(270_55%_10%)] via-[hsl(270_55%_10%)]/80 to-transparent z-10" />
       <motion.div
-        className="flex gap-4 w-max"
+        className="flex gap-5 w-max"
         animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
       >
         {doubled.map((name, i) => (
           <div
             key={`${name}-${i}`}
-            className="flex-shrink-0 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white/80 text-sm font-semibold whitespace-nowrap"
+            className="group flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-br from-white/[0.14] to-white/[0.06] border border-white/25 text-white text-sm font-semibold whitespace-nowrap shadow-[0_4px_20px_-6px_hsl(310_60%_45%/0.35)] backdrop-blur-sm hover:border-accent/60 transition-colors"
           >
+            <span
+              className="inline-block w-2 h-2 rounded-full bg-accent shadow-[0_0_10px_hsl(var(--accent))]"
+              aria-hidden
+            />
             {name}
           </div>
         ))}
