@@ -397,7 +397,7 @@ const DualServiceSection = () => {
 
             <div className="absolute bottom-0 left-0 right-0 p-5 text-white z-10 pointer-events-none">
               <h3 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                AI-resepsjonist
+                AI-resepsjonistene
                 <Volume2 className="w-4 h-4 text-white/70" />
               </h3>
               <p className="text-sm text-white/80 mt-1">
