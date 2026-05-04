@@ -22,14 +22,17 @@ const manualServices = [
   { icon: Filter, title: "Filtrere henvendelser", desc: "Vi sorterer og prioriterer henvendelsene for deg." },
   { icon: CalendarCheck, title: "Håndtere booking og timebestillinger", desc: "Vi booker avtaler direkte i din kalender." },
   { icon: Package, title: "Håndtere bestillinger", desc: "Bestillinger i større løsninger administreres effektivt." },
-];
-
-const aiServices = [
-  { icon: Clock, title: "AI utenom åpningstid", desc: "Vi er tilgjengelig 24/7, også når kontoret er stengt." },
   { icon: Mail, title: "E-postbesvarelse", desc: "Vi besvarer kundehenvendelser via e-post raskt og profesjonelt." },
   { icon: Smartphone, title: "SMS-håndtering", desc: "Vi sender og mottar SMS på vegne av deg." },
   { icon: Share2, title: "Sosiale medier", desc: "Vi svarer på henvendelser fra Facebook, TikTok og Instagram." },
   { icon: Mic, title: "Lydopptak av samtaler", desc: "Alle samtaler kan tas opp for kvalitet og dokumentasjon." },
+];
+
+const aiServices = [
+  { icon: Clock, title: "AI utenom åpningstid", desc: "Vi er tilgjengelig 24/7, også når kontoret er stengt." },
+  { icon: Phone, title: "Besvare innkommende telefoner", desc: "AI tar telefonen, identifiserer ønsket og svarer kunden umiddelbart." },
+  { icon: ArrowRightLeft, title: "Videresende samtaler", desc: "AI vurderer henvendelsen og setter samtalen over til riktig person." },
+  { icon: MessageSquare, title: "Ta imot og formidle beskjeder", desc: "AI registrerer beskjeden og sender den videre til deg umiddelbart." },
 ];
 
 type Service = { icon: typeof Phone; title: string; desc: string };
