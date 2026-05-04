@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Clock, CheckCircle, Phone, Mail, MapPin, Send } from "lucide-react";
+import { Sparkles, Clock, CheckCircle, Phone, Mail, MapPin, Send, Building2 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
@@ -419,6 +419,12 @@ const Footer = () => (
                 <MapPin className="w-4 h-4 text-background/50 mt-0.5 flex-shrink-0" />
                 <span>{ADDRESS}</span>
               </a>
+            </li>
+            <li>
+              <div className="flex items-center gap-2 text-background/80">
+                <Building2 className="w-4 h-4 text-background/50" />
+                <span>Org.nr 936 065 619</span>
+              </div>
             </li>
           </ul>
         </div>
