@@ -153,7 +153,7 @@ const NewsletterSection = () => {
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Vi sender maks 1–2 e-poster i måneden. Ingen spam.
+                    Vi sender maks 1-2 e-poster i kvartalet. Ingen spam»
                   </p>
                 </form>
               )}
