@@ -10,6 +10,8 @@ import {
   Sparkle,
   Truck,
   Anchor,
+  ShieldCheck,
+  Activity,
 } from "lucide-react";
 
 const industries = [
@@ -23,6 +25,8 @@ const industries = [
   { name: "Rengjøring", icon: Sparkle },
   { name: "Transport", icon: Truck },
   { name: "Båt", icon: Anchor },
+  { name: "Forsikring", icon: ShieldCheck },
+  { name: "Kiropraktor", icon: Activity },
 ];
 
 const IndustriesSection = () => {
