@@ -7,14 +7,14 @@ const steps = [
   {
     icon: Search,
     num: "01",
-    title: "Vi kartlegger bedriften din",
-    desc: "Vi går gjennom hvordan du ønsker at samtaler skal håndteres, hvilken informasjon vi trenger, og hvordan vi best representerer bedriften din.",
+    title: "Vi kartlegger bedriften din gratis",
+    desc: "Helt uforpliktende går vi gjennom hvordan du ønsker at samtaler skal håndteres, hvilken informasjon vi trenger, og hvordan vi best representerer bedriften din.",
   },
   {
     icon: PhoneForwarded,
     num: "02",
-    title: "Du setter opp viderekobling",
-    desc: "Du videresender telefonen din til et nummer du får av oss. Dette kan vanligvis settes opp raskt via mobil eller operatør.",
+    title: "Gratis onboarding av din bedrift",
+    desc: "Du videresender telefonen din til et nummer du får av oss. Dette kan vanligvis settes opp raskt via mobil eller operatør. Vi onboarder både løsningen og deg som kunde helt gratis.",
   },
   {
     icon: Headphones,
