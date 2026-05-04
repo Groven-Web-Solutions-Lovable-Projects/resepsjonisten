@@ -8,6 +8,7 @@ import logo from "@/assets/logo.png";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useCalculatorSnapshot } from "@/contexts/CalculatorContext";
 
 const perks = [
   { icon: Clock, text: "30 min uforpliktende gjennomgang" },
@@ -15,11 +16,71 @@ const perks = [
   { icon: CheckCircle, text: "Helt gratis — ingen forpliktelser" },
 ];
 
+const demoSchema = z.object({
+  name: z.string().trim().min(1, "Skriv inn navnet ditt").max(200, "Navnet er for langt"),
+  company: z.string().trim().max(200, "Bedriftsnavnet er for langt").optional(),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Skriv inn e-postadressen din")
+    .email("Ugyldig e-postadresse")
+    .max(255, "E-post er for lang"),
+  phone: z.string().trim().max(50, "Telefonnummeret er for langt").optional(),
+  message: z.string().trim().max(2000, "Meldingen er for lang").optional(),
+});
+
 const FinalCTASection = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { snapshot, clearSnapshot } = useCalculatorSnapshot();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const parsed = demoSchema.safeParse({
+      name: String(formData.get("name") ?? ""),
+      company: String(formData.get("company") ?? "") || undefined,
+      email: String(formData.get("email") ?? ""),
+      phone: String(formData.get("phone") ?? "") || undefined,
+      message: String(formData.get("message") ?? "") || undefined,
+    });
+
+    if (!parsed.success) {
+      toast({
+        title: "Sjekk skjemaet",
+        description: parsed.error.issues[0].message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.from("demo_requests").insert({
+      name: parsed.data.name,
+      company: parsed.data.company ?? null,
+      email: parsed.data.email,
+      phone: parsed.data.phone ?? null,
+      message: parsed.data.message ?? null,
+      source: snapshot?.source ?? "contact",
+      calculator_data: snapshot?.data ?? null,
+      calculator_summary: snapshot?.summary ?? null,
+      user_agent:
+        typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
+    });
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: "Noe gikk galt",
+        description: "Kunne ikke sende henvendelsen. Prøv igjen, eller ring oss direkte.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    clearSnapshot();
     setSubmitted(true);
   };
 
@@ -132,18 +193,26 @@ const FinalCTASection = () => {
                   Fyll ut skjemaet — vi kontakter deg innen 24 timer.
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {snapshot && (
+                    <div className="rounded-lg bg-primary/5 border border-primary/20 px-3 py-2 text-xs text-primary flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      {snapshot.source === "pricing"
+                        ? "Din priskalkulator sendes med henvendelsen"
+                        : "Tallene fra tapt-samtale-kalkulatoren sendes med henvendelsen"}
+                    </div>
+                  )}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs font-semibold text-foreground mb-1.5 block uppercase tracking-wide">
                         Navn
                       </label>
-                      <Input placeholder="Ditt navn" required className="bg-background" />
+                      <Input name="name" placeholder="Ditt navn" required maxLength={200} className="bg-background" />
                     </div>
                     <div>
                       <label className="text-xs font-semibold text-foreground mb-1.5 block uppercase tracking-wide">
                         Bedrift
                       </label>
-                      <Input placeholder="Bedriftsnavn" className="bg-background" />
+                      <Input name="company" placeholder="Bedriftsnavn" maxLength={200} className="bg-background" />
                     </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -151,13 +220,13 @@ const FinalCTASection = () => {
                       <label className="text-xs font-semibold text-foreground mb-1.5 block uppercase tracking-wide">
                         E-post
                       </label>
-                      <Input type="email" placeholder="din@epost.no" required className="bg-background" />
+                      <Input name="email" type="email" placeholder="din@epost.no" required maxLength={255} className="bg-background" />
                     </div>
                     <div>
                       <label className="text-xs font-semibold text-foreground mb-1.5 block uppercase tracking-wide">
                         Telefon
                       </label>
-                      <Input type="tel" placeholder="+47 000 00 000" className="bg-background" />
+                      <Input name="phone" type="tel" placeholder="+47 000 00 000" maxLength={50} className="bg-background" />
                     </div>
                   </div>
                   <div>
@@ -165,14 +234,16 @@ const FinalCTASection = () => {
                       Melding
                     </label>
                     <Textarea
+                      name="message"
                       placeholder="Fortell oss litt om bedriften din og hva du trenger hjelp med..."
                       rows={3}
+                      maxLength={2000}
                       className="bg-background"
                     />
                   </div>
-                  <Button variant="hero" size="xl" type="submit" className="w-full">
+                  <Button variant="hero" size="xl" type="submit" disabled={loading} className="w-full">
                     <Sparkles className="w-4 h-4" />
-                    Book gratis demo nå
+                    {loading ? "Sender ..." : "Book gratis demo nå"}
                   </Button>
                   <p className="text-xs text-muted-foreground text-center">
                     Ingen bindingstid · Svar innen 24 timer

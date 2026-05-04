@@ -21,6 +21,7 @@ import {
   formatKr,
   type PricingConfig,
 } from "@/lib/pricing";
+import { useCalculatorSnapshot } from "@/contexts/CalculatorContext";
 
 /** Info-knapp som åpner popover med fyldigere forklaring. Klikkbar på alle enheter. */
 const InfoTip = ({ title, text }: { title: string; text: string }) => (
@@ -161,11 +162,44 @@ const AddonRow = ({
 const PricingSection = () => {
   const [config, setConfig] = useState<PricingConfig>(defaultConfig);
   const result = useMemo(() => calculatePrice(config), [config]);
+  const { setSnapshot } = useCalculatorSnapshot();
 
   const update = <K extends keyof PricingConfig>(key: K, value: PricingConfig[K]) =>
     setConfig((c) => ({ ...c, [key]: value }));
 
   const extraHours = Math.max(0, config.hours - PRICING.baseHours);
+
+  const captureSnapshot = () => {
+    const summary = [
+      `Pakke: ${formatKr(result.monthly)}/mnd (${result.contractMonths} mnd binding)`,
+      `Åpningstider: ${config.hours} t/dag`,
+      ...result.lines.map((l) => `${l.label}: ${formatKr(l.amount)}`),
+      result.discountRate > 0
+        ? `Bindingsrabatt: −${Math.round(result.discountRate * 100)} %`
+        : null,
+      `Total over ${result.contractMonths} mnd: ${formatKr(result.contractTotal)}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    setSnapshot({
+      source: "pricing",
+      summary,
+      data: {
+        config,
+        result: {
+          lines: result.lines,
+          subtotal: result.subtotal,
+          discountRate: result.discountRate,
+          discountAmount: result.discountAmount,
+          monthly: result.monthly,
+          contractMonths: result.contractMonths,
+          contractTotal: result.contractTotal,
+        },
+      },
+      capturedAt: "",
+    });
+  };
 
   return (
     <section id="priser" className="py-20 bg-card">
@@ -371,7 +405,9 @@ const PricingSection = () => {
               size="xl"
               className="mt-5 w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
             >
-              <a href="#kontakt">Book gratis demo</a>
+              <a href="#kontakt" onClick={captureSnapshot}>
+                Book gratis demo
+              </a>
             </Button>
             <Button
               asChild
