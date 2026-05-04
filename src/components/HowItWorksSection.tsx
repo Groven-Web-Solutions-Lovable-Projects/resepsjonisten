@@ -7,13 +7,13 @@ const steps = [
   {
     icon: Search,
     num: "01",
-    title: "Vi kartlegger bedriften din gratis",
+    title: 'Vi kartlegger bedriften din <span class="text-accent font-extrabold underline decoration-accent/60 underline-offset-4">gratis</span>',
     desc: "Helt uforpliktende går vi gjennom hvordan du ønsker at samtaler skal håndteres, hvilken informasjon vi trenger, og hvordan vi best representerer bedriften din.",
   },
   {
     icon: PhoneForwarded,
     num: "02",
-    title: "Gratis onboarding av din bedrift",
+    title: '<span class="text-accent font-extrabold underline decoration-accent/60 underline-offset-4">Gratis</span> onboarding av din bedrift',
     desc: "Du videresender telefonen din til et nummer du får av oss. Dette kan vanligvis settes opp raskt via mobil eller operatør. Vi onboarder både løsningen og deg som kunde helt gratis.",
   },
   {
@@ -87,7 +87,10 @@ const HowItWorksSection = () => (
             <span className="inline-block mt-5 text-[10px] font-mono text-white/50 uppercase tracking-[0.2em]">
               Steg {step.num}
             </span>
-            <h3 className="mt-2 text-xl font-bold text-white">{step.title}</h3>
+            <h3
+              className="mt-2 text-xl font-bold text-white"
+              dangerouslySetInnerHTML={{ __html: step.title }}
+            />
             <p className="mt-3 text-white/60 leading-relaxed">{step.desc}</p>
           </motion.div>
         ))}
