@@ -4,6 +4,7 @@ import { PhoneOff, TrendingDown, CalendarDays, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { useCalculatorSnapshot } from "@/contexts/CalculatorContext";
 
 /** Norsk tallformat: "12 500 kr" – bruker non-breaking space som tusenskille. */
 const formatKr = (n: number) => {
@@ -139,10 +140,36 @@ const LostCallsCalculator = () => {
   const [callsPerDay, setCallsPerDay] = useState(20);
   const [revenuePerCall, setRevenuePerCall] = useState(1500);
   const [missedPercent, setMissedPercent] = useState(30);
+  const { setSnapshot } = useCalculatorSnapshot();
 
   const lostPerDay = callsPerDay * revenuePerCall * (missedPercent / 100);
   const lostPerMonth = lostPerDay * 22;
   const lostPerYear = lostPerDay * 250;
+
+  const captureSnapshot = () => {
+    const summary = [
+      `Antall samtaler/dag: ${callsPerDay}`,
+      `Inntekt per samtale: ${formatKr(revenuePerCall)}`,
+      `Andel ubesvarte: ${missedPercent} %`,
+      `Tapt per dag: ${formatKr(lostPerDay)}`,
+      `Tapt per måned (22 dager): ${formatKr(lostPerMonth)}`,
+      `Tapt per år (250 dager): ${formatKr(lostPerYear)}`,
+    ].join("\n");
+
+    setSnapshot({
+      source: "lost-calls",
+      summary,
+      data: {
+        callsPerDay,
+        revenuePerCall,
+        missedPercent,
+        lostPerDay,
+        lostPerMonth,
+        lostPerYear,
+      },
+      capturedAt: "",
+    });
+  };
 
   return (
     <section id="tapt-samtale" className="py-20 bg-background">
@@ -260,7 +287,7 @@ const LostCallsCalculator = () => {
                 variant="secondary"
                 className="w-full bg-background text-primary hover:bg-background/90 font-semibold"
               >
-                <a href="#kontakt">
+                <a href="#kontakt" onClick={captureSnapshot}>
                   Book gratis demo
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </a>
