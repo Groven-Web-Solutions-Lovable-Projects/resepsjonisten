@@ -168,11 +168,11 @@ const HeroSection = () => (
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-xl">
           <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
-            Mist aldri en viktig{" "}
-            <span className="gradient-text">kundehenvendelse</span> igjen
+            Du jobber. Vi tar{" "}
+            <span className="gradient-text">telefonen</span> for deg.
           </motion.h1>
           <motion.p variants={fadeUp} className="mt-6 text-lg text-muted-foreground leading-relaxed">
-            Vi fungerer som resepsjonisten for bedriften din og svarer telefonen på dine vegne. Vi tar imot beskjeder, videresender samtaler og håndterer booking, slik at du kan fokusere på jobben din uten å bli avbrutt.
+            Vi er din eksterne kundeserviceavdeling – ekte mennesker og smart AI som svarer på vegne av deg, døgnet rundt. Slik mister du aldri en kunde, uansett hvor travel hverdagen din er.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
             <a href="#kontakt"><Button variant="hero" size="xl">Book gratis demo</Button></a>
