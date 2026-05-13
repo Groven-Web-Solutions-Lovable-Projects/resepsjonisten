@@ -25,40 +25,99 @@ const stats: Stat[] = [
 ];
 
 const companies = [
-  "Øhres Auto AS",
-  "Negassie Holding AS",
-  "NGT AS",
-  "Pescator AB",
-  "Svenska Industrihotellet AB",
-  "OIV7B AS",
-  "Pepzi AS",
   "FinnAI AS",
+  "Svenska Industrihotellet AB",
+  "Pescator AB",
+  "Negassie Holding AS",
+  "OIV7B AS",
+  "Øhres Auto AS",
+  "NGT AS",
+  "Pepzi AS",
+  "Fine Negler AS",
+  "Lashes By Kasja",
+  "Clinica AS",
+  "Waypoint Maritime AS",
+  "Blindleia Kiropraktor AS",
 ];
 
 const testimonials = [
   {
-    name: "Morten Eriksen",
-    company: "Øhres Auto AS",
-    text: "Etter at vi begynte å bruke Resepsjonisten har vi ikke mistet en eneste kundehenvendelse. Fantastisk service og profesjonelt team!",
-    role: "Daglig leder",
+    name: "Adiam Negassie",
+    role: "Styreleder",
+    company: "FinnAI AS",
+    text: "Resepsjonisten har gitt oss en helt ny struktur på kundehenvendelser. Vi mister ikke lenger leads, og oppfølgingen skjer raskt og profesjonelt. Dette har direkte påvirket salget vårt positivt. Anbefales på det sterkeste.",
   },
   {
-    name: "Sara Lindström",
+    name: "Jonas Skogam",
+    role: "",
+    company: "Svenska Industrihotellet AB",
+    text: "Vi har fått en langt mer profesjonell håndtering av alle henvendelser etter at vi startet samarbeidet. Resepsjonisten sørger for at både eksisterende og nye kunder blir fulgt opp på en strukturert måte. Det gir oss mer tid til drift og utvikling.",
+  },
+  {
+    name: "Jonas Skogam",
+    role: "",
     company: "Pescator AB",
-    text: "Vi trengte en løsning for å håndtere telefoner mens vi var opptatt med kunder. Resepsjonisten løste dette perfekt – anbefales varmt.",
-    role: "Kontorsjef",
+    text: "Rask respons og god oppfølging har vært avgjørende for oss. Resepsjonisten fungerer som en forlengelse av vårt eget team, og kundene våre merker ikke forskjell. Dette har løftet servicenivået vårt betydelig.",
   },
   {
-    name: "Ahmed Negassie",
+    name: "Adiam Negassie",
+    role: "",
     company: "Negassie Holding AS",
-    text: "Profesjonell og pålitelig. Våre kunder tror de snakker med vår egen resepsjonist. Det har gjort en stor forskjell for omdømmet vårt.",
-    role: "CEO",
+    text: "Vi har flere selskaper og henvendelser. Resepsjonisten gir oss kontroll og sørger for at ingenting faller mellom stolene. En effektiv og lønnsom løsning.",
   },
   {
-    name: "Kristine Haugen",
+    name: "Tommy Nordengen",
+    role: "",
+    company: "OIV7B AS",
+    text: "Enkel oppstart, profesjonell gjennomføring og tydelig effekt. Vi opplever bedre flyt i hverdagen og mer fornøyde kunder. Resepsjonisten leverer akkurat det de lover.",
+  },
+  {
+    name: "Tommy Nordengen",
+    role: "",
+    company: "Øhres Auto AS",
+    text: "Telefonen blir alltid besvart, og kundene får rask hjelp. Dette har gitt oss flere bookinger og bedre kapasitetsutnyttelse på verkstedet. En investering som raskt betaler seg. Jeg startet Resepsjonisten pga egne behov og konseptet har virkelig levd opp til egne forventninger.",
+  },
+  {
+    name: "Styreleder",
+    role: "",
     company: "NGT AS",
-    text: "Enkel oppstart og utmerket kundebehandling. Vi sparer tid hver eneste dag takket være Resepsjonisten.",
-    role: "Administrasjonssjef",
+    text: "Resepsjonisten har gitt oss bedre struktur og oversikt på alle henvendelser. Oppfølgingen er systematisk, og vi får utnyttet hver kunde bedre. Veldig fornøyd med samarbeidet.",
+  },
+  {
+    name: "Styreleder",
+    role: "",
+    company: "Pepzi AS",
+    text: "Vi ønsket en løsning som både var fleksibel og profesjonell – det fikk vi. Resepsjonisten håndterer kundedialogen effektivt og bidrar til økt konvertering. Anbefales.",
+  },
+  {
+    name: "Jostein Sørstrønen",
+    role: "",
+    company: "Fine Negler AS",
+    text: "Timeboken vår er mye bedre fylt opp etter at vi startet med Resepsjonisten. De følger opp kunder og sørger for at vi ikke mister bookinger. Enkelt, effektivt og veldig verdifullt.",
+  },
+  {
+    name: "Katarzyna Natalia Rzepecka",
+    role: "Styreleder",
+    company: "Lashes By Kasja",
+    text: "Vi har fått en mye mer profesjonell kundedialog og raskere responstid. Resepsjonisten gjør en solid jobb hver eneste dag. Dette merkes godt på kundetilfredsheten.",
+  },
+  {
+    name: "Jay",
+    role: "",
+    company: "Clinica AS",
+    text: "For oss er tilgjengelighet avgjørende. Resepsjonisten sørger for at pasientene alltid får svar, og at henvendelser håndteres riktig. Dette gir trygghet både for oss og kundene våre.",
+  },
+  {
+    name: "Sondre",
+    role: "Daglig Leder",
+    company: "Waypoint Maritime AS",
+    text: "I en bransje hvor timing er kritisk, er rask respons helt avgjørende. Resepsjonisten leverer på dette hver gang. Vi har fått bedre kontroll og mer effektiv drift.",
+  },
+  {
+    name: "Jeremy Pont",
+    role: "",
+    company: "Blindleia Kiropraktor AS",
+    text: "Pasientene våre får rask respons og enkel booking. Resepsjonisten fungerer sømløst sammen med vår drift og gir oss mer tid til å fokusere på behandling. Veldig fornøyd.",
   },
 ];
 
@@ -120,15 +179,29 @@ const StatCard = ({ stat, index, start }: { stat: Stat; index: number; start: bo
 const TestimonialCarousel = () => {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [perPage, setPerPage] = useState(1);
+
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      setPerPage(w >= 1280 ? 3 : w >= 768 ? 2 : 1);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  const pageCount = Math.ceil(testimonials.length / perPage);
+  const safeCurrent = current % pageCount;
 
   const next = useCallback(() => {
     setDirection(1);
-    setCurrent((c) => (c + 1) % testimonials.length);
-  }, []);
+    setCurrent((c) => (c + 1) % pageCount);
+  }, [pageCount]);
   const prev = useCallback(() => {
     setDirection(-1);
-    setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
-  }, []);
+    setCurrent((c) => (c - 1 + pageCount) % pageCount);
+  }, [pageCount]);
 
   useEffect(() => {
     const timer = setInterval(next, 6000);
@@ -141,32 +214,46 @@ const TestimonialCarousel = () => {
     exit: (d: number) => ({ x: d > 0 ? -200 : 200, opacity: 0 }),
   };
 
-  const t = testimonials[current];
+  const pageItems = testimonials.slice(
+    safeCurrent * perPage,
+    safeCurrent * perPage + perPage,
+  );
 
   return (
-    <div className="relative max-w-3xl mx-auto">
-      <div className="relative overflow-hidden rounded-2xl bg-white/[0.06] border border-white/10 p-8 md:p-10 min-h-[260px] flex items-center backdrop-blur-sm">
+    <div className="relative max-w-6xl mx-auto">
+      <div className="relative overflow-hidden min-h-[300px] flex items-stretch">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
-            key={current}
+            key={safeCurrent}
             custom={direction}
             variants={variants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            className="w-full text-center"
+            className="w-full grid gap-5 md:grid-cols-2 xl:grid-cols-3"
           >
-            <div className="flex justify-center gap-1 mb-5">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-              ))}
-            </div>
-            <p className="text-base md:text-lg text-white/90 leading-relaxed italic">"{t.text}"</p>
-            <div className="mt-6">
-              <p className="font-bold text-white">{t.name}</p>
-              <p className="text-sm text-white/60">{t.role}, {t.company}</p>
-            </div>
+            {pageItems.map((t, i) => (
+              <div
+                key={`${safeCurrent}-${i}`}
+                className="rounded-2xl bg-white/[0.06] border border-white/10 p-6 md:p-7 backdrop-blur-sm flex flex-col"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, k) => (
+                    <Star key={k} className="w-4 h-4 fill-accent text-accent" />
+                  ))}
+                </div>
+                <p className="text-sm md:text-base text-white/90 leading-relaxed italic flex-1">
+                  "{t.text}"
+                </p>
+                <div className="mt-5 pt-4 border-t border-white/10">
+                  <p className="font-bold text-white text-sm">{t.name}</p>
+                  <p className="text-xs text-white/60">
+                    {[t.role, t.company].filter(Boolean).join(", ")}
+                  </p>
+                </div>
+              </div>
+            ))}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -180,17 +267,17 @@ const TestimonialCarousel = () => {
           <ChevronLeft className="w-4 h-4" />
         </button>
         <div className="flex gap-2">
-          {testimonials.map((_, i) => (
+          {Array.from({ length: pageCount }).map((_, i) => (
             <button
               key={i}
               onClick={() => {
-                setDirection(i > current ? 1 : -1);
+                setDirection(i > safeCurrent ? 1 : -1);
                 setCurrent(i);
               }}
               className={`h-2 rounded-full transition-all duration-300 ${
-                i === current ? "bg-accent w-6" : "bg-white/30 hover:bg-white/50 w-2"
+                i === safeCurrent ? "bg-accent w-6" : "bg-white/30 hover:bg-white/50 w-2"
               }`}
-              aria-label={`Referanse ${i + 1}`}
+              aria-label={`Side ${i + 1}`}
             />
           ))}
         </div>
