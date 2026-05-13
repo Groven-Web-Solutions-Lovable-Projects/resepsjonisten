@@ -424,6 +424,16 @@ const PricingSection = () => {
                   checked={config.ai247}
                   onChange={(v) => update("ai247", v)}
                 />
+                <ToggleService
+                  icon={PhoneCall}
+                  title="AirCall lisens"
+                  desc="Egen bruker med statistikk og samtalelogg"
+                  info={PRICING.descriptions.aircall}
+                  price={0}
+                  priceText="Pris på forespørsel"
+                  checked={config.aircall}
+                  onChange={(v) => update("aircall", v)}
+                />
               </div>
             </section>
 
