@@ -64,7 +64,7 @@ const FinalCTASection = () => {
       phone: parsed.data.phone ?? null,
       message: parsed.data.message ?? null,
       source: snapshot?.source ?? "contact",
-      calculator_data: snapshot?.data ?? null,
+      calculator_data: (snapshot?.data ?? null) as never,
       calculator_summary: snapshot?.summary ?? null,
       user_agent:
         typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
