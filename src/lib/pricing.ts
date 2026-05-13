@@ -46,7 +46,7 @@ export const PRICING = {
     aircall:
       "Ønsker du egen bruker i Aircall for å se dine egne statistikker, samt få tilgang til samtalelogg og relevant rapportering? Dette kan legges til som egen lisens etter behov.",
     contract:
-      "Lengre bindingstid gir lavere månedspris:\n\n• 1 måned: ingen binding\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt\n• 24 måneder: 15 % rabatt",
+      "Lengre bindingstid gir lavere månedspris:\n\n• 3 måneder: ingen rabatt\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt\n• 24 måneder: 15 % rabatt",
   },
   email: {
     label: "E-post per måned",
@@ -93,7 +93,7 @@ export const PRICING = {
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 0, priceText: "Pris på forespørsel" },
   contracts: [
-    { months: 1, label: "1 måned", discount: 0 },
+    { months: 3, label: "3 måneder", discount: 0 },
     { months: 6, label: "6 måneder", discount: 0.05 },
     { months: 12, label: "12 måneder", discount: 0.1 },
     { months: 24, label: "24 måneder", discount: 0.15 },
@@ -141,7 +141,7 @@ export const defaultConfig: PricingConfig = {
   forwarding: false,
   ai247: false,
   aircall: false,
-  contractMonths: 12,
+  contractMonths: 3,
 };
 
 export function calculatePrice(c: PricingConfig): PricingResult {
