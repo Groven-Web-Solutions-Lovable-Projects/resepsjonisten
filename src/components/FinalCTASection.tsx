@@ -426,6 +426,12 @@ const Footer = () => (
                 <span>Org.nr 936 065 619</span>
               </div>
             </li>
+            <li>
+              <div className="flex items-center gap-2 text-background/80">
+                <Building2 className="w-4 h-4 text-background/50" />
+                <span>Kontonummer 2320.31.09679</span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
