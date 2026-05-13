@@ -40,6 +40,9 @@
     --primary-glow: 310 60% 50%;
     --surface-elevated: 0 0% 100%;
 
+    --success: 142 55% 45%;
+    --success-foreground: 0 0% 100%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -70,6 +73,8 @@
     --border: 270 15% 20%;
     --input: 270 15% 20%;
     --ring: 276 52% 60%;
+    --success: 142 50% 55%;
+    --success-foreground: 0 0% 10%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
