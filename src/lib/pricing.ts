@@ -41,6 +41,10 @@ export const PRICING = {
       "Aktiver muligheten for å overføre viktige samtaler videre til riktig person i din virksomhet.",
     ai247:
       "Aktiver tilgjengelighet døgnet rundt – også på kvelder, netter, helger og helligdager.",
+    phoneSubscription:
+      "Telefonabonnement som følger med Fysisk Resepsjonist. Inkluderer linje og nødvendig oppsett.",
+    aircall:
+      "Ønsker du egen bruker i Aircall for å se dine egne statistikker, samt få tilgang til samtalelogg og relevant rapportering? Dette kan legges til som egen lisens etter behov.",
     contract:
       "Lengre bindingstid gir lavere månedspris:\n\n• 1 måned: ingen binding\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt\n• 24 måneder: 15 % rabatt",
   },
@@ -84,8 +88,10 @@ export const PRICING = {
     ],
   },
   recording: { label: "Lydopptak av samtaler", price: 490 },
-  forwarding: { label: "Samtaleoverføring", price: 290 },
+  forwarding: { label: "Samtaleoverføring", price: 99 },
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990 },
+  phoneSubscription: { label: "Telefonabonnement", price: 250 },
+  aircall: { label: "AirCall lisens", price: 0, priceText: "Pris på forespørsel" },
   contracts: [
     { months: 1, label: "1 måned", discount: 0 },
     { months: 6, label: "6 måneder", discount: 0.05 },
@@ -106,6 +112,7 @@ export type PricingConfig = {
   recording: boolean;
   forwarding: boolean;
   ai247: boolean;
+  aircall: boolean;
   contractMonths: number;
 };
 
@@ -133,14 +140,19 @@ export const defaultConfig: PricingConfig = {
   recording: false,
   forwarding: false,
   ai247: false,
+  aircall: false,
   contractMonths: 12,
 };
 
 export function calculatePrice(c: PricingConfig): PricingResult {
   const recType = RECEPTIONIST_TYPES.find((t) => t.value === c.receptionistType) ?? RECEPTIONIST_TYPES[0];
   const lines: LineItem[] = [
-    { label: `Grunnpris (${recType.summaryLabel})`, amount: PRICING.basePrice },
+    { label: recType.summaryLabel, amount: PRICING.basePrice },
   ];
+
+  if (c.receptionistType === "fysisk") {
+    lines.push({ label: PRICING.phoneSubscription.label, amount: PRICING.phoneSubscription.price });
+  }
 
   const extraHours = Math.max(0, c.hours - PRICING.baseHours);
   if (extraHours > 0) {
@@ -167,6 +179,7 @@ export function calculatePrice(c: PricingConfig): PricingResult {
   if (c.recording) lines.push({ label: PRICING.recording.label, amount: PRICING.recording.price });
   if (c.forwarding) lines.push({ label: PRICING.forwarding.label, amount: PRICING.forwarding.price });
   if (c.ai247) lines.push({ label: PRICING.ai247.label, amount: PRICING.ai247.price });
+  if (c.aircall) lines.push({ label: `${PRICING.aircall.label} (${PRICING.aircall.priceText})`, amount: 0 });
 
   const subtotal = lines.reduce((s, l) => s + l.amount, 0);
   const contract =
