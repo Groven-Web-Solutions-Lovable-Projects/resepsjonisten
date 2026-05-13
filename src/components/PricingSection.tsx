@@ -12,6 +12,7 @@ import {
   MessagesSquare,
   Send,
   UserCog,
+  PhoneCall,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -76,6 +77,7 @@ const ToggleService = ({
   desc,
   info,
   price,
+  priceText,
   checked,
   onChange,
 }: {
@@ -84,23 +86,24 @@ const ToggleService = ({
   desc: string;
   info?: string;
   price: number;
+  priceText?: string;
   checked: boolean;
   onChange: (v: boolean) => void;
 }) => (
   <div
     className={cn(
       "flex items-center justify-between gap-4 rounded-lg border bg-background p-3 transition-colors",
-      checked ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
+      checked ? "border-success bg-success/10" : "border-border hover:border-primary/40",
     )}
   >
     <div className="flex items-center gap-3 min-w-0 flex-1">
       <div
         className={cn(
           "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
-          checked ? "gradient-primary" : "bg-muted",
+          checked ? "bg-success" : "bg-muted",
         )}
       >
-        <Icon className={cn("w-4 h-4", checked ? "text-primary-foreground" : "text-muted-foreground")} />
+        <Icon className={cn("w-4 h-4", checked ? "text-success-foreground" : "text-muted-foreground")} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
@@ -112,7 +115,7 @@ const ToggleService = ({
     </div>
     <div className="flex items-center gap-3 shrink-0">
       <span className="text-sm font-semibold text-foreground tabular-nums hidden sm:inline">
-        +{formatKr(price)}
+        {priceText ?? `+${formatKr(price)}`}
       </span>
       <Switch checked={checked} onCheckedChange={onChange} aria-label={title} />
     </div>
@@ -157,7 +160,7 @@ const TieredService = ({
     <div
       className={cn(
         "rounded-lg border bg-background p-3 transition-colors",
-        active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
+        active ? "border-success bg-success/10" : "border-border hover:border-primary/40",
       )}
     >
       <div className="flex items-center justify-between gap-3">
@@ -165,10 +168,10 @@ const TieredService = ({
           <div
             className={cn(
               "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
-              active ? "gradient-primary" : "bg-muted",
+              active ? "bg-success" : "bg-muted",
             )}
           >
-            <Icon className={cn("w-4 h-4", active ? "text-primary-foreground" : "text-muted-foreground")} />
+            <Icon className={cn("w-4 h-4", active ? "text-success-foreground" : "text-muted-foreground")} />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
@@ -420,6 +423,16 @@ const PricingSection = () => {
                   price={PRICING.ai247.price}
                   checked={config.ai247}
                   onChange={(v) => update("ai247", v)}
+                />
+                <ToggleService
+                  icon={PhoneCall}
+                  title="AirCall lisens"
+                  desc="Egen bruker med statistikk og samtalelogg"
+                  info={PRICING.descriptions.aircall}
+                  price={0}
+                  priceText="Pris på forespørsel"
+                  checked={config.aircall}
+                  onChange={(v) => update("aircall", v)}
                 />
               </div>
             </section>
