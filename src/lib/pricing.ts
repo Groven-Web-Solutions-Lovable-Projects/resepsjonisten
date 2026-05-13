@@ -141,7 +141,7 @@ export const defaultConfig: PricingConfig = {
   forwarding: false,
   ai247: false,
   aircall: false,
-  contractMonths: 12,
+  contractMonths: 3,
 };
 
 export function calculatePrice(c: PricingConfig): PricingResult {
