@@ -1,10 +1,23 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Mic, PhoneForwarded, Zap, Clock, Info } from "lucide-react";
+import {
+  Sparkles,
+  Mic,
+  PhoneForwarded,
+  Zap,
+  Clock,
+  Info,
+  Mail,
+  MessageSquare,
+  MessagesSquare,
+  Send,
+  UserCog,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -16,14 +29,16 @@ import {
 import { cn } from "@/lib/utils";
 import {
   PRICING,
+  RECEPTIONIST_TYPES,
+  SOCIAL_PLATFORMS,
   calculatePrice,
   defaultConfig,
   formatKr,
   type PricingConfig,
+  type SocialPlatform,
 } from "@/lib/pricing";
 import { useCalculatorSnapshot } from "@/contexts/CalculatorContext";
 
-/** Info-knapp som åpner popover med fyldigere forklaring. Klikkbar på alle enheter. */
 const InfoTip = ({ title, text }: { title: string; text: string }) => (
   <Popover>
     <PopoverTrigger asChild>
@@ -51,64 +66,11 @@ const InfoTip = ({ title, text }: { title: string; text: string }) => (
 
 type NumberOption = { value: number; label: string; price: number };
 
-/** Tekst i dropdown-listen: viser "Ingen" alene, ellers "Etikett · +pris/mnd". */
 const optionRowLabel = (o: NumberOption) =>
   o.value === 0 ? o.label : `${o.label} · +${formatKr(o.price)}/mnd`;
 
-/** Tekst i selve trigger-feltet: kortere — bare valget. */
-const triggerLabel = (o: NumberOption) => o.label;
-
-const SelectField = ({
-  label,
-  helper,
-  info,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  helper?: string;
-  info?: string;
-  value: number;
-  options: readonly NumberOption[];
-  onChange: (v: number) => void;
-}) => {
-  const current = options.find((o) => o.value === value) ?? options[0];
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-baseline justify-between gap-2">
-        <div className="flex items-center gap-1.5">
-          <Label className="text-sm font-medium text-foreground">{label}</Label>
-          {info && <InfoTip title={label} text={info} />}
-        </div>
-        {helper && <span className="text-xs text-muted-foreground">{helper}</span>}
-      </div>
-      <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
-        <SelectTrigger className="h-11">
-          <SelectValue>
-            <span className="flex items-center gap-2">
-              <span className="font-medium">{triggerLabel(current)}</span>
-              {current.price > 0 && (
-                <span className="text-xs text-muted-foreground">
-                  +{formatKr(current.price)}/mnd
-                </span>
-              )}
-            </span>
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((o) => (
-            <SelectItem key={o.value} value={String(o.value)}>
-              {optionRowLabel(o)}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-};
-
-const AddonRow = ({
+/** Toggle-tjeneste (på/av) */
+const ToggleService = ({
   icon: Icon,
   title,
   desc,
@@ -143,9 +105,7 @@ const AddonRow = ({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <div className="text-sm font-medium text-foreground">{title}</div>
-          {info && (
-            <InfoTip title={title} text={info} />
-          )}
+          {info && <InfoTip title={title} text={info} />}
         </div>
         <div className="text-xs text-muted-foreground">{desc}</div>
       </div>
@@ -159,6 +119,106 @@ const AddonRow = ({
   </div>
 );
 
+/** Tiered tjeneste (dropdown med nivåer) — med valgfrie plattform-checkboxes */
+const TieredService = ({
+  icon: Icon,
+  title,
+  info,
+  value,
+  options,
+  onChange,
+  platforms,
+  selectedPlatforms,
+  onPlatformsChange,
+}: {
+  icon: typeof Mail;
+  title: string;
+  info?: string;
+  value: number;
+  options: readonly NumberOption[];
+  onChange: (v: number) => void;
+  platforms?: readonly { value: SocialPlatform; label: string }[];
+  selectedPlatforms?: SocialPlatform[];
+  onPlatformsChange?: (v: SocialPlatform[]) => void;
+}) => {
+  const active = value > 0;
+  const current = options.find((o) => o.value === value) ?? options[0];
+
+  const togglePlatform = (p: SocialPlatform) => {
+    if (!onPlatformsChange || !selectedPlatforms) return;
+    onPlatformsChange(
+      selectedPlatforms.includes(p)
+        ? selectedPlatforms.filter((x) => x !== p)
+        : [...selectedPlatforms, p],
+    );
+  };
+
+  return (
+    <div
+      className={cn(
+        "rounded-lg border bg-background p-3 transition-colors",
+        active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
+      )}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div
+            className={cn(
+              "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+              active ? "gradient-primary" : "bg-muted",
+            )}
+          >
+            <Icon className={cn("w-4 h-4", active ? "text-primary-foreground" : "text-muted-foreground")} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <div className="text-sm font-medium text-foreground">{title}</div>
+              {info && <InfoTip title={title} text={info} />}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {active ? `${current.label} · +${formatKr(current.price)}/mnd` : "Ikke inkludert"}
+            </div>
+          </div>
+        </div>
+        <div className="shrink-0 w-[150px] sm:w-[180px]">
+          <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
+            <SelectTrigger className="h-9 text-sm">
+              <SelectValue>{current.label}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((o) => (
+                <SelectItem key={o.value} value={String(o.value)}>
+                  {optionRowLabel(o)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {active && platforms && selectedPlatforms && onPlatformsChange && (
+        <div className="mt-3 pl-12">
+          <div className="text-xs text-muted-foreground mb-1.5">Velg plattformer:</div>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {platforms.map((p) => (
+              <label
+                key={p.value}
+                className="flex items-center gap-2 text-sm text-foreground cursor-pointer"
+              >
+                <Checkbox
+                  checked={selectedPlatforms.includes(p.value)}
+                  onCheckedChange={() => togglePlatform(p.value)}
+                />
+                {p.label}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const PricingSection = () => {
   const [config, setConfig] = useState<PricingConfig>(defaultConfig);
   const result = useMemo(() => calculatePrice(config), [config]);
@@ -170,10 +230,18 @@ const PricingSection = () => {
   const extraHours = Math.max(0, config.hours - PRICING.baseHours);
 
   const captureSnapshot = () => {
+    const recType = RECEPTIONIST_TYPES.find((t) => t.value === config.receptionistType)!;
     const summary = [
+      `Resepsjonist-type: ${recType.label}`,
       `Pakke: ${formatKr(result.monthly)}/mnd (${result.contractMonths} mnd binding)`,
       `Åpningstider: ${config.hours} t/dag`,
       ...result.lines.map((l) => `${l.label}: ${formatKr(l.amount)}`),
+      config.social > 0 && config.socialPlatforms.length > 0
+        ? `Meldinger – plattformer: ${config.socialPlatforms.join(", ")}`
+        : null,
+      config.socialPosts > 0 && config.socialPostsPlatforms.length > 0
+        ? `Innlegg – plattformer: ${config.socialPostsPlatforms.join(", ")}`
+        : null,
       result.discountRate > 0
         ? `Bindingsrabatt: −${Math.round(result.discountRate * 100)} %`
         : null,
@@ -221,6 +289,37 @@ const PricingSection = () => {
         <div className="mt-10 max-w-5xl mx-auto grid lg:grid-cols-5 gap-6 items-start">
           {/* Konfigurator */}
           <div className="lg:col-span-3 rounded-2xl border border-border bg-background p-5 sm:p-6 space-y-6">
+            {/* Type resepsjonist */}
+            <section>
+              <div className="flex items-center gap-2 mb-3">
+                <UserCog className="w-4 h-4 text-primary" />
+                <Label className="text-sm font-medium text-foreground">Type resepsjonist</Label>
+                <InfoTip title="Type resepsjonist" text={PRICING.descriptions.receptionist} />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {RECEPTIONIST_TYPES.map((t) => {
+                  const active = config.receptionistType === t.value;
+                  return (
+                    <button
+                      key={t.value}
+                      type="button"
+                      onClick={() => update("receptionistType", t.value)}
+                      className={cn(
+                        "rounded-lg border px-2 py-2.5 text-xs sm:text-sm font-medium transition-colors text-center",
+                        active
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground",
+                      )}
+                    >
+                      {t.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <div className="border-t border-border" />
+
             {/* Åpningstider */}
             <section>
               <div className="flex items-center justify-between gap-3 mb-3">
@@ -253,75 +352,49 @@ const PricingSection = () => {
 
             <div className="border-t border-border" />
 
-            {/* Volum-dropdowns */}
-            <section className="grid sm:grid-cols-2 gap-4">
-              <SelectField
-                label={PRICING.email.label}
-                info={PRICING.descriptions.email}
-                value={config.email}
-                options={PRICING.email.options}
-                onChange={(v) => update("email", v)}
-              />
-              <SelectField
-                label={PRICING.sms.label}
-                info={PRICING.descriptions.sms}
-                value={config.sms}
-                options={PRICING.sms.options}
-                onChange={(v) => update("sms", v)}
-              />
-              <SelectField
-                label="Sosiale medier per måned"
-                helper="FB, IG, TikTok"
-                info={PRICING.descriptions.social}
-                value={config.social}
-                options={PRICING.social.options}
-                onChange={(v) => update("social", v)}
-              />
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-1.5">
-                  <Label className="text-sm font-medium text-foreground">Bindingstid</Label>
-                  <InfoTip title="Bindingstid" text={PRICING.descriptions.contract} />
-                </div>
-                <Select
-                  value={String(config.contractMonths)}
-                  onValueChange={(v) => update("contractMonths", Number(v))}
-                >
-                  <SelectTrigger className="h-11">
-                    <SelectValue>
-                      {(() => {
-                        const c = PRICING.contracts.find((x) => x.months === config.contractMonths)!;
-                        return (
-                          <span className="flex items-center gap-2">
-                            <span className="font-medium">{c.label}</span>
-                            {c.discount > 0 && (
-                              <span className="text-xs text-muted-foreground">
-                                −{Math.round(c.discount * 100)} % rabatt
-                              </span>
-                            )}
-                          </span>
-                        );
-                      })()}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PRICING.contracts.map((c) => (
-                      <SelectItem key={c.months} value={String(c.months)}>
-                        {c.label}
-                        {c.discount > 0 ? ` · −${Math.round(c.discount * 100)} % rabatt` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </section>
-
-            <div className="border-t border-border" />
-
-            {/* Tilleggsvalg */}
+            {/* Tjenester */}
             <section>
-              <Label className="text-sm font-medium text-foreground">Tilleggstjenester</Label>
+              <Label className="text-sm font-medium text-foreground">Tjenester</Label>
               <div className="mt-2 space-y-2">
-                <AddonRow
+                <TieredService
+                  icon={Mail}
+                  title={PRICING.email.label}
+                  info={PRICING.descriptions.email}
+                  value={config.email}
+                  options={PRICING.email.options}
+                  onChange={(v) => update("email", v)}
+                />
+                <TieredService
+                  icon={MessageSquare}
+                  title={PRICING.sms.label}
+                  info={PRICING.descriptions.sms}
+                  value={config.sms}
+                  options={PRICING.sms.options}
+                  onChange={(v) => update("sms", v)}
+                />
+                <TieredService
+                  icon={MessagesSquare}
+                  title={PRICING.social.label}
+                  info={PRICING.descriptions.social}
+                  value={config.social}
+                  options={PRICING.social.options}
+                  onChange={(v) => update("social", v)}
+                  platforms={SOCIAL_PLATFORMS}
+                  selectedPlatforms={config.socialPlatforms}
+                  onPlatformsChange={(v) => update("socialPlatforms", v)}
+                />
+                <TieredService
+                  icon={Send}
+                  title={PRICING.socialPosts.label}
+                  info={PRICING.descriptions.socialPosts}
+                  value={config.socialPosts}
+                  options={PRICING.socialPosts.options}
+                  onChange={(v) => update("socialPosts", v)}
+                  platforms={SOCIAL_PLATFORMS}
+                  selectedPlatforms={config.socialPostsPlatforms}
+                  onPlatformsChange={(v) => update("socialPostsPlatforms", v)}
+                />
+                <ToggleService
                   icon={Mic}
                   title="Lydopptak av samtaler"
                   desc="For kvalitetssikring og dokumentasjon"
@@ -330,7 +403,7 @@ const PricingSection = () => {
                   checked={config.recording}
                   onChange={(v) => update("recording", v)}
                 />
-                <AddonRow
+                <ToggleService
                   icon={PhoneForwarded}
                   title="Samtaleoverføring"
                   desc="Send viktige samtaler videre til riktig person"
@@ -339,7 +412,7 @@ const PricingSection = () => {
                   checked={config.forwarding}
                   onChange={(v) => update("forwarding", v)}
                 />
-                <AddonRow
+                <ToggleService
                   icon={Zap}
                   title="AI utenom åpningstid (24/7)"
                   desc="Vi svarer kundene dine døgnet rundt"
@@ -349,6 +422,46 @@ const PricingSection = () => {
                   onChange={(v) => update("ai247", v)}
                 />
               </div>
+            </section>
+
+            <div className="border-t border-border" />
+
+            {/* Bindingstid */}
+            <section>
+              <div className="flex items-center gap-1.5 mb-2">
+                <Label className="text-sm font-medium text-foreground">Bindingstid</Label>
+                <InfoTip title="Bindingstid" text={PRICING.descriptions.contract} />
+              </div>
+              <Select
+                value={String(config.contractMonths)}
+                onValueChange={(v) => update("contractMonths", Number(v))}
+              >
+                <SelectTrigger className="h-11">
+                  <SelectValue>
+                    {(() => {
+                      const c = PRICING.contracts.find((x) => x.months === config.contractMonths)!;
+                      return (
+                        <span className="flex items-center gap-2">
+                          <span className="font-medium">{c.label}</span>
+                          {c.discount > 0 && (
+                            <span className="text-xs text-muted-foreground">
+                              −{Math.round(c.discount * 100)} % rabatt
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })()}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {PRICING.contracts.map((c) => (
+                    <SelectItem key={c.months} value={String(c.months)}>
+                      {c.label}
+                      {c.discount > 0 ? ` · −${Math.round(c.discount * 100)} % rabatt` : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </section>
           </div>
 
