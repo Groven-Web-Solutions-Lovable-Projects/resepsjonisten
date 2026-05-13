@@ -234,20 +234,26 @@ const PricingSection = () => {
 
   const captureSnapshot = () => {
     const recType = RECEPTIONIST_TYPES.find((t) => t.value === config.receptionistType)!;
+    const contract = PRICING.contracts.find((p) => p.months === result.contractMonths);
     const summary = [
       `Resepsjonist-type: ${recType.label}`,
-      `Pakke: ${formatKr(result.monthly)}/mnd (${result.contractMonths} mnd binding)`,
       `Åpningstider: ${config.hours} t/dag`,
+      "",
+      "Valgte tjenester:",
       ...result.lines.map((l) => `${l.label}: ${formatKr(l.amount)}`),
       config.social > 0 && config.socialPlatforms.length > 0
-        ? `Meldinger – plattformer: ${config.socialPlatforms.join(", ")}`
+        ? `  → Meldinger plattformer: ${config.socialPlatforms.join(", ")}`
         : null,
       config.socialPosts > 0 && config.socialPostsPlatforms.length > 0
-        ? `Innlegg – plattformer: ${config.socialPostsPlatforms.join(", ")}`
+        ? `  → Innlegg plattformer: ${config.socialPostsPlatforms.join(", ")}`
         : null,
+      "",
+      `Subtotal: ${formatKr(result.subtotal)}/mnd`,
       result.discountRate > 0
-        ? `Bindingsrabatt: −${Math.round(result.discountRate * 100)} %`
+        ? `Bindingsrabatt: −${Math.round(result.discountRate * 100)} % (−${formatKr(result.discountAmount)})`
         : null,
+      `Månedspris: ${formatKr(result.monthly)}/mnd`,
+      `Bindingstid: ${contract?.label ?? `${result.contractMonths} mnd`}`,
       `Total over ${result.contractMonths} mnd: ${formatKr(result.contractTotal)}`,
     ]
       .filter(Boolean)
@@ -258,6 +264,7 @@ const PricingSection = () => {
       summary,
       data: {
         config,
+        receptionistTypeLabel: recType.label,
         result: {
           lines: result.lines,
           subtotal: result.subtotal,
