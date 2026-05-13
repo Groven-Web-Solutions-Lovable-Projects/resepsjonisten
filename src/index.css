@@ -30,8 +30,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 270 15% 90%;
-    --input: 270 15% 90%;
+   --border: 270 18% 78%;
+   --input: 270 18% 78%;
     --ring: 276 52% 28%;
 
     --radius: 0.75rem;
@@ -70,8 +70,8 @@
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 270 15% 20%;
-    --input: 270 15% 20%;
+   --border: 270 18% 32%;
+   --input: 270 18% 32%;
     --ring: 276 52% 60%;
     --success: 142 50% 55%;
     --success-foreground: 0 0% 10%;
