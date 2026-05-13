@@ -307,7 +307,7 @@ const CompanyMarquee = () => {
         {doubled.map((name, i) => (
           <div
             key={`${name}-${i}`}
-            className="group flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-br from-accent/30 via-primary/25 to-accent/15 border border-accent/40 text-white text-sm font-semibold whitespace-nowrap shadow-[0_6px_24px_-6px_hsl(var(--accent)/0.55)] backdrop-blur-sm hover:border-accent hover:from-accent/45 hover:to-primary/35 transition-colors"
+            className="group flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-white border border-white text-foreground text-sm font-semibold whitespace-nowrap shadow-[0_6px_24px_-6px_hsl(0_0%_0%/0.25)] hover:bg-white/95 transition-colors"
           >
             <span
               className="inline-block w-2 h-2 rounded-full bg-accent shadow-[0_0_10px_hsl(var(--accent))]"
