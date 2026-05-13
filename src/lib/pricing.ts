@@ -1,5 +1,20 @@
 // Sentralisert prislogikk for Resepsjonisten.no.
-// All justering av priser, valg og rabatter gjøres her.
+
+export const RECEPTIONIST_TYPES = [
+  { value: "ai", label: "AI Resepsjonist", summaryLabel: "AI tjeneste" },
+  { value: "fysisk", label: "Fysisk Resepsjonist", summaryLabel: "Fysisk Resepsjonist" },
+  { value: "kombi", label: "Kombinasjon", summaryLabel: "Kombi (AI og fysisk resepsjonist)" },
+] as const;
+
+export type ReceptionistType = (typeof RECEPTIONIST_TYPES)[number]["value"];
+
+export const SOCIAL_PLATFORMS = [
+  { value: "facebook", label: "Facebook" },
+  { value: "instagram", label: "Instagram" },
+  { value: "tiktok", label: "TikTok" },
+] as const;
+
+export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number]["value"];
 
 export const PRICING = {
   basePrice: 2990,
@@ -8,48 +23,64 @@ export const PRICING = {
   hoursMin: 8,
   hoursMax: 24,
   descriptions: {
+    receptionist:
+      "Velg hvilken type resepsjonist du ønsker. AI Resepsjonist håndterer henvendelser automatisk. Fysisk Resepsjonist gir personlig oppfølging fra et menneske. Kombinasjon bruker AI som førstelinje og menneske ved behov.",
     hours:
-      "Velg hvor mange timer per dag AI-resepsjonisten skal være tilgjengelig for å besvare anrop. Standard kontortid er 8 timer (f.eks. 08:00–16:00). Ønsker du utvidet tilgjengelighet, kan du øke antall timer. Pris justeres automatisk etter valgt åpningstid.",
+      "Velg hvor mange timer per dag resepsjonisten skal være tilgjengelig. Standard kontortid er 8 timer (f.eks. 08:00–16:00). Pris justeres automatisk etter valgt åpningstid.",
     email:
-      "Velg estimert antall e-poster vi skal besvare på vegne av deg per måned. Vi leser, vurderer og besvarer henvendelsene profesjonelt slik at kundene dine får raske svar. Velger du 0, er e-postbesvarelse ikke inkludert.",
+      "Velg estimert antall e-poster vi skal besvare per måned. Vi leser, vurderer og besvarer henvendelsene profesjonelt slik at kundene dine får raske svar.",
     sms:
-      "Velg estimert antall SMS vi skal håndtere per måned – både utgående (f.eks. bekreftelser, påminnelser) og innkommende meldinger fra dine kunder. Velger du 0, er SMS-håndtering ikke inkludert.",
+      "Velg estimert antall SMS vi skal håndtere per måned – både utgående (bekreftelser, påminnelser) og innkommende meldinger. 25 kr per SMS.",
     social:
-      "Velg antall meldinger fra Facebook, TikTok og Instagram vi skal besvare per måned. Vi sørger for at kundehenvendelser i sosiale medier blir besvart raskt og profesjonelt – uansett kanal. Antallet gjelder samlet på tvers av alle plattformer.",
+      "Velg antall meldinger fra sosiale medier vi skal besvare per måned. Du velger selv hvilke plattformer det gjelder.",
+    socialPosts:
+      "Vi publiserer innlegg på dine sosiale medier, gitt at du sender oss bilder og eventuelt råtekst. Vi tilpasser bildetekst, hashtags og publiseringstidspunkt.",
     recording:
-      "Aktiver lydopptak av samtaler for kvalitetssikring, opplæring og dokumentasjon. Alle opptak håndteres i tråd med GDPR, og kunder informeres ved samtalens start. Nyttig for virksomheter som vil dokumentere avtaler eller forbedre kundeservicen over tid.",
+      "Aktiver lydopptak av samtaler for kvalitetssikring og dokumentasjon. Alle opptak håndteres i tråd med GDPR.",
     forwarding:
-      "Aktiver muligheten for å overføre viktige samtaler videre til riktig person i din virksomhet. Vi vurderer henvendelsen og setter samtalen direkte over til deg eller en kollega når det er nødvendig – så ingen viktige saker faller mellom to stoler.",
+      "Aktiver muligheten for å overføre viktige samtaler videre til riktig person i din virksomhet.",
     ai247:
-      "Aktiver tilgjengelighet døgnet rundt – også på kvelder, netter, helger og helligdager. Vår AI-resepsjonist tar imot anrop og henvendelser når kontoret ditt er stengt, slik at du aldri går glipp av en kunde. Anbefalt for virksomheter med kunder som forventer rask respons utenom vanlig arbeidstid.",
+      "Aktiver tilgjengelighet døgnet rundt – også på kvelder, netter, helger og helligdager.",
     contract:
-      "Velg avtaleperioden som passer din virksomhet best. Lengre bindingstid gir lavere månedspris:\n\n• 1 måned: ingen binding, full fleksibilitet\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt (vår mest populære)\n• 24 måneder: 15 % rabatt – beste pris",
+      "Lengre bindingstid gir lavere månedspris:\n\n• 1 måned: ingen binding\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt\n• 24 måneder: 15 % rabatt",
   },
   email: {
     label: "E-post per måned",
     options: [
       { value: 0, label: "Ingen", price: 0 },
-      { value: 50, label: "50 e-poster", price: 1500 },
-      { value: 120, label: "120 e-poster", price: 4000 },
+      { value: 25, label: "0–25 e-poster", price: 750 },
+      { value: 50, label: "26–50 e-poster", price: 1500 },
+      { value: 75, label: "51–75 e-poster", price: 2250 },
+      { value: 100, label: "76–100 e-poster", price: 3000 },
+      { value: 125, label: "101–125 e-poster", price: 3750 },
     ],
   },
   sms: {
     label: "SMS per måned",
     options: [
       { value: 0, label: "Ingen", price: 0 },
-      { value: 100, label: "100 SMS", price: 990 },
-      { value: 200, label: "200 SMS", price: 1800 },
-      { value: 500, label: "500 SMS", price: 3990 },
+      { value: 30, label: "0–30 SMS", price: 750 },
+      { value: 60, label: "31–60 SMS", price: 1500 },
+      { value: 120, label: "61–120 SMS", price: 3000 },
+      { value: 240, label: "121–240 SMS", price: 6000 },
     ],
   },
   social: {
-    label: "Sosiale medier per måned",
-    helper: "Facebook, TikTok og Instagram samlet",
+    label: "Meldinger på sosiale medier",
     options: [
       { value: 0, label: "Ingen", price: 0 },
       { value: 50, label: "50 meldinger", price: 1200 },
       { value: 100, label: "100 meldinger", price: 2200 },
       { value: 200, label: "200 meldinger", price: 3990 },
+    ],
+  },
+  socialPosts: {
+    label: "Innlegg på sosiale medier",
+    options: [
+      { value: 0, label: "Ingen", price: 0 },
+      { value: 4, label: "4 innlegg", price: 1490 },
+      { value: 8, label: "8 innlegg", price: 2790 },
+      { value: 12, label: "12 innlegg", price: 3990 },
     ],
   },
   recording: { label: "Lydopptak av samtaler", price: 490 },
@@ -64,10 +95,14 @@ export const PRICING = {
 } as const;
 
 export type PricingConfig = {
+  receptionistType: ReceptionistType;
   hours: number;
   email: number;
   sms: number;
   social: number;
+  socialPlatforms: SocialPlatform[];
+  socialPosts: number;
+  socialPostsPlatforms: SocialPlatform[];
   recording: boolean;
   forwarding: boolean;
   ai247: boolean;
@@ -87,10 +122,14 @@ export type PricingResult = {
 };
 
 export const defaultConfig: PricingConfig = {
+  receptionistType: "ai",
   hours: PRICING.baseHours,
   email: 0,
   sms: 0,
   social: 0,
+  socialPlatforms: [],
+  socialPosts: 0,
+  socialPostsPlatforms: [],
   recording: false,
   forwarding: false,
   ai247: false,
@@ -98,8 +137,9 @@ export const defaultConfig: PricingConfig = {
 };
 
 export function calculatePrice(c: PricingConfig): PricingResult {
+  const recType = RECEPTIONIST_TYPES.find((t) => t.value === c.receptionistType) ?? RECEPTIONIST_TYPES[0];
   const lines: LineItem[] = [
-    { label: "Grunnpris (AI-telefonbesvarelse)", amount: PRICING.basePrice },
+    { label: `Grunnpris (${recType.summaryLabel})`, amount: PRICING.basePrice },
   ];
 
   const extraHours = Math.max(0, c.hours - PRICING.baseHours);
@@ -118,7 +158,11 @@ export function calculatePrice(c: PricingConfig): PricingResult {
 
   const social = PRICING.social.options.find((o) => o.value === c.social);
   if (social && social.price > 0)
-    lines.push({ label: `Sosiale medier – ${social.label}`, amount: social.price });
+    lines.push({ label: `Meldinger sosiale medier – ${social.label}`, amount: social.price });
+
+  const socialPosts = PRICING.socialPosts.options.find((o) => o.value === c.socialPosts);
+  if (socialPosts && socialPosts.price > 0)
+    lines.push({ label: `Innlegg sosiale medier – ${socialPosts.label}`, amount: socialPosts.price });
 
   if (c.recording) lines.push({ label: PRICING.recording.label, amount: PRICING.recording.price });
   if (c.forwarding) lines.push({ label: PRICING.forwarding.label, amount: PRICING.forwarding.price });
