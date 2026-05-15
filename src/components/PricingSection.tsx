@@ -409,6 +409,19 @@ const PricingSection = () => {
                   platforms={SOCIAL_PLATFORMS}
                   selectedPlatforms={config.socialPostsPlatforms}
                   onPlatformsChange={(v) => update("socialPostsPlatforms", v)}
+                  optionLabel={(o) =>
+                    o.value === 0
+                      ? o.label
+                      : `${o.label} · ${formatKr(o.value * PRICING.socialPosts.pricePerPostPerPlatform)} per plattform/mnd`
+                  }
+                  currentSubtitle={(() => {
+                    const platformCount = Math.max(1, config.socialPostsPlatforms.length);
+                    const amount =
+                      config.socialPosts * PRICING.socialPosts.pricePerPostPerPlatform * platformCount;
+                    const platformText =
+                      platformCount === 1 ? "1 plattform" : `${platformCount} plattformer`;
+                    return `${config.socialPosts} innlegg × ${platformText} · +${formatKr(amount)}/mnd`;
+                  })()}
                 />
                 <ToggleService
                   icon={Mic}
@@ -442,8 +455,7 @@ const PricingSection = () => {
                   title="AirCall lisens"
                   desc="Egen bruker med statistikk og samtalelogg"
                   info={PRICING.descriptions.aircall}
-                  price={0}
-                  priceText="Pris på forespørsel"
+                  price={PRICING.aircall.price}
                   checked={config.aircall}
                   onChange={(v) => update("aircall", v)}
                 />
