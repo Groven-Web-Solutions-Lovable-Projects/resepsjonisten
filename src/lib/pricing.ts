@@ -83,9 +83,9 @@ export const PRICING = {
     pricePerPostPerPlatform: 29,
     options: [
       { value: 0, label: "Ingen", price: 0 },
-      { value: 4, label: "4 innlegg", price: 0 },
-      { value: 8, label: "8 innlegg", price: 0 },
-      { value: 12, label: "12 innlegg", price: 0 },
+      { value: 4, label: "4 innlegg per måned", price: 0 },
+      { value: 8, label: "8 innlegg per måned", price: 0 },
+      { value: 12, label: "12 innlegg per måned", price: 0 },
     ],
   },
   recording: { label: "Lydopptak av samtaler", price: 490 },
