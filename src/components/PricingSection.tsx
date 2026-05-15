@@ -133,6 +133,8 @@ const TieredService = ({
   platforms,
   selectedPlatforms,
   onPlatformsChange,
+  currentSubtitle,
+  optionLabel,
 }: {
   icon: typeof Mail;
   title: string;
@@ -143,6 +145,8 @@ const TieredService = ({
   platforms?: readonly { value: SocialPlatform; label: string }[];
   selectedPlatforms?: SocialPlatform[];
   onPlatformsChange?: (v: SocialPlatform[]) => void;
+  currentSubtitle?: string;
+  optionLabel?: (o: NumberOption) => string;
 }) => {
   const active = value > 0;
   const current = options.find((o) => o.value === value) ?? options[0];
@@ -179,7 +183,9 @@ const TieredService = ({
               {info && <InfoTip title={title} text={info} />}
             </div>
             <div className="text-xs text-muted-foreground">
-              {active ? `${current.label} · +${formatKr(current.price)}/mnd` : "Ikke inkludert"}
+              {active
+                ? currentSubtitle ?? `${current.label} · +${formatKr(current.price)}/mnd`
+                : "Ikke inkludert"}
             </div>
           </div>
         </div>
@@ -191,7 +197,7 @@ const TieredService = ({
             <SelectContent>
               {options.map((o) => (
                 <SelectItem key={o.value} value={String(o.value)}>
-                  {optionRowLabel(o)}
+                  {optionLabel ? optionLabel(o) : optionRowLabel(o)}
                 </SelectItem>
               ))}
             </SelectContent>
