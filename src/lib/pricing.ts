@@ -34,7 +34,7 @@ export const PRICING = {
     social:
       "Velg antall meldinger fra sosiale medier vi skal besvare per måned. Du velger selv hvilke plattformer det gjelder.",
     socialPosts:
-      "Vi publiserer innlegg på dine sosiale medier, gitt at du sender oss bilder og eventuelt råtekst. Vi tilpasser bildetekst, hashtags og publiseringstidspunkt.",
+      "Vi skriver teksten og publiserer innlegg på dine sosiale medier, gitt at du sender oss bilder. Vi tilpasser bildetekst, hashtags og publiseringstidspunkt. Pris: 29 kr per innlegg, per plattform.",
     recording:
       "Aktiver lydopptak av samtaler for kvalitetssikring og dokumentasjon. Alle opptak håndteres i tråd med GDPR.",
     forwarding:
@@ -80,18 +80,19 @@ export const PRICING = {
   },
   socialPosts: {
     label: "Innlegg på sosiale medier",
+    pricePerPostPerPlatform: 29,
     options: [
       { value: 0, label: "Ingen", price: 0 },
-      { value: 4, label: "4 innlegg", price: 1490 },
-      { value: 8, label: "8 innlegg", price: 2790 },
-      { value: 12, label: "12 innlegg", price: 3990 },
+      { value: 4, label: "4 innlegg", price: 0 },
+      { value: 8, label: "8 innlegg", price: 0 },
+      { value: 12, label: "12 innlegg", price: 0 },
     ],
   },
   recording: { label: "Lydopptak av samtaler", price: 490 },
   forwarding: { label: "Samtaleoverføring", price: 99 },
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990 },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
-  aircall: { label: "AirCall lisens", price: 0, priceText: "Pris på forespørsel" },
+  aircall: { label: "AirCall lisens", price: 750 },
   contracts: [
     { months: 3, label: "3 måneder", discount: 0 },
     { months: 6, label: "6 måneder", discount: 0.05 },
@@ -173,13 +174,20 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     lines.push({ label: `Meldinger sosiale medier – ${social.label}`, amount: social.price });
 
   const socialPosts = PRICING.socialPosts.options.find((o) => o.value === c.socialPosts);
-  if (socialPosts && socialPosts.price > 0)
-    lines.push({ label: `Innlegg sosiale medier – ${socialPosts.label}`, amount: socialPosts.price });
+  if (socialPosts && c.socialPosts > 0) {
+    const platformCount = Math.max(1, c.socialPostsPlatforms.length);
+    const amount = c.socialPosts * PRICING.socialPosts.pricePerPostPerPlatform * platformCount;
+    const platformText = platformCount === 1 ? "1 plattform" : `${platformCount} plattformer`;
+    lines.push({
+      label: `Innlegg sosiale medier – ${socialPosts.label} × ${platformText}`,
+      amount,
+    });
+  }
 
   if (c.recording) lines.push({ label: PRICING.recording.label, amount: PRICING.recording.price });
   if (c.forwarding) lines.push({ label: PRICING.forwarding.label, amount: PRICING.forwarding.price });
   if (c.ai247) lines.push({ label: PRICING.ai247.label, amount: PRICING.ai247.price });
-  if (c.aircall) lines.push({ label: `${PRICING.aircall.label} (${PRICING.aircall.priceText})`, amount: 0 });
+  if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
 
   const subtotal = lines.reduce((s, l) => s + l.amount, 0);
   const contract =

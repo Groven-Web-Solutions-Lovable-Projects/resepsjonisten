@@ -133,6 +133,8 @@ const TieredService = ({
   platforms,
   selectedPlatforms,
   onPlatformsChange,
+  currentSubtitle,
+  optionLabel,
 }: {
   icon: typeof Mail;
   title: string;
@@ -143,6 +145,8 @@ const TieredService = ({
   platforms?: readonly { value: SocialPlatform; label: string }[];
   selectedPlatforms?: SocialPlatform[];
   onPlatformsChange?: (v: SocialPlatform[]) => void;
+  currentSubtitle?: string;
+  optionLabel?: (o: NumberOption) => string;
 }) => {
   const active = value > 0;
   const current = options.find((o) => o.value === value) ?? options[0];
@@ -179,7 +183,9 @@ const TieredService = ({
               {info && <InfoTip title={title} text={info} />}
             </div>
             <div className="text-xs text-muted-foreground">
-              {active ? `${current.label} · +${formatKr(current.price)}/mnd` : "Ikke inkludert"}
+              {active
+                ? currentSubtitle ?? `${current.label} · +${formatKr(current.price)}/mnd`
+                : "Ikke inkludert"}
             </div>
           </div>
         </div>
@@ -191,7 +197,7 @@ const TieredService = ({
             <SelectContent>
               {options.map((o) => (
                 <SelectItem key={o.value} value={String(o.value)}>
-                  {optionRowLabel(o)}
+                  {optionLabel ? optionLabel(o) : optionRowLabel(o)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -403,6 +409,19 @@ const PricingSection = () => {
                   platforms={SOCIAL_PLATFORMS}
                   selectedPlatforms={config.socialPostsPlatforms}
                   onPlatformsChange={(v) => update("socialPostsPlatforms", v)}
+                  optionLabel={(o) =>
+                    o.value === 0
+                      ? o.label
+                      : `${o.label} · ${formatKr(o.value * PRICING.socialPosts.pricePerPostPerPlatform)} per plattform/mnd`
+                  }
+                  currentSubtitle={(() => {
+                    const platformCount = Math.max(1, config.socialPostsPlatforms.length);
+                    const amount =
+                      config.socialPosts * PRICING.socialPosts.pricePerPostPerPlatform * platformCount;
+                    const platformText =
+                      platformCount === 1 ? "1 plattform" : `${platformCount} plattformer`;
+                    return `${config.socialPosts} innlegg × ${platformText} · +${formatKr(amount)}/mnd`;
+                  })()}
                 />
                 <ToggleService
                   icon={Mic}
@@ -436,8 +455,7 @@ const PricingSection = () => {
                   title="AirCall lisens"
                   desc="Egen bruker med statistikk og samtalelogg"
                   info={PRICING.descriptions.aircall}
-                  price={0}
-                  priceText="Pris på forespørsel"
+                  price={PRICING.aircall.price}
                   checked={config.aircall}
                   onChange={(v) => update("aircall", v)}
                 />
