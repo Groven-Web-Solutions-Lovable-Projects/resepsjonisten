@@ -14,7 +14,7 @@ type Stat = {
 const stats: Stat[] = [
   {
     icon: PhoneCall,
-    value: 10000,
+    value: 11600,
     suffix: "+",
     display: (n) => `${Math.round(n).toLocaleString("nb-NO").replace(/\u00A0/g, " ")}`,
     label: "Kundesamtaler besvart",
