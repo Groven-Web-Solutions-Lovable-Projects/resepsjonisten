@@ -21,10 +21,10 @@ const manualServices = [
   { icon: MessageSquare, title: "Ta imot og formidle beskjeder", desc: "Alle beskjeder leveres raskt og nøyaktig." },
   { icon: Filter, title: "Filtrere henvendelser", desc: "Vi sorterer og prioriterer henvendelsene for deg." },
   { icon: CalendarCheck, title: "Håndtere booking og timebestillinger", desc: "Vi booker avtaler direkte i din kalender." },
-  { icon: Package, title: "Håndtere bestillinger", desc: "Bestillinger i større løsninger administreres effektivt." },
+  { icon: Package, title: "Håndtere bestillinger", desc: "Bestillinger i større løsninger administreres effektivt i ditt system." },
   { icon: Mail, title: "E-postbesvarelse", desc: "Vi besvarer kundehenvendelser via e-post raskt og profesjonelt." },
   { icon: Smartphone, title: "SMS-håndtering", desc: "Vi sender og mottar SMS på vegne av deg." },
-  { icon: Share2, title: "Sosiale medier", desc: "Vi svarer på henvendelser fra Facebook, TikTok og Instagram." },
+  { icon: Share2, title: "Sosiale medier", desc: "Vi svarer på henvendelser fra Facebook, Instagram, TikTok, LinkedIn og Snapchat." },
   { icon: Mic, title: "Lydopptak av samtaler", desc: "Alle samtaler kan tas opp for kvalitet og dokumentasjon." },
 ];
 
@@ -33,6 +33,8 @@ const aiServices = [
   { icon: Phone, title: "Besvare innkommende telefoner", desc: "AI tar telefonen, identifiserer ønsket og svarer kunden umiddelbart." },
   { icon: ArrowRightLeft, title: "Videresende samtaler", desc: "AI vurderer henvendelsen og setter samtalen over til riktig person." },
   { icon: MessageSquare, title: "Ta imot og formidle beskjeder", desc: "AI registrerer beskjeden og sender den videre til deg umiddelbart." },
+  { icon: CalendarCheck, title: "Håndtere booking og timebestillinger", desc: "AI booker avtaler direkte i din kalender." },
+  { icon: Mic, title: "Lydopptak av samtaler", desc: "Alle samtaler kan tas opp for kvalitet og dokumentasjon." },
 ];
 
 type Service = { icon: typeof Phone; title: string; desc: string };
