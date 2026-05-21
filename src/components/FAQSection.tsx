@@ -39,6 +39,8 @@ const INITIAL_COUNT = 6;
 
 const FAQSection = () => {
   const [query, setQuery] = useState("");
+  const [expanded, setExpanded] = useState(false);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return faqs.map((f, i) => ({ ...f, originalIndex: i }));
@@ -46,6 +48,10 @@ const FAQSection = () => {
       .map((f, i) => ({ ...f, originalIndex: i }))
       .filter((f) => f.q.toLowerCase().includes(q) || f.a.toLowerCase().includes(q));
   }, [query]);
+
+  const isSearching = query.trim().length > 0;
+  const visible = isSearching || expanded ? filtered : filtered.slice(0, INITIAL_COUNT);
+  const hasMore = !isSearching && !expanded && filtered.length > INITIAL_COUNT;
 
   return (
     <section
