@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import {
   Building2,
@@ -109,10 +109,6 @@ const IndustryCard = ({
   const [open, setOpen] = useState(false);
   const Icon = industry.icon;
   const isLong = industry.description.length > PREVIEW_LENGTH;
-  const preview =
-    isLong && !open
-      ? industry.description.slice(0, PREVIEW_LENGTH).trimEnd() + "…"
-      : industry.description;
 
   return (
     <motion.div
@@ -120,31 +116,26 @@ const IndustryCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
-      className="relative rounded-2xl bg-card border border-border p-5 sm:p-6 shadow-sm overflow-hidden flex flex-col"
+      className="relative rounded-2xl bg-card border border-border p-5 sm:p-6 shadow-sm overflow-hidden flex flex-col h-full"
     >
       <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary border border-primary/15">
         <Icon className="w-5 h-5" strokeWidth={1.75} />
       </div>
       <p className="mt-5 text-base font-semibold text-foreground">{industry.name}</p>
 
-      <AnimatePresence initial={false}>
-        <motion.p
-          key={open ? "full" : "preview"}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="mt-2 text-sm text-muted-foreground leading-relaxed"
-        >
-          {preview}
-        </motion.p>
-      </AnimatePresence>
+      <p
+        className={`mt-2 text-sm text-muted-foreground leading-relaxed transition-[max-height] duration-300 ease-out ${
+          isLong && !open ? "line-clamp-3" : ""
+        }`}
+      >
+        {industry.description}
+      </p>
 
       {isLong && (
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="mt-3 self-start text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+          className="mt-auto pt-3 self-start text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
         >
           {open ? "Vis mindre" : "Les mer"}
         </button>
@@ -178,7 +169,7 @@ const IndustriesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
           {industries.map((industry, i) => (
             <IndustryCard key={industry.name} industry={industry} index={i} />
           ))}
