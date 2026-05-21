@@ -14,7 +14,7 @@ type Stat = {
 const stats: Stat[] = [
   {
     icon: PhoneCall,
-    value: 10000,
+    value: 11600,
     suffix: "+",
     display: (n) => `${Math.round(n).toLocaleString("nb-NO").replace(/\u00A0/g, " ")}`,
     label: "Kundesamtaler besvart",
@@ -40,7 +40,7 @@ const companies = [
   "Blindleia Kiropraktor AS",
 ];
 
-const testimonials = [
+const rawTestimonials = [
   {
     name: "Adiam Negassie",
     role: "Styreleder",
@@ -120,6 +120,21 @@ const testimonials = [
     text: "Pasientene våre får rask respons og enkel booking. Resepsjonisten fungerer sømløst sammen med vår drift og gir oss mer tid til å fokusere på behandling. Veldig fornøyd.",
   },
 ];
+
+// Reorder so two testimonials with the same name are never adjacent
+const reorderTestimonials = <T extends { name: string }>(items: T[]): T[] => {
+  const result: T[] = [];
+  const remaining = [...items];
+  while (remaining.length) {
+    const lastName = result[result.length - 1]?.name;
+    const idx = remaining.findIndex((t) => t.name !== lastName);
+    const pickIdx = idx === -1 ? 0 : idx;
+    result.push(remaining.splice(pickIdx, 1)[0]);
+  }
+  return result;
+};
+
+const testimonials = reorderTestimonials(rawTestimonials);
 
 const useCountUp = (target: number, start: boolean, duration = 1800) => {
   const [val, setVal] = useState(0);
