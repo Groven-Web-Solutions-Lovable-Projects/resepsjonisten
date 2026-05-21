@@ -217,14 +217,6 @@ const FinalCTASection = () => {
                   Fyll ut skjemaet — vi kontakter deg innen 24 timer.
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {snapshot && (
-                    <div className="rounded-lg bg-primary/5 border border-primary/20 px-3 py-2 text-xs text-primary flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      {snapshot.source === "pricing"
-                        ? "Din priskalkulator sendes med henvendelsen"
-                        : "Tallene fra tapt-samtale-kalkulatoren sendes med henvendelsen"}
-                    </div>
-                  )}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs font-semibold text-foreground mb-1.5 block uppercase tracking-wide">
