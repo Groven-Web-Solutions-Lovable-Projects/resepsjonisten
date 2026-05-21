@@ -267,7 +267,7 @@ const emailSchema = z
   .email({ message: "Ugyldig e-postadresse" })
   .max(255, { message: "E-post er for lang" });
 
-const ADDRESS = "Høvikveien 2A, 1363 Høvik";
+const ADDRESS = "Lundekroken 34, 1396 Billingstad";
 const MAP_LINK =
   "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ADDRESS);
 

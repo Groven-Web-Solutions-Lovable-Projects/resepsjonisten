@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
@@ -34,8 +35,12 @@ const faqs = [
   { q: "Hvor mye må vi selv bidra med?", a: "Oppstarten krever noe input fra dere, som tjenester, priser og rutiner. Etter dette tar vi over det meste av håndteringen. Målet er å spare dere tid – ikke skape mer arbeid. Tenk på oss som en resepsjonist som er ansatt hos dere." },
 ];
 
+const INITIAL_COUNT = 6;
+
 const FAQSection = () => {
   const [query, setQuery] = useState("");
+  const [expanded, setExpanded] = useState(false);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return faqs.map((f, i) => ({ ...f, originalIndex: i }));
@@ -43,6 +48,10 @@ const FAQSection = () => {
       .map((f, i) => ({ ...f, originalIndex: i }))
       .filter((f) => f.q.toLowerCase().includes(q) || f.a.toLowerCase().includes(q));
   }, [query]);
+
+  const isSearching = query.trim().length > 0;
+  const visible = isSearching || expanded ? filtered : filtered.slice(0, INITIAL_COUNT);
+  const hasMore = !isSearching && !expanded && filtered.length > INITIAL_COUNT;
 
   return (
     <section
@@ -92,27 +101,41 @@ const FAQSection = () => {
           {filtered.length === 0 ? (
             <p className="text-muted-foreground py-6">Ingen treff på «{query}».</p>
           ) : (
-          <Accordion type="single" collapsible className="border-t border-foreground/15">
-            {filtered.map((faq, i) => (
-              <AccordionItem
-                key={faq.originalIndex}
-                value={`item-${i}`}
-                className="border-b border-foreground/15 px-0"
-              >
-                <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5 text-base md:text-lg">
-                  <span className="flex items-baseline gap-4">
-                    <span className="text-xs font-mono text-muted-foreground/60">
-                      {String(faq.originalIndex + 1).padStart(2, "0")}
-                    </span>
-                    {faq.q}
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pl-10 pb-5">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            <>
+              <Accordion type="single" collapsible className="border-t border-foreground/15">
+                {visible.map((faq, i) => (
+                  <AccordionItem
+                    key={faq.originalIndex}
+                    value={`item-${i}`}
+                    className="border-b border-foreground/15 px-0"
+                  >
+                    <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5 text-base md:text-lg">
+                      <span className="flex items-baseline gap-4">
+                        <span className="text-xs font-mono text-muted-foreground/60">
+                          {String(faq.originalIndex + 1).padStart(2, "0")}
+                        </span>
+                        {faq.q}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pl-10 pb-5">
+                      {faq.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+              {hasMore && (
+                <div className="flex justify-center mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setExpanded(true)}
+                    className="gap-2"
+                  >
+                    Se mer
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </motion.div>
       </div>
