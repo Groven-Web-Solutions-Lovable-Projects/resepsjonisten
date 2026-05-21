@@ -56,6 +56,19 @@ const NewsletterSection = () => {
       return;
     }
 
+    void supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "newsletter-notification",
+        recipientEmail: "tommy@resepsjonisten.no",
+        idempotencyKey: `newsletter-notif-${parsed.data}-${Date.now()}`,
+        templateData: {
+          subscriberEmail: parsed.data,
+          source: "landing_page",
+          submittedAt: new Date().toLocaleString("nb-NO"),
+        },
+      },
+    });
+
     setSubmitted(true);
     toast({
       title: "Takk for påmeldingen!",

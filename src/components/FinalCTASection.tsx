@@ -57,7 +57,11 @@ const FinalCTASection = () => {
     }
 
     setLoading(true);
+    const demoId = crypto.randomUUID();
+    const userAgent =
+      typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null;
     const { error } = await supabase.from("demo_requests").insert({
+      id: demoId,
       name: parsed.data.name,
       company: parsed.data.company ?? null,
       email: parsed.data.email,
@@ -66,8 +70,7 @@ const FinalCTASection = () => {
       source: snapshot?.source ?? "contact",
       calculator_data: (snapshot?.data ?? null) as never,
       calculator_summary: snapshot?.summary ?? null,
-      user_agent:
-        typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
+      user_agent: userAgent,
     });
     setLoading(false);
 
@@ -79,6 +82,27 @@ const FinalCTASection = () => {
       });
       return;
     }
+
+    // Send intern varsel-epost til Tommy (best-effort, blokkerer ikke UX).
+    void supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "demo-notification",
+        recipientEmail: "tommy@resepsjonisten.no",
+        idempotencyKey: `demo-notif-${demoId}`,
+        templateData: {
+          name: parsed.data.name,
+          company: parsed.data.company ?? null,
+          email: parsed.data.email,
+          phone: parsed.data.phone ?? null,
+          message: parsed.data.message ?? null,
+          source: snapshot?.source ?? "contact",
+          calculatorSummary: snapshot?.summary ?? null,
+          calculatorData: snapshot?.data ?? null,
+          userAgent,
+          submittedAt: new Date().toLocaleString("nb-NO"),
+        },
+      },
+    });
 
     clearSnapshot();
     setSubmitted(true);
@@ -308,6 +332,20 @@ const NewsletterInline = () => {
         variant: "destructive",
       });
       return;
+    }
+    if (!error) {
+      void supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "newsletter-notification",
+          recipientEmail: "tommy@resepsjonisten.no",
+          idempotencyKey: `newsletter-notif-${parsed.data}-${Date.now()}`,
+          templateData: {
+            subscriberEmail: parsed.data,
+            source: "footer",
+            submittedAt: new Date().toLocaleString("nb-NO"),
+          },
+        },
+      });
     }
     setDone(true);
     toast({ title: "Takk!", description: "Du er nå påmeldt nyhetsbrevet." });
