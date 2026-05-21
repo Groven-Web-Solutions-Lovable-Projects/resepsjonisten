@@ -101,27 +101,41 @@ const FAQSection = () => {
           {filtered.length === 0 ? (
             <p className="text-muted-foreground py-6">Ingen treff på «{query}».</p>
           ) : (
-          <Accordion type="single" collapsible className="border-t border-foreground/15">
-            {filtered.map((faq, i) => (
-              <AccordionItem
-                key={faq.originalIndex}
-                value={`item-${i}`}
-                className="border-b border-foreground/15 px-0"
-              >
-                <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5 text-base md:text-lg">
-                  <span className="flex items-baseline gap-4">
-                    <span className="text-xs font-mono text-muted-foreground/60">
-                      {String(faq.originalIndex + 1).padStart(2, "0")}
-                    </span>
-                    {faq.q}
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pl-10 pb-5">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            <>
+              <Accordion type="single" collapsible className="border-t border-foreground/15">
+                {visible.map((faq, i) => (
+                  <AccordionItem
+                    key={faq.originalIndex}
+                    value={`item-${i}`}
+                    className="border-b border-foreground/15 px-0"
+                  >
+                    <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5 text-base md:text-lg">
+                      <span className="flex items-baseline gap-4">
+                        <span className="text-xs font-mono text-muted-foreground/60">
+                          {String(faq.originalIndex + 1).padStart(2, "0")}
+                        </span>
+                        {faq.q}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pl-10 pb-5">
+                      {faq.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+              {hasMore && (
+                <div className="flex justify-center mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setExpanded(true)}
+                    className="gap-2"
+                  >
+                    Se mer
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </motion.div>
       </div>
