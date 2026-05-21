@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
@@ -33,6 +34,8 @@ const faqs = [
   { q: "Kan dere tilpasse dere vår tone og merkevare?", a: "Ja, vi tilpasser kommunikasjonen slik at den matcher deres profil og kundetype. Vi fremstår som en del av deres bedrift – ikke en ekstern aktør." },
   { q: "Hvor mye må vi selv bidra med?", a: "Oppstarten krever noe input fra dere, som tjenester, priser og rutiner. Etter dette tar vi over det meste av håndteringen. Målet er å spare dere tid – ikke skape mer arbeid. Tenk på oss som en resepsjonist som er ansatt hos dere." },
 ];
+
+const INITIAL_COUNT = 6;
 
 const FAQSection = () => {
   const [query, setQuery] = useState("");
