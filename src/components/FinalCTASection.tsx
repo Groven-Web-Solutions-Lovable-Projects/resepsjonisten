@@ -87,7 +87,7 @@ const FinalCTASection = () => {
     void supabase.functions.invoke("send-transactional-email", {
       body: {
         templateName: "demo-notification",
-        recipientEmail: "tommy@resepsjonisten.no",
+        recipientEmail: "kontakt@resepsjonisten.no",
         idempotencyKey: `demo-notif-${demoId}`,
         templateData: {
           name: parsed.data.name,
