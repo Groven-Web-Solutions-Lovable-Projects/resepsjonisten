@@ -85,7 +85,6 @@ const Navbar = () => {
 
         {/* Mobile + tablet */}
         <div className="flex items-center gap-2 lg:hidden">
-          <LanguageSwitcher variant="compact" />
           <Button
             asChild
             size="sm"
