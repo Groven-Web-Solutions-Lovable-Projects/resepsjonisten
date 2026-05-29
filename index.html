@@ -20,11 +20,15 @@
   <meta name="twitter:description" content="Vi svarer telefonen for bedriften din. Profesjonell telefonhåndtering, booking og beskjeder — uten å ansette noen.">
   <style>
     /* Skjul Google Translate sin standard UI – vi bruker egen flagg-knapp */
+    .goog-te-banner-frame,
     .goog-te-banner-frame.skiptranslate,
+    .skiptranslate > iframe,
+    iframe.goog-te-banner-frame,
     .goog-te-gadget,
     #goog-gt-tt,
-    .goog-te-balloon-frame { display: none !important; }
-    body { top: 0 !important; }
+    .goog-te-balloon-frame { display: none !important; visibility: hidden !important; }
+    body { top: 0 !important; position: static !important; }
+    html { margin-top: 0 !important; }
     .goog-tooltip, .goog-tooltip:hover { display: none !important; }
     .goog-text-highlight { background: none !important; box-shadow: none !important; }
   </style>
