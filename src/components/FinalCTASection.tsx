@@ -514,6 +514,12 @@ const Footer = () => (
         >
           Brønnøysundregistrene
         </a>
+        <a
+          href="/personvern"
+          className="hover:text-background transition-colors"
+        >
+          Personvernerklæring
+        </a>
       </div>
     </div>
   </footer>
