@@ -85,7 +85,6 @@ const Navbar = () => {
 
         {/* Mobile + tablet */}
         <div className="flex items-center gap-2 lg:hidden">
-          <LanguageSwitcher variant="compact" />
           <Button
             asChild
             size="sm"
@@ -118,6 +117,10 @@ const Navbar = () => {
             className="lg:hidden overflow-hidden border-t border-border bg-background"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-2">
+              <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-secondary/40 border border-border mb-1">
+                <span className="text-sm font-medium text-muted-foreground">Språk / Language</span>
+                <LanguageSwitcher variant="compact" />
+              </div>
               {navLinks.map((l, i) => (
                 <motion.a
                   key={l.href}
