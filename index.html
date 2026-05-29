@@ -18,10 +18,30 @@
   <meta name="twitter:title" content="Resepsjonisten — Din Resepsjonist 24/7">
   <meta property="og:description" content="Vi svarer telefonen for bedriften din. Profesjonell telefonhåndtering, booking og beskjeder — uten å ansette noen.">
   <meta name="twitter:description" content="Vi svarer telefonen for bedriften din. Profesjonell telefonhåndtering, booking og beskjeder — uten å ansette noen.">
+  <style>
+    /* Skjul Google Translate sin standard UI – vi bruker egen flagg-knapp */
+    .goog-te-banner-frame.skiptranslate,
+    .goog-te-gadget,
+    #goog-gt-tt,
+    .goog-te-balloon-frame { display: none !important; }
+    body { top: 0 !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    .goog-text-highlight { background: none !important; box-shadow: none !important; }
+  </style>
 </head>
 
   <body>
     <div id="root"></div>
+    <div id="google_translate_element" style="display:none"></div>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: 'no', includedLanguages: 'en,sv,pl,no', autoDisplay: false },
+          'google_translate_element'
+        );
+      }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
