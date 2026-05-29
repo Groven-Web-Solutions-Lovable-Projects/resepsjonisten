@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Star, Phone, Sparkles, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import CallUsButton, { PHONE_NUMBER } from "@/components/CallUsButton";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/hero-receptionist.jpg";
 import avatar1 from "@/assets/avatar-1.png";
@@ -66,6 +67,7 @@ const Navbar = () => {
             </a>
           ))}
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             <Button asChild variant="outline" size="sm" className="border-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary font-semibold">
               <a href={`tel:${PHONE_NUMBER}`} aria-label="Ring oss">
                 <Phone className="w-4 h-4" />
@@ -83,6 +85,7 @@ const Navbar = () => {
 
         {/* Mobile + tablet */}
         <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher variant="compact" />
           <Button
             asChild
             size="sm"
