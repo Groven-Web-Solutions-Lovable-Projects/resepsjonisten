@@ -287,6 +287,16 @@ const ADDRESS = "Lundekroken 34, 1396 Billingstad";
 const MAP_LINK =
   "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ADDRESS);
 
+// Koordinater fra OpenStreetMap (Nominatim) – Lundekroken 34, Billingstad
+const MAP_LAT = 59.8769283;
+const MAP_LON = 10.4997353;
+const MAP_DELTA = 0.004; // zoom-nivå via bbox
+const OSM_EMBED_URL = `https://www.openstreetmap.org/export/embed.html?bbox=${
+  MAP_LON - MAP_DELTA
+}%2C${MAP_LAT - MAP_DELTA / 2}%2C${MAP_LON + MAP_DELTA}%2C${
+  MAP_LAT + MAP_DELTA / 2
+}&layer=mapnik&marker=${MAP_LAT}%2C${MAP_LON}`;
+
 const quickLinks = [
   { label: "Tjenester", href: "#tjenester" },
   { label: "Bransjer", href: "#bransjer" },
@@ -463,6 +473,31 @@ const Footer = () => (
               </div>
             </li>
           </ul>
+        </div>
+      </div>
+
+      {/* Interaktivt kart over kontorlokasjon */}
+      <div className="mt-12">
+        <p className="text-xs font-semibold uppercase tracking-wide text-background/50 mb-3">
+          Finn oss
+        </p>
+        <div className="relative rounded-2xl overflow-hidden border border-background/10 shadow-elevated bg-background/5">
+          <iframe
+            title={`Kart over ${ADDRESS}`}
+            src={OSM_EMBED_URL}
+            loading="lazy"
+            className="w-full h-64 md:h-72 border-0"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+          <a
+            href={`https://www.openstreetmap.org/?mlat=${MAP_LAT}&mlon=${MAP_LON}#map=17/${MAP_LAT}/${MAP_LON}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-lg bg-background/95 text-foreground px-3 py-1.5 text-xs font-semibold shadow hover:bg-background transition-colors"
+          >
+            <MapPin className="w-3.5 h-3.5" />
+            Åpne større kart
+          </a>
         </div>
       </div>
 
