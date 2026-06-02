@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
 import Personvern from "./pages/Personvern.tsx";
+import Kalkulator from "./pages/Kalkulator.tsx";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/personvern" element={<Personvern />} />
+            <Route path="/kalkulator" element={<Kalkulator />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
