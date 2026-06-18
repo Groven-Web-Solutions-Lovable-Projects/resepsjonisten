@@ -278,7 +278,7 @@ export function calculatePrice(c: PricingConfig): PricingResult {
   const allowedStart = PRICING.openingHours.weekdayAllowedStart;
   const allowedEnd = PRICING.openingHours.weekdayAllowedEnd;
   let weekdayOutOfRange = false;
-  let maxWeekdayHours = PRICING.baseHours;
+  let maxWeekdayHours: number = PRICING.baseHours;
   for (const d of WEEKDAYS) {
     const { start, end } = c.weekdayHours[d.value];
     if (start < allowedStart || end > allowedEnd || end <= start) {
