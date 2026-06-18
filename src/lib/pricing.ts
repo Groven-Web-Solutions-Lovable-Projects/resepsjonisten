@@ -21,6 +21,7 @@ export const PRICING = {
   baseHours: 8,
   hoursMin: 8,
   hoursMax: 24,
+  startupCost: 3990,
   // Åpningstider per ukedag
   openingHours: {
     weekdayAllowedStart: 8, // 08:00
@@ -266,6 +267,7 @@ export type PricingResult = {
   monthly: number;
   contractMonths: number;
   contractTotal: number;
+  startupCost: number;
   /** True hvis en ukedag har valgt tid utenfor 08–17 */
   weekdayOutOfRange: boolean;
   /** Maks lengde på en hverdag (timer) – brukt til prisberegning */
@@ -476,7 +478,8 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     discountAmount,
     monthly,
     contractMonths: contract.months,
-    contractTotal: monthly * contract.months,
+    contractTotal: monthly * contract.months + PRICING.startupCost,
+    startupCost: PRICING.startupCost,
     weekdayOutOfRange,
     maxWeekdayHours,
   };
