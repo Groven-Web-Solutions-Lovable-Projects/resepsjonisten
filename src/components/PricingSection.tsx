@@ -855,6 +855,137 @@ const PricingSection = () => {
                   checked={config.appointmentBooking}
                   onChange={(v) => update("appointmentBooking", v)}
                 />
+                <QuantityService
+                  icon={Database}
+                  title={PRICING.crmUpdate.label}
+                  desc={`${PRICING.crmUpdate.pricePerUnit} kr per ${PRICING.crmUpdate.unitLabel}`}
+                  info={PRICING.descriptions.crmUpdate}
+                  value={config.crmUpdates}
+                  pricePerUnit={PRICING.crmUpdate.pricePerUnit}
+                  unitLabel={PRICING.crmUpdate.unitLabel}
+                  unitLabelPlural={PRICING.crmUpdate.unitLabelPlural}
+                  min={PRICING.crmUpdate.sliderMin}
+                  max={PRICING.crmUpdate.sliderMax}
+                  step={PRICING.crmUpdate.step}
+                  onChange={(v) => update("crmUpdates", v)}
+                />
+                <QuantityService
+                  icon={Bot}
+                  title={PRICING.aiSms.label}
+                  desc={`${PRICING.aiSms.pricePerUnit} kr per SMS`}
+                  info={PRICING.descriptions.aiSms}
+                  value={config.aiSmsCount}
+                  pricePerUnit={PRICING.aiSms.pricePerUnit}
+                  unitLabel={PRICING.aiSms.unitLabel}
+                  unitLabelPlural={PRICING.aiSms.unitLabelPlural}
+                  min={PRICING.aiSms.sliderMin}
+                  max={PRICING.aiSms.sliderMax}
+                  step={PRICING.aiSms.step}
+                  onChange={(v) => update("aiSmsCount", v)}
+                />
+                <QuantityService
+                  icon={Bot}
+                  title={PRICING.aiEmail.label}
+                  desc={`${PRICING.aiEmail.pricePerUnit} kr per e-post`}
+                  info={PRICING.descriptions.aiEmail}
+                  value={config.aiEmailCount}
+                  pricePerUnit={PRICING.aiEmail.pricePerUnit}
+                  unitLabel={PRICING.aiEmail.unitLabel}
+                  unitLabelPlural={PRICING.aiEmail.unitLabelPlural}
+                  min={PRICING.aiEmail.sliderMin}
+                  max={PRICING.aiEmail.sliderMax}
+                  step={PRICING.aiEmail.step}
+                  onChange={(v) => update("aiEmailCount", v)}
+                />
+                <QuantityService
+                  icon={CalendarPlus}
+                  title={PRICING.outboundBooking.label}
+                  desc={`${PRICING.outboundBooking.pricePerUnit} kr per time`}
+                  info={PRICING.descriptions.outboundBooking}
+                  value={config.outboundBookingHours}
+                  pricePerUnit={PRICING.outboundBooking.pricePerUnit}
+                  unitLabel={PRICING.outboundBooking.unitLabel}
+                  unitLabelPlural={PRICING.outboundBooking.unitLabelPlural}
+                  min={PRICING.outboundBooking.sliderMin}
+                  max={PRICING.outboundBooking.sliderMax}
+                  step={PRICING.outboundBooking.step}
+                  onChange={(v) => update("outboundBookingHours", v)}
+                />
+                <QuantityService
+                  icon={ClipboardList}
+                  title={PRICING.adminTasks.label}
+                  desc={`${PRICING.adminTasks.pricePerUnit} kr per time`}
+                  info={PRICING.descriptions.adminTasks}
+                  value={config.adminTaskHours}
+                  pricePerUnit={PRICING.adminTasks.pricePerUnit}
+                  unitLabel={PRICING.adminTasks.unitLabel}
+                  unitLabelPlural={PRICING.adminTasks.unitLabelPlural}
+                  min={PRICING.adminTasks.sliderMin}
+                  max={PRICING.adminTasks.sliderMax}
+                  step={PRICING.adminTasks.step}
+                  onChange={(v) => update("adminTaskHours", v)}
+                />
+                <div
+                  className={cn(
+                    "rounded-lg border bg-background p-3 transition-colors",
+                    config.vacationCover ? "border-success bg-success/10" : "border-border hover:border-primary/40",
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div
+                        className={cn(
+                          "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                          config.vacationCover ? "bg-success" : "bg-muted",
+                        )}
+                      >
+                        <Plane className={cn("w-4 h-4", config.vacationCover ? "text-success-foreground" : "text-muted-foreground")} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <div className="text-sm font-medium text-foreground">{PRICING.vacationCover.label}</div>
+                          <InfoTip title={PRICING.vacationCover.label} text={PRICING.descriptions.vacationCover} />
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {config.vacationCover
+                            ? `${formatKr(PRICING.vacationCover.basePrice)}/mnd inkl. ${PRICING.vacationCover.includedMinutes} min`
+                            : `Inkluderer ${PRICING.vacationCover.includedMinutes} min, deretter ${PRICING.vacationCover.extraPerMinute} kr/min`}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="shrink-0">
+                      <Switch
+                        checked={config.vacationCover}
+                        onCheckedChange={(v) => update("vacationCover", v)}
+                        aria-label={PRICING.vacationCover.label}
+                      />
+                    </div>
+                  </div>
+                  {config.vacationCover && (
+                    <div className="mt-3 pl-12">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <span className="text-xs text-muted-foreground">Forventet bruk per måned</span>
+                        <span className="text-sm font-semibold text-foreground tabular-nums">
+                          {config.vacationMinutes} min
+                        </span>
+                      </div>
+                      <Slider
+                        min={PRICING.vacationCover.sliderMin}
+                        max={PRICING.vacationCover.sliderMax}
+                        step={PRICING.vacationCover.step}
+                        value={[config.vacationMinutes]}
+                        onValueChange={([v]) => update("vacationMinutes", v)}
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
+                        <span>{PRICING.vacationCover.includedMinutes} min (inkludert)</span>
+                        <span>{PRICING.vacationCover.sliderMax} min</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Ekstra minutter: {PRICING.vacationCover.extraPerMinute} kr per minutt
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="rounded-lg border border-border bg-muted/40 p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <MessageCircle className="w-4 h-4 text-primary" />
