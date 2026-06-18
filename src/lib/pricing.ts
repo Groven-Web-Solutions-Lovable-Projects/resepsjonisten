@@ -21,6 +21,7 @@ export const PRICING = {
   baseHours: 8,
   hoursMin: 8,
   hoursMax: 24,
+  startupCost: 3990,
   // Åpningstider per ukedag
   openingHours: {
     weekdayAllowedStart: 8, // 08:00
