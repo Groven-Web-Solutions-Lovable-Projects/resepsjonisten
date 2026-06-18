@@ -267,6 +267,7 @@ export type PricingResult = {
   monthly: number;
   contractMonths: number;
   contractTotal: number;
+  startupCost: number;
   /** True hvis en ukedag har valgt tid utenfor 08–17 */
   weekdayOutOfRange: boolean;
   /** Maks lengde på en hverdag (timer) – brukt til prisberegning */
