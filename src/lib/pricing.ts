@@ -17,14 +17,46 @@ export const SOCIAL_PLATFORMS = [
 export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number]["value"];
 
 export const PRICING = {
-  basePrice: 2990,
   extraHourPrice: 200,
   baseHours: 8,
   hoursMin: 8,
   hoursMax: 24,
+  // Minutter inkludert per måned per resepsjonisttype
+  minutes: {
+    ai: {
+      basePrice: 1490,
+      includedMinutes: 100,
+      extraPerMinute: 6.5,
+      sliderMin: 100,
+      sliderMax: 500,
+      step: 10,
+    },
+    fysisk: {
+      basePrice: 2990,
+      includedMinutes: 150,
+      extraPerMinute: 12,
+      sliderMin: 150,
+      sliderMax: 1000,
+      step: 10,
+    },
+    kombi: {
+      basePrice: 3990,
+      includedAiMinutes: 100,
+      includedFysiskMinutes: 150,
+      extraAiPerMinute: 6.5,
+      extraFysiskPerMinute: 12,
+      aiSliderMin: 100,
+      aiSliderMax: 500,
+      fysiskSliderMin: 150,
+      fysiskSliderMax: 1000,
+      step: 10,
+    },
+  },
   descriptions: {
     receptionist:
       "Velg hvilken type resepsjonist du ønsker. AI Resepsjonist håndterer henvendelser automatisk. Fysisk Resepsjonist gir personlig oppfølging fra et menneske. Kombinasjon bruker AI som førstelinje og menneske ved behov.",
+    minutes:
+      "Velg hvor mange samtaleminutter du ønsker inkludert per måned. Bruker du mer enn det inkluderte, faktureres ekstra minutter til en fast pris per minutt.",
     hours:
       "Velg hvor mange timer per dag resepsjonisten skal være tilgjengelig. Standard kontortid er 8 timer (f.eks. 08:00–16:00). Pris justeres automatisk etter valgt åpningstid.",
     email:
@@ -104,6 +136,10 @@ export const PRICING = {
 export type PricingConfig = {
   receptionistType: ReceptionistType;
   hours: number;
+  /** Inkluderte AI-minutter per måned (brukt av "ai" og "kombi") */
+  aiMinutes: number;
+  /** Inkluderte fysiske minutter per måned (brukt av "fysisk" og "kombi") */
+  fysiskMinutes: number;
   email: number;
   sms: number;
   social: number;
@@ -132,6 +168,8 @@ export type PricingResult = {
 export const defaultConfig: PricingConfig = {
   receptionistType: "ai",
   hours: PRICING.baseHours,
+  aiMinutes: PRICING.minutes.ai.includedMinutes,
+  fysiskMinutes: PRICING.minutes.fysisk.includedMinutes,
   email: 0,
   sms: 0,
   social: 0,
@@ -147,11 +185,55 @@ export const defaultConfig: PricingConfig = {
 
 export function calculatePrice(c: PricingConfig): PricingResult {
   const recType = RECEPTIONIST_TYPES.find((t) => t.value === c.receptionistType) ?? RECEPTIONIST_TYPES[0];
-  const lines: LineItem[] = [
-    { label: recType.summaryLabel, amount: PRICING.basePrice },
-  ];
+  const lines: LineItem[] = [];
 
-  if (c.receptionistType === "fysisk") {
+  if (c.receptionistType === "ai") {
+    const m = PRICING.minutes.ai;
+    lines.push({
+      label: `${recType.summaryLabel} (${m.includedMinutes} min inkl.)`,
+      amount: m.basePrice,
+    });
+    const extra = Math.max(0, c.aiMinutes - m.includedMinutes);
+    if (extra > 0) {
+      lines.push({
+        label: `Ekstra AI-minutter (+${extra} min × ${m.extraPerMinute} kr)`,
+        amount: Math.round(extra * m.extraPerMinute),
+      });
+    }
+  } else if (c.receptionistType === "fysisk") {
+    const m = PRICING.minutes.fysisk;
+    lines.push({
+      label: `${recType.summaryLabel} (${m.includedMinutes} min inkl.)`,
+      amount: m.basePrice,
+    });
+    const extra = Math.max(0, c.fysiskMinutes - m.includedMinutes);
+    if (extra > 0) {
+      lines.push({
+        label: `Ekstra fysiske minutter (+${extra} min × ${m.extraPerMinute} kr)`,
+        amount: Math.round(extra * m.extraPerMinute),
+      });
+    }
+    lines.push({ label: PRICING.phoneSubscription.label, amount: PRICING.phoneSubscription.price });
+  } else {
+    const m = PRICING.minutes.kombi;
+    lines.push({
+      label: `${recType.summaryLabel} (${m.includedFysiskMinutes} min fysisk + ${m.includedAiMinutes} min AI inkl.)`,
+      amount: m.basePrice,
+    });
+    const extraAi = Math.max(0, c.aiMinutes - m.includedAiMinutes);
+    if (extraAi > 0) {
+      lines.push({
+        label: `Ekstra AI-minutter (+${extraAi} min × ${m.extraAiPerMinute} kr)`,
+        amount: Math.round(extraAi * m.extraAiPerMinute),
+      });
+    }
+    const extraFysisk = Math.max(0, c.fysiskMinutes - m.includedFysiskMinutes);
+    if (extraFysisk > 0) {
+      lines.push({
+        label: `Ekstra fysiske minutter (+${extraFysisk} min × ${m.extraFysiskPerMinute} kr)`,
+        amount: Math.round(extraFysisk * m.extraFysiskPerMinute),
+      });
+    }
     lines.push({ label: PRICING.phoneSubscription.label, amount: PRICING.phoneSubscription.price });
   }
 

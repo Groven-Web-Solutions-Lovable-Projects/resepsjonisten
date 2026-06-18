@@ -13,6 +13,7 @@ import {
   Send,
   UserCog,
   PhoneCall,
+  Timer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -69,6 +70,67 @@ type NumberOption = { value: number; label: string; price: number };
 
 const optionRowLabel = (o: NumberOption) =>
   o.value === 0 ? o.label : `${o.label} · +${formatKr(o.price)}/mnd`;
+
+/** Slider for inkluderte minutter per måned */
+const MinutesSlider = ({
+  title,
+  value,
+  min,
+  max,
+  step,
+  included,
+  extraPerMinute,
+  basePrice,
+  basePriceLabel,
+  onChange,
+}: {
+  title: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  included: number;
+  extraPerMinute: number;
+  basePrice: number;
+  basePriceLabel?: string;
+  onChange: (v: number) => void;
+}) => {
+  const extra = Math.max(0, value - included);
+  const extraCost = Math.round(extra * extraPerMinute);
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2">
+          <Timer className="w-4 h-4 text-primary" />
+          <Label className="text-sm font-medium text-foreground">{title}</Label>
+          <InfoTip title={title} text={PRICING.descriptions.minutes} />
+        </div>
+        <div className="text-right">
+          <div className="text-base font-semibold text-foreground tabular-nums">{value} min</div>
+          <div className="text-xs text-muted-foreground">
+            {extra > 0
+              ? `+${formatKr(extraCost)}/mnd (${extra} ekstra)`
+              : `Inkludert ${basePriceLabel ?? `for ${formatKr(basePrice)}/mnd`}`}
+          </div>
+        </div>
+      </div>
+      <Slider
+        min={min}
+        max={max}
+        step={step}
+        value={[value]}
+        onValueChange={([v]) => onChange(v)}
+      />
+      <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
+        <span>{included} min (inkludert)</span>
+        <span>{max} min</span>
+      </div>
+      <div className="text-xs text-muted-foreground mt-1">
+        Ekstra minutter: {extraPerMinute.toString().replace(".", ",")} kr per minutt
+      </div>
+    </div>
+  );
+};
 
 /** Toggle-tjeneste (på/av) */
 const ToggleService = ({
@@ -332,6 +394,66 @@ const PricingSection = () => {
                   );
                 })}
               </div>
+            </section>
+
+            <div className="border-t border-border" />
+
+            {/* Inkluderte minutter per måned */}
+            <section>
+              {config.receptionistType === "ai" && (
+                <MinutesSlider
+                  title="Inkluderte AI-minutter per måned"
+                  value={config.aiMinutes}
+                  min={PRICING.minutes.ai.sliderMin}
+                  max={PRICING.minutes.ai.sliderMax}
+                  step={PRICING.minutes.ai.step}
+                  included={PRICING.minutes.ai.includedMinutes}
+                  extraPerMinute={PRICING.minutes.ai.extraPerMinute}
+                  basePrice={PRICING.minutes.ai.basePrice}
+                  onChange={(v) => update("aiMinutes", v)}
+                />
+              )}
+              {config.receptionistType === "fysisk" && (
+                <MinutesSlider
+                  title="Inkluderte minutter per måned"
+                  value={config.fysiskMinutes}
+                  min={PRICING.minutes.fysisk.sliderMin}
+                  max={PRICING.minutes.fysisk.sliderMax}
+                  step={PRICING.minutes.fysisk.step}
+                  included={PRICING.minutes.fysisk.includedMinutes}
+                  extraPerMinute={PRICING.minutes.fysisk.extraPerMinute}
+                  basePrice={PRICING.minutes.fysisk.basePrice}
+                  onChange={(v) => update("fysiskMinutes", v)}
+                />
+              )}
+              {config.receptionistType === "kombi" && (
+                <div className="space-y-5">
+                  <MinutesSlider
+                    title="Inkluderte fysiske minutter per måned"
+                    value={config.fysiskMinutes}
+                    min={PRICING.minutes.kombi.fysiskSliderMin}
+                    max={PRICING.minutes.kombi.fysiskSliderMax}
+                    step={PRICING.minutes.kombi.step}
+                    included={PRICING.minutes.kombi.includedFysiskMinutes}
+                    extraPerMinute={PRICING.minutes.kombi.extraFysiskPerMinute}
+                    basePrice={PRICING.minutes.kombi.basePrice}
+                    basePriceLabel="i kombi-pakken"
+                    onChange={(v) => update("fysiskMinutes", v)}
+                  />
+                  <MinutesSlider
+                    title="Inkluderte AI-minutter per måned"
+                    value={config.aiMinutes}
+                    min={PRICING.minutes.kombi.aiSliderMin}
+                    max={PRICING.minutes.kombi.aiSliderMax}
+                    step={PRICING.minutes.kombi.step}
+                    included={PRICING.minutes.kombi.includedAiMinutes}
+                    extraPerMinute={PRICING.minutes.kombi.extraAiPerMinute}
+                    basePrice={PRICING.minutes.kombi.basePrice}
+                    basePriceLabel="i kombi-pakken"
+                    onChange={(v) => update("aiMinutes", v)}
+                  />
+                </div>
+              )}
             </section>
 
             <div className="border-t border-border" />
