@@ -71,6 +71,67 @@ type NumberOption = { value: number; label: string; price: number };
 const optionRowLabel = (o: NumberOption) =>
   o.value === 0 ? o.label : `${o.label} · +${formatKr(o.price)}/mnd`;
 
+/** Slider for inkluderte minutter per måned */
+const MinutesSlider = ({
+  title,
+  value,
+  min,
+  max,
+  step,
+  included,
+  extraPerMinute,
+  basePrice,
+  basePriceLabel,
+  onChange,
+}: {
+  title: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  included: number;
+  extraPerMinute: number;
+  basePrice: number;
+  basePriceLabel?: string;
+  onChange: (v: number) => void;
+}) => {
+  const extra = Math.max(0, value - included);
+  const extraCost = Math.round(extra * extraPerMinute);
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2">
+          <Timer className="w-4 h-4 text-primary" />
+          <Label className="text-sm font-medium text-foreground">{title}</Label>
+          <InfoTip title={title} text={PRICING.descriptions.minutes} />
+        </div>
+        <div className="text-right">
+          <div className="text-base font-semibold text-foreground tabular-nums">{value} min</div>
+          <div className="text-xs text-muted-foreground">
+            {extra > 0
+              ? `+${formatKr(extraCost)}/mnd (${extra} ekstra)`
+              : `Inkludert ${basePriceLabel ?? `for ${formatKr(basePrice)}/mnd`}`}
+          </div>
+        </div>
+      </div>
+      <Slider
+        min={min}
+        max={max}
+        step={step}
+        value={[value]}
+        onValueChange={([v]) => onChange(v)}
+      />
+      <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
+        <span>{included} min (inkludert)</span>
+        <span>{max} min</span>
+      </div>
+      <div className="text-xs text-muted-foreground mt-1">
+        Ekstra minutter: {extraPerMinute.toString().replace(".", ",")} kr per minutt
+      </div>
+    </div>
+  );
+};
+
 /** Toggle-tjeneste (på/av) */
 const ToggleService = ({
   icon: Icon,
