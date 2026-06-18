@@ -480,7 +480,8 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     discountAmount,
     monthly,
     contractMonths: contract.months,
-    contractTotal: monthly * contract.months,
+    contractTotal: monthly * contract.months + PRICING.startupCost,
+    startupCost: PRICING.startupCost,
     weekdayOutOfRange,
     maxWeekdayHours,
   };
