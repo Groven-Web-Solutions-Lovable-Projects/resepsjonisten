@@ -161,7 +161,7 @@ export const PRICING = {
     step: 5,
   },
   aiSms: {
-    label: "AI svarer SMS",
+    label: "AI besvarer SMS",
     pricePerUnit: 15,
     unitLabel: "SMS",
     unitLabelPlural: "SMS",
@@ -170,7 +170,7 @@ export const PRICING = {
     step: 10,
   },
   aiEmail: {
-    label: "AI på e-post",
+    label: "AI besvarer e-post",
     pricePerUnit: 15,
     unitLabel: "e-post",
     unitLabelPlural: "e-poster",
