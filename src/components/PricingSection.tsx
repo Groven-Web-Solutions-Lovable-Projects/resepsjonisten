@@ -18,6 +18,11 @@ import {
   CalendarDays,
   MessageCircle,
   Calendar,
+  Database,
+  Bot,
+  CalendarPlus,
+  ClipboardList,
+  Plane,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
