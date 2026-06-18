@@ -592,30 +592,47 @@ const PricingSection = () => {
                 {" "}{formatKr(PRICING.extraHourPrice)}/t/mnd.
               </p>
 
-              {/* Lørdag */}
-              <div className="mt-4">
-                <ToggleService
-                  icon={CalendarDays}
-                  title="Lørdagsåpent (09:00–15:00)"
-                  desc="Vi svarer kundene dine også på lørdager"
-                  info={PRICING.descriptions.saturday}
-                  price={PRICING.openingHours.saturday.price}
-                  checked={config.saturday}
-                  onChange={(v) => update("saturday", v)}
+              {/* Helgeåpent */}
+              <div className="mt-4 flex items-start gap-3 rounded-lg border border-border bg-background p-3">
+                <Checkbox
+                  id="helgeapent"
+                  checked={weekendsOpen}
+                  onCheckedChange={(v) => setWeekendsOpen(!!v)}
+                  className="mt-0.5"
                 />
+                <label htmlFor="helgeapent" className="text-sm text-foreground cursor-pointer leading-snug">
+                  Har du også åpent i helger?
+                </label>
               </div>
 
-              {/* Søndag / 24-7 info */}
-              <div className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-                <div className="font-medium text-foreground mb-1">Søndag og 24/7</div>
-                <p className="leading-relaxed">
-                  Søndagsåpent og full 24/7-tilgjengelighet leveres kun på forespørsel.
-                  Ta kontakt så finner vi en løsning som passer deg.
-                </p>
-                <Button asChild variant="link" className="h-auto p-0 mt-1">
-                  <a href="#kontakt">Ta kontakt →</a>
-                </Button>
-              </div>
+              {weekendsOpen && (
+                <>
+                  {/* Lørdag */}
+                  <div className="mt-3">
+                    <ToggleService
+                      icon={CalendarDays}
+                      title="Lørdagsåpent (09:00–15:00)"
+                      desc="Vi svarer kundene dine også på lørdager"
+                      info={PRICING.descriptions.saturday}
+                      price={PRICING.openingHours.saturday.price}
+                      checked={config.saturday}
+                      onChange={(v) => update("saturday", v)}
+                    />
+                  </div>
+
+                  {/* Søndag / 24-7 info */}
+                  <div className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+                    <div className="font-medium text-foreground mb-1">Søndag og 24/7</div>
+                    <p className="leading-relaxed">
+                      Søndagsåpent og full 24/7-tilgjengelighet leveres kun på forespørsel.
+                      Ta kontakt så finner vi en løsning som passer deg.
+                    </p>
+                    <Button asChild variant="link" className="h-auto p-0 mt-1">
+                      <a href="#kontakt">Ta kontakt →</a>
+                    </Button>
+                  </div>
+                </>
+              )}
 
               {/* Out-of-range warning */}
               {result.weekdayOutOfRange && (
