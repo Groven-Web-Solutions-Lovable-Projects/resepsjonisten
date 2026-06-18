@@ -1055,6 +1055,11 @@ const PricingSection = () => {
               <Sparkles className="w-4 h-4" /> Din pakke
             </div>
 
+            <div className="mt-3 flex items-start justify-between gap-3 text-sm border-b border-primary-foreground/20 pb-3">
+              <span className="opacity-95">Oppstartskostnad og implementering</span>
+              <span className="font-semibold tabular-nums whitespace-nowrap">{formatKr(result.startupCost)} engangssum</span>
+            </div>
+
             <ul className="mt-3 space-y-1.5 text-sm">
               {result.lines.map((line) => (
                 <li key={line.label} className="flex items-start justify-between gap-3">
