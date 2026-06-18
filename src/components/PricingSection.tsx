@@ -439,6 +439,8 @@ const PricingSection = () => {
       (d) => `  ${d.short}: ${formatHour(config.weekdayHours[d.value].start)}–${formatHour(config.weekdayHours[d.value].end)}`,
     ).join("\n");
     const summary = [
+      `Oppstartskostnad og implementering: ${formatKr(result.startupCost)} (engangssum)`,
+      "",
       `Resepsjonist-type: ${recType.label}`,
       `Åpningstider man–fre:`,
       weekdayText,
