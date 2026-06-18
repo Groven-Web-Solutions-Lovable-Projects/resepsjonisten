@@ -270,16 +270,18 @@ const QuantityService = ({
               {value} {unit}
             </span>
           </div>
-          <Slider
-            min={Math.max(step, min || step)}
-            max={max}
-            step={step}
-            value={[value]}
-            onValueChange={([v]) => onChange(v)}
-          />
-          <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
-            <span>{Math.max(step, min || step)}</span>
-            <span>{max}</span>
+          <div className="border border-border rounded-lg p-3 bg-background">
+            <Slider
+              min={Math.max(step, min || step)}
+              max={max}
+              step={step}
+              value={[value]}
+              onValueChange={([v]) => onChange(v)}
+            />
+            <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
+              <span>{Math.max(step, min || step)}</span>
+              <span>{max}</span>
+            </div>
           </div>
         </div>
       )}
