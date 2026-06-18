@@ -13,6 +13,7 @@ import {
   Send,
   UserCog,
   PhoneCall,
+  Timer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -332,6 +333,66 @@ const PricingSection = () => {
                   );
                 })}
               </div>
+            </section>
+
+            <div className="border-t border-border" />
+
+            {/* Inkluderte minutter per måned */}
+            <section>
+              {config.receptionistType === "ai" && (
+                <MinutesSlider
+                  title="Inkluderte AI-minutter per måned"
+                  value={config.aiMinutes}
+                  min={PRICING.minutes.ai.sliderMin}
+                  max={PRICING.minutes.ai.sliderMax}
+                  step={PRICING.minutes.ai.step}
+                  included={PRICING.minutes.ai.includedMinutes}
+                  extraPerMinute={PRICING.minutes.ai.extraPerMinute}
+                  basePrice={PRICING.minutes.ai.basePrice}
+                  onChange={(v) => update("aiMinutes", v)}
+                />
+              )}
+              {config.receptionistType === "fysisk" && (
+                <MinutesSlider
+                  title="Inkluderte minutter per måned"
+                  value={config.fysiskMinutes}
+                  min={PRICING.minutes.fysisk.sliderMin}
+                  max={PRICING.minutes.fysisk.sliderMax}
+                  step={PRICING.minutes.fysisk.step}
+                  included={PRICING.minutes.fysisk.includedMinutes}
+                  extraPerMinute={PRICING.minutes.fysisk.extraPerMinute}
+                  basePrice={PRICING.minutes.fysisk.basePrice}
+                  onChange={(v) => update("fysiskMinutes", v)}
+                />
+              )}
+              {config.receptionistType === "kombi" && (
+                <div className="space-y-5">
+                  <MinutesSlider
+                    title="Inkluderte fysiske minutter per måned"
+                    value={config.fysiskMinutes}
+                    min={PRICING.minutes.kombi.fysiskSliderMin}
+                    max={PRICING.minutes.kombi.fysiskSliderMax}
+                    step={PRICING.minutes.kombi.step}
+                    included={PRICING.minutes.kombi.includedFysiskMinutes}
+                    extraPerMinute={PRICING.minutes.kombi.extraFysiskPerMinute}
+                    basePrice={PRICING.minutes.kombi.basePrice}
+                    basePriceLabel="i kombi-pakken"
+                    onChange={(v) => update("fysiskMinutes", v)}
+                  />
+                  <MinutesSlider
+                    title="Inkluderte AI-minutter per måned"
+                    value={config.aiMinutes}
+                    min={PRICING.minutes.kombi.aiSliderMin}
+                    max={PRICING.minutes.kombi.aiSliderMax}
+                    step={PRICING.minutes.kombi.step}
+                    included={PRICING.minutes.kombi.includedAiMinutes}
+                    extraPerMinute={PRICING.minutes.kombi.extraAiPerMinute}
+                    basePrice={PRICING.minutes.kombi.basePrice}
+                    basePriceLabel="i kombi-pakken"
+                    onChange={(v) => update("aiMinutes", v)}
+                  />
+                </div>
+              )}
             </section>
 
             <div className="border-t border-border" />
