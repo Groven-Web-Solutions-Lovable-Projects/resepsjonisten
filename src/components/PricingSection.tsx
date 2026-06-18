@@ -17,6 +17,7 @@ import {
   AlertTriangle,
   CalendarDays,
   MessageCircle,
+  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -748,6 +749,15 @@ const PricingSection = () => {
                   price={PRICING.aircall.price}
                   checked={config.aircall}
                   onChange={(v) => update("aircall", v)}
+                />
+                <ToggleService
+                  icon={Calendar}
+                  title="Timebestilling/avbestilling og utsettelse"
+                  desc="Vi håndterer booking i dine systemer"
+                  info={PRICING.descriptions.appointmentBooking}
+                  price={PRICING.appointmentBooking.price}
+                  checked={config.appointmentBooking}
+                  onChange={(v) => update("appointmentBooking", v)}
                 />
                 <div className="rounded-lg border border-border bg-muted/40 p-3">
                   <div className="flex items-center gap-2 mb-1">

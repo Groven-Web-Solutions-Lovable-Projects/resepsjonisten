@@ -88,6 +88,8 @@ export const PRICING = {
       "Telefonabonnement som følger med Fysisk Resepsjonist. Inkluderer linje og nødvendig oppsett.",
     aircall:
       "Ønsker du egen bruker i Aircall for å se dine egne statistikker, samt få tilgang til samtalelogg og relevant rapportering? Dette kan legges til som egen lisens etter behov.",
+    appointmentBooking:
+      "Vi håndterer timebestilling, avbestilling og utsettelse i dine systemer. Prisen gjelder per bookingsystem.",
     contract:
       "Lengre bindingstid gir lavere månedspris:\n\n• 3 måneder: ingen rabatt\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt\n• 24 måneder: 15 % rabatt",
   },
@@ -136,6 +138,7 @@ export const PRICING = {
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990 },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 750 },
+  appointmentBooking: { label: "Timebestilling/avbestilling og utsettelse", price: 490 },
   contracts: [
     { months: 3, label: "3 måneder", discount: 0 },
     { months: 6, label: "6 måneder", discount: 0.05 },
@@ -164,6 +167,7 @@ export type PricingConfig = {
   forwarding: boolean;
   ai247: boolean;
   aircall: boolean;
+  appointmentBooking: boolean;
   contractMonths: number;
 };
 
@@ -217,6 +221,7 @@ export const defaultConfig: PricingConfig = {
   forwarding: false,
   ai247: false,
   aircall: false,
+  appointmentBooking: false,
   contractMonths: 3,
 };
 
@@ -325,6 +330,7 @@ export function calculatePrice(c: PricingConfig): PricingResult {
   if (c.forwarding) lines.push({ label: PRICING.forwarding.label, amount: PRICING.forwarding.price });
   if (c.ai247) lines.push({ label: PRICING.ai247.label, amount: PRICING.ai247.price });
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
+  if (c.appointmentBooking) lines.push({ label: PRICING.appointmentBooking.label, amount: PRICING.appointmentBooking.price });
 
   const subtotal = lines.reduce((s, l) => s + l.amount, 0);
   const contract =
