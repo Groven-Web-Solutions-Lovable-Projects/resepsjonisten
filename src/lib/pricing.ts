@@ -88,6 +88,8 @@ export const PRICING = {
       "Telefonabonnement som følger med Fysisk Resepsjonist. Inkluderer linje og nødvendig oppsett.",
     aircall:
       "Ønsker du egen bruker i Aircall for å se dine egne statistikker, samt få tilgang til samtalelogg og relevant rapportering? Dette kan legges til som egen lisens etter behov.",
+    appointmentBooking:
+      "Vi håndterer timebestilling, avbestilling og utsettelse i dine systemer. Prisen gjelder per bookingsystem.",
     contract:
       "Lengre bindingstid gir lavere månedspris:\n\n• 3 måneder: ingen rabatt\n• 6 måneder: 5 % rabatt\n• 12 måneder: 10 % rabatt\n• 24 måneder: 15 % rabatt",
   },
