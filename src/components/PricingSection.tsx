@@ -14,6 +14,8 @@ import {
   UserCog,
   PhoneCall,
   Timer,
+  AlertTriangle,
+  CalendarDays,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -33,11 +35,14 @@ import {
   PRICING,
   RECEPTIONIST_TYPES,
   SOCIAL_PLATFORMS,
+  WEEKDAYS,
+  formatHour,
   calculatePrice,
   defaultConfig,
   formatKr,
   type PricingConfig,
   type SocialPlatform,
+  type Weekday,
 } from "@/lib/pricing";
 import { useCalculatorSnapshot } from "@/contexts/CalculatorContext";
 
@@ -294,18 +299,47 @@ const PricingSection = () => {
   const [config, setConfig] = useState<PricingConfig>(defaultConfig);
   const result = useMemo(() => calculatePrice(config), [config]);
   const { setSnapshot } = useCalculatorSnapshot();
+  const [sameForAll, setSameForAll] = useState(true);
 
   const update = <K extends keyof PricingConfig>(key: K, value: PricingConfig[K]) =>
     setConfig((c) => ({ ...c, [key]: value }));
 
-  const extraHours = Math.max(0, config.hours - PRICING.baseHours);
+  const extraHours = Math.max(0, result.maxWeekdayHours - PRICING.baseHours);
+
+  const allowedStart = PRICING.openingHours.weekdayAllowedStart;
+  const allowedEnd = PRICING.openingHours.weekdayAllowedEnd;
+  const startOptions = PRICING.openingHours.weekdayTimeOptions.filter((h) => h < allowedEnd);
+  const endOptions = PRICING.openingHours.weekdayTimeOptions.filter((h) => h > allowedStart);
+
+  const setDayHours = (day: Weekday, patch: Partial<{ start: number; end: number }>) => {
+    setConfig((c) => ({
+      ...c,
+      weekdayHours: { ...c.weekdayHours, [day]: { ...c.weekdayHours[day], ...patch } },
+    }));
+  };
+
+  const setAllWeekdays = (patch: Partial<{ start: number; end: number }>) => {
+    setConfig((c) => {
+      const next = { ...c.weekdayHours };
+      for (const d of WEEKDAYS) next[d.value] = { ...next[d.value], ...patch };
+      return { ...c, weekdayHours: next };
+    });
+  };
+
+  const monHours = config.weekdayHours.mon;
 
   const captureSnapshot = () => {
     const recType = RECEPTIONIST_TYPES.find((t) => t.value === config.receptionistType)!;
     const contract = PRICING.contracts.find((p) => p.months === result.contractMonths);
+    const weekdayText = WEEKDAYS.map(
+      (d) => `  ${d.short}: ${formatHour(config.weekdayHours[d.value].start)}–${formatHour(config.weekdayHours[d.value].end)}`,
+    ).join("\n");
     const summary = [
       `Resepsjonist-type: ${recType.label}`,
-      `Åpningstider: ${config.hours} t/dag`,
+      `Åpningstider man–fre:`,
+      weekdayText,
+      config.saturday ? `Lørdag: 09:00–15:00 (+990 kr/mnd)` : null,
+      result.weekdayOutOfRange ? `OBS: Valgte tider utenfor 08–17 – ta direkte kontakt.` : null,
       "",
       "Valgte tjenester:",
       ...result.lines.map((l) => `${l.label}: ${formatKr(l.amount)}`),
