@@ -298,7 +298,11 @@ const TieredService = ({
 
 const PricingSection = () => {
   const [config, setConfig] = useState<PricingConfig>(defaultConfig);
-  const result = useMemo(() => calculatePrice(config), [config]);
+  const [weekendsOpen, setWeekendsOpen] = useState(false);
+  const result = useMemo(
+    () => calculatePrice({ ...config, saturday: weekendsOpen ? config.saturday : false }),
+    [config, weekendsOpen],
+  );
   const { setSnapshot } = useCalculatorSnapshot();
   const [sameForAll, setSameForAll] = useState(true);
 
