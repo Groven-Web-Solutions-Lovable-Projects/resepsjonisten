@@ -309,9 +309,7 @@ export const defaultConfig: PricingConfig = {
 
 export function calculatePrice(c: PricingConfig): PricingResult {
   const recType = RECEPTIONIST_TYPES.find((t) => t.value === c.receptionistType) ?? RECEPTIONIST_TYPES[0];
-  const lines: LineItem[] = [
-    { label: "Oppstartskostnad og implementering", amount: PRICING.startupCost },
-  ];
+  const lines: LineItem[] = [];
 
   if (c.receptionistType === "ai") {
     const m = PRICING.minutes.ai;
