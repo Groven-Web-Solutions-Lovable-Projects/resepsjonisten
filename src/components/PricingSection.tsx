@@ -196,6 +196,97 @@ const ToggleService = ({
   </div>
 );
 
+/** Kvantitets-tjeneste: av/på + slider for antall enheter, pris per enhet */
+const QuantityService = ({
+  icon: Icon,
+  title,
+  desc,
+  info,
+  value,
+  pricePerUnit,
+  unitLabel,
+  unitLabelPlural,
+  min,
+  max,
+  step,
+  onChange,
+}: {
+  icon: typeof Mic;
+  title: string;
+  desc: string;
+  info?: string;
+  value: number;
+  pricePerUnit: number;
+  unitLabel: string;
+  unitLabelPlural: string;
+  min: number;
+  max: number;
+  step: number;
+  onChange: (v: number) => void;
+}) => {
+  const active = value > 0;
+  const amount = value * pricePerUnit;
+  const unit = value === 1 ? unitLabel : unitLabelPlural;
+  return (
+    <div
+      className={cn(
+        "rounded-lg border bg-background p-3 transition-colors",
+        active ? "border-success bg-success/10" : "border-border hover:border-primary/40",
+      )}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div
+            className={cn(
+              "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+              active ? "bg-success" : "bg-muted",
+            )}
+          >
+            <Icon className={cn("w-4 h-4", active ? "text-success-foreground" : "text-muted-foreground")} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <div className="text-sm font-medium text-foreground">{title}</div>
+              {info && <InfoTip title={title} text={info} />}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {active ? `${value} ${unit} × ${pricePerUnit} kr · +${formatKr(amount)}/mnd` : desc}
+            </div>
+          </div>
+        </div>
+        <div className="shrink-0">
+          <Switch
+            checked={active}
+            onCheckedChange={(v) => onChange(v ? Math.max(step, min || step) : 0)}
+            aria-label={title}
+          />
+        </div>
+      </div>
+      {active && (
+        <div className="mt-3 pl-12">
+          <div className="flex items-center justify-between gap-3 mb-2">
+            <span className="text-xs text-muted-foreground">Antall per måned</span>
+            <span className="text-sm font-semibold text-foreground tabular-nums">
+              {value} {unit}
+            </span>
+          </div>
+          <Slider
+            min={Math.max(step, min || step)}
+            max={max}
+            step={step}
+            value={[value]}
+            onValueChange={([v]) => onChange(v)}
+          />
+          <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
+            <span>{Math.max(step, min || step)}</span>
+            <span>{max}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 /** Tiered tjeneste (dropdown med nivåer) — med valgfrie plattform-checkboxes */
 const TieredService = ({
   icon: Icon,
