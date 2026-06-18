@@ -728,6 +728,18 @@ const PricingSection = () => {
                   checked={config.aircall}
                   onChange={(v) => update("aircall", v)}
                 />
+                <div className="rounded-lg border border-border bg-muted/40 p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <MessageCircle className="w-4 h-4 text-primary" />
+                    <div className="text-sm font-medium text-foreground">Livechat på nettsiden</div>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Leveres kun på forespørsel. Ta kontakt så finner vi en løsning som passer deg.
+                  </p>
+                  <Button asChild variant="link" className="h-auto p-0 mt-1 text-xs">
+                    <a href="#kontakt">Ta kontakt →</a>
+                  </Button>
+                </div>
               </div>
             </section>
 
