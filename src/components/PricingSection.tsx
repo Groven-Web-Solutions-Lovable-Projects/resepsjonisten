@@ -1117,7 +1117,7 @@ const PricingSection = () => {
               </a>
             </Button>
             <p className="text-[11px] opacity-75 text-center mt-2">
-              Eks. mva. Ingen oppstartskostnad.
+              Eks. mva. Oppstartskostnad {formatKr(result.startupCost)} engangssum.
             </p>
           </motion.aside>
         </div>
