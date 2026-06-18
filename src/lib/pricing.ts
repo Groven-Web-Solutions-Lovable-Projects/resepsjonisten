@@ -21,6 +21,13 @@ export const PRICING = {
   baseHours: 8,
   hoursMin: 8,
   hoursMax: 24,
+  // Åpningstider per ukedag
+  openingHours: {
+    weekdayAllowedStart: 8, // 08:00
+    weekdayAllowedEnd: 17, // 17:00
+    weekdayTimeOptions: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17] as const,
+    saturday: { price: 990, start: 9, end: 15, label: "Lørdag 09–15" },
+  },
   // Minutter inkludert per måned per resepsjonisttype
   minutes: {
     ai: {
@@ -58,7 +65,11 @@ export const PRICING = {
     minutes:
       "Velg hvor mange samtaleminutter du ønsker inkludert per måned. Bruker du mer enn det inkluderte, faktureres ekstra minutter til en fast pris per minutt.",
     hours:
-      "Velg hvor mange timer per dag resepsjonisten skal være tilgjengelig. Standard kontortid er 8 timer (f.eks. 08:00–16:00). Pris justeres automatisk etter valgt åpningstid.",
+      "Velg åpningstider per ukedag innenfor 08:00–17:00. Inntil 8 timer per dag er inkludert. Lørdag kan legges til (09–15) for 990 kr/mnd. Søndag og 24/7 leveres på forespørsel – ta kontakt.",
+    saturday:
+      "Lørdagsåpent leveres innenfor 09:00–15:00 og koster 990 kr/mnd.",
+    sunday:
+      "Søndagsåpent leveres kun på forespørsel. Ta kontakt for et tilpasset tilbud.",
     email:
       "Velg estimert antall e-poster vi skal besvare per måned. Vi leser, vurderer og besvarer henvendelsene profesjonelt slik at kundene dine får raske svar.",
     sms:
@@ -135,7 +146,10 @@ export const PRICING = {
 
 export type PricingConfig = {
   receptionistType: ReceptionistType;
-  hours: number;
+  /** Åpningstider man–fre. Tider i hele timer (8 = 08:00). */
+  weekdayHours: Record<Weekday, { start: number; end: number }>;
+  /** Lørdagsåpent 09–15 (+990 kr/mnd) */
+  saturday: boolean;
   /** Inkluderte AI-minutter per måned (brukt av "ai" og "kombi") */
   aiMinutes: number;
   /** Inkluderte fysiske minutter per måned (brukt av "fysisk" og "kombi") */
@@ -153,6 +167,18 @@ export type PricingConfig = {
   contractMonths: number;
 };
 
+export const WEEKDAYS = [
+  { value: "mon", label: "Mandag", short: "Man" },
+  { value: "tue", label: "Tirsdag", short: "Tir" },
+  { value: "wed", label: "Onsdag", short: "Ons" },
+  { value: "thu", label: "Torsdag", short: "Tor" },
+  { value: "fri", label: "Fredag", short: "Fre" },
+] as const;
+
+export type Weekday = (typeof WEEKDAYS)[number]["value"];
+
+export const formatHour = (h: number) => `${String(h).padStart(2, "0")}:00`;
+
 export type LineItem = { label: string; amount: number };
 
 export type PricingResult = {
@@ -163,11 +189,22 @@ export type PricingResult = {
   monthly: number;
   contractMonths: number;
   contractTotal: number;
+  /** True hvis en ukedag har valgt tid utenfor 08–17 */
+  weekdayOutOfRange: boolean;
+  /** Maks lengde på en hverdag (timer) – brukt til prisberegning */
+  maxWeekdayHours: number;
 };
 
 export const defaultConfig: PricingConfig = {
   receptionistType: "ai",
-  hours: PRICING.baseHours,
+  weekdayHours: {
+    mon: { start: 8, end: 16 },
+    tue: { start: 8, end: 16 },
+    wed: { start: 8, end: 16 },
+    thu: { start: 8, end: 16 },
+    fri: { start: 8, end: 16 },
+  },
+  saturday: false,
   aiMinutes: PRICING.minutes.ai.includedMinutes,
   fysiskMinutes: PRICING.minutes.fysisk.includedMinutes,
   email: 0,
@@ -237,12 +274,30 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     lines.push({ label: PRICING.phoneSubscription.label, amount: PRICING.phoneSubscription.price });
   }
 
-  const extraHours = Math.max(0, c.hours - PRICING.baseHours);
-  if (extraHours > 0) {
+  // Åpningstider man–fre
+  const allowedStart = PRICING.openingHours.weekdayAllowedStart;
+  const allowedEnd = PRICING.openingHours.weekdayAllowedEnd;
+  let weekdayOutOfRange = false;
+  let maxWeekdayHours: number = PRICING.baseHours;
+  for (const d of WEEKDAYS) {
+    const { start, end } = c.weekdayHours[d.value];
+    if (start < allowedStart || end > allowedEnd || end <= start) {
+      weekdayOutOfRange = true;
+      continue;
+    }
+    const dur = end - start;
+    if (dur > maxWeekdayHours) maxWeekdayHours = dur;
+  }
+  const extraHours = Math.max(0, maxWeekdayHours - PRICING.baseHours);
+  if (extraHours > 0 && !weekdayOutOfRange) {
     lines.push({
       label: `Utvidede åpningstider (+${extraHours} t/dag)`,
       amount: extraHours * PRICING.extraHourPrice,
     });
+  }
+  if (c.saturday) {
+    const s = PRICING.openingHours.saturday;
+    lines.push({ label: s.label, amount: s.price });
   }
 
   const email = PRICING.email.options.find((o) => o.value === c.email);
@@ -286,6 +341,8 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     monthly,
     contractMonths: contract.months,
     contractTotal: monthly * contract.months,
+    weekdayOutOfRange,
+    maxWeekdayHours,
   };
 }
 

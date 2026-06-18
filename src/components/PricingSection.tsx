@@ -14,6 +14,8 @@ import {
   UserCog,
   PhoneCall,
   Timer,
+  AlertTriangle,
+  CalendarDays,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -33,11 +35,14 @@ import {
   PRICING,
   RECEPTIONIST_TYPES,
   SOCIAL_PLATFORMS,
+  WEEKDAYS,
+  formatHour,
   calculatePrice,
   defaultConfig,
   formatKr,
   type PricingConfig,
   type SocialPlatform,
+  type Weekday,
 } from "@/lib/pricing";
 import { useCalculatorSnapshot } from "@/contexts/CalculatorContext";
 
@@ -294,18 +299,47 @@ const PricingSection = () => {
   const [config, setConfig] = useState<PricingConfig>(defaultConfig);
   const result = useMemo(() => calculatePrice(config), [config]);
   const { setSnapshot } = useCalculatorSnapshot();
+  const [sameForAll, setSameForAll] = useState(true);
 
   const update = <K extends keyof PricingConfig>(key: K, value: PricingConfig[K]) =>
     setConfig((c) => ({ ...c, [key]: value }));
 
-  const extraHours = Math.max(0, config.hours - PRICING.baseHours);
+  const extraHours = Math.max(0, result.maxWeekdayHours - PRICING.baseHours);
+
+  const allowedStart = PRICING.openingHours.weekdayAllowedStart;
+  const allowedEnd = PRICING.openingHours.weekdayAllowedEnd;
+  const startOptions = PRICING.openingHours.weekdayTimeOptions.filter((h) => h < allowedEnd);
+  const endOptions = PRICING.openingHours.weekdayTimeOptions.filter((h) => h > allowedStart);
+
+  const setDayHours = (day: Weekday, patch: Partial<{ start: number; end: number }>) => {
+    setConfig((c) => ({
+      ...c,
+      weekdayHours: { ...c.weekdayHours, [day]: { ...c.weekdayHours[day], ...patch } },
+    }));
+  };
+
+  const setAllWeekdays = (patch: Partial<{ start: number; end: number }>) => {
+    setConfig((c) => {
+      const next = { ...c.weekdayHours };
+      for (const d of WEEKDAYS) next[d.value] = { ...next[d.value], ...patch };
+      return { ...c, weekdayHours: next };
+    });
+  };
+
+  const monHours = config.weekdayHours.mon;
 
   const captureSnapshot = () => {
     const recType = RECEPTIONIST_TYPES.find((t) => t.value === config.receptionistType)!;
     const contract = PRICING.contracts.find((p) => p.months === result.contractMonths);
+    const weekdayText = WEEKDAYS.map(
+      (d) => `  ${d.short}: ${formatHour(config.weekdayHours[d.value].start)}–${formatHour(config.weekdayHours[d.value].end)}`,
+    ).join("\n");
     const summary = [
       `Resepsjonist-type: ${recType.label}`,
-      `Åpningstider: ${config.hours} t/dag`,
+      `Åpningstider man–fre:`,
+      weekdayText,
+      config.saturday ? `Lørdag: 09:00–15:00 (+990 kr/mnd)` : null,
+      result.weekdayOutOfRange ? `OBS: Valgte tider utenfor 08–17 – ta direkte kontakt.` : null,
       "",
       "Valgte tjenester:",
       ...result.lines.map((l) => `${l.label}: ${formatKr(l.amount)}`),
@@ -467,25 +501,137 @@ const PricingSection = () => {
                   <InfoTip title="Åpningstider per dag" text={PRICING.descriptions.hours} />
                 </div>
                 <div className="text-right">
-                  <div className="text-base font-semibold text-foreground tabular-nums">{config.hours} timer</div>
-                  {extraHours > 0 && (
+                  <div className="text-base font-semibold text-foreground tabular-nums">
+                    {result.maxWeekdayHours} t/dag (maks)
+                  </div>
+                  {extraHours > 0 && !result.weekdayOutOfRange && (
                     <div className="text-xs text-muted-foreground">
                       +{formatKr(extraHours * PRICING.extraHourPrice)}/mnd
                     </div>
                   )}
                 </div>
               </div>
-              <Slider
-                min={PRICING.hoursMin}
-                max={PRICING.hoursMax}
-                step={1}
-                value={[config.hours]}
-                onValueChange={([v]) => update("hours", v)}
-              />
-              <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
-                <span>8 t (inkludert)</span>
-                <span>24 t</span>
+
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background p-3 mb-3">
+                <div className="text-sm text-foreground">
+                  Bruk samme åpningstid mandag–fredag
+                </div>
+                <Switch
+                  checked={sameForAll}
+                  onCheckedChange={(v) => {
+                    setSameForAll(v);
+                    if (v) setAllWeekdays({ start: monHours.start, end: monHours.end });
+                  }}
+                  aria-label="Bruk samme åpningstid mandag til fredag"
+                />
               </div>
+
+              {sameForAll ? (
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                  <Select
+                    value={String(monHours.start)}
+                    onValueChange={(v) => setAllWeekdays({ start: Number(v) })}
+                  >
+                    <SelectTrigger className="h-10"><SelectValue>{formatHour(monHours.start)}</SelectValue></SelectTrigger>
+                    <SelectContent>
+                      {startOptions.map((h) => (
+                        <SelectItem key={h} value={String(h)}>{formatHour(h)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-muted-foreground">–</span>
+                  <Select
+                    value={String(monHours.end)}
+                    onValueChange={(v) => setAllWeekdays({ end: Number(v) })}
+                  >
+                    <SelectTrigger className="h-10"><SelectValue>{formatHour(monHours.end)}</SelectValue></SelectTrigger>
+                    <SelectContent>
+                      {endOptions.filter((h) => h > monHours.start).map((h) => (
+                        <SelectItem key={h} value={String(h)}>{formatHour(h)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {WEEKDAYS.map((d) => {
+                    const dh = config.weekdayHours[d.value];
+                    return (
+                      <div key={d.value} className="grid grid-cols-[80px_1fr_auto_1fr] items-center gap-2">
+                        <div className="text-sm text-foreground">{d.label}</div>
+                        <Select value={String(dh.start)} onValueChange={(v) => setDayHours(d.value, { start: Number(v) })}>
+                          <SelectTrigger className="h-10"><SelectValue>{formatHour(dh.start)}</SelectValue></SelectTrigger>
+                          <SelectContent>
+                            {startOptions.map((h) => (
+                              <SelectItem key={h} value={String(h)}>{formatHour(h)}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <span className="text-muted-foreground">–</span>
+                        <Select value={String(dh.end)} onValueChange={(v) => setDayHours(d.value, { end: Number(v) })}>
+                          <SelectTrigger className="h-10"><SelectValue>{formatHour(dh.end)}</SelectValue></SelectTrigger>
+                          <SelectContent>
+                            {endOptions.filter((h) => h > dh.start).map((h) => (
+                              <SelectItem key={h} value={String(h)}>{formatHour(h)}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground mt-2">
+                Innenfor 08:00–17:00 er inntil 8 t/dag inkludert. Utvidet åpningstid (opptil 9 t) koster
+                {" "}{formatKr(PRICING.extraHourPrice)}/t/mnd.
+              </p>
+
+              {/* Lørdag */}
+              <div className="mt-4">
+                <ToggleService
+                  icon={CalendarDays}
+                  title="Lørdagsåpent (09:00–15:00)"
+                  desc="Vi svarer kundene dine også på lørdager"
+                  info={PRICING.descriptions.saturday}
+                  price={PRICING.openingHours.saturday.price}
+                  checked={config.saturday}
+                  onChange={(v) => update("saturday", v)}
+                />
+              </div>
+
+              {/* Søndag / 24-7 info */}
+              <div className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+                <div className="font-medium text-foreground mb-1">Søndag og 24/7</div>
+                <p className="leading-relaxed">
+                  Søndagsåpent og full 24/7-tilgjengelighet leveres kun på forespørsel.
+                  Ta kontakt så finner vi en løsning som passer deg.
+                </p>
+                <Button asChild variant="link" className="h-auto p-0 mt-1">
+                  <a href="#kontakt">Ta kontakt →</a>
+                </Button>
+              </div>
+
+              {/* Out-of-range warning */}
+              {result.weekdayOutOfRange && (
+                <div className="mt-3 rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+                    <div className="flex-1">
+                      <div className="font-medium text-foreground mb-1">
+                        Ønsket åpningstid er utenfor 08:00–17:00
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Tider utenfor dette intervallet leveres på forespørsel. Ta direkte kontakt
+                        så lager vi et tilpasset tilbud.
+                      </p>
+                      <Button asChild variant="link" className="h-auto p-0 mt-1 text-destructive">
+                        <a href="#kontakt">Ta kontakt →</a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </section>
 
             <div className="border-t border-border" />
