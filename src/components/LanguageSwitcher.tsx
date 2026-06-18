@@ -8,6 +8,12 @@ const LANGUAGES: Lang[] = [
   { code: "no", label: "Norsk", flag: "no", googleCode: "no" },
   { code: "en", label: "English", flag: "gb", googleCode: "en" },
   { code: "sv", label: "Svenska", flag: "se", googleCode: "sv" },
+  { code: "da", label: "Dansk", flag: "dk", googleCode: "da" },
+  { code: "de", label: "Deutsch", flag: "de", googleCode: "de" },
+  { code: "fr", label: "Français", flag: "fr", googleCode: "fr" },
+  { code: "es", label: "Español", flag: "es", googleCode: "es" },
+  { code: "it", label: "Italiano", flag: "it", googleCode: "it" },
+  { code: "lt", label: "Lietuvių", flag: "lt", googleCode: "lt" },
   { code: "pl", label: "Polski", flag: "pl", googleCode: "pl" },
 ];
 
