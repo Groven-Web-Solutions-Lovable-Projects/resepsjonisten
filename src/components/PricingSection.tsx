@@ -707,7 +707,9 @@ const PricingSection = () => {
                 {" "}{formatKr(PRICING.extraHourPrice)}/t/mnd.
               </p>
 
-              {/* Helgeåpent */}
+              {/* Helgeåpent — ikke tilgjengelig for AI Resepsjonist */}
+              {config.receptionistType !== "ai" && (
+              <>
               <div className="mt-4 flex items-start gap-3 rounded-lg border border-border bg-background p-3">
                 <Checkbox
                   id="helgeapent"
@@ -851,9 +853,10 @@ const PricingSection = () => {
                   title="AI utenom åpningstid (24/7)"
                   desc="Vi svarer kundene dine døgnet rundt"
                   info={PRICING.descriptions.ai247}
-                  price={PRICING.ai247.price}
+                  price={config.receptionistType === "ai" ? PRICING.ai247.aiPrice : PRICING.ai247.price}
                   checked={config.ai247}
                   onChange={(v) => update("ai247", v)}
+                  disabled={config.receptionistType === "ai"}
                 />
                 <ToggleService
                   icon={PhoneCall}
