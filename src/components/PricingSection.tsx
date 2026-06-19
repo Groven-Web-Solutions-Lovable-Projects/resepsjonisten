@@ -881,6 +881,20 @@ const PricingSection = () => {
                   onChange={(v) => update("leadPackage", v)}
                 />
                 <QuantityService
+                  icon={FileText}
+                  title={PRICING.callSummary.label}
+                  desc={`${PRICING.callSummary.pricePerUnit} kr per e-post`}
+                  info={PRICING.descriptions.callSummary}
+                  value={config.callSummaryCount}
+                  pricePerUnit={PRICING.callSummary.pricePerUnit}
+                  unitLabel={PRICING.callSummary.unitLabel}
+                  unitLabelPlural={PRICING.callSummary.unitLabelPlural}
+                  min={PRICING.callSummary.sliderMin}
+                  max={PRICING.callSummary.sliderMax}
+                  step={PRICING.callSummary.step}
+                  onChange={(v) => update("callSummaryCount", v)}
+                />
+                <QuantityService
                   icon={Calendar}
                   title={PRICING.appointmentBooking.label}
                   desc={`${PRICING.appointmentBooking.pricePerUnit} kr per system`}

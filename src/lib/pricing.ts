@@ -442,6 +442,13 @@ export function calculatePrice(c: PricingConfig): PricingResult {
   }
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
   if (c.leadPackage) lines.push({ label: PRICING.leadPackage.label, amount: PRICING.leadPackage.price });
+  if (c.callSummaryCount > 0) {
+    const p = PRICING.callSummary;
+    lines.push({
+      label: `${p.label} (${c.callSummaryCount} ${c.callSummaryCount === 1 ? p.unitLabel : p.unitLabelPlural} × ${p.pricePerUnit} kr)`,
+      amount: c.callSummaryCount * p.pricePerUnit,
+    });
+  }
   if (c.appointmentBookingSystems > 0) {
     const p = PRICING.appointmentBooking;
     lines.push({
