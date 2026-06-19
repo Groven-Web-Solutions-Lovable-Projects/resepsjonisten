@@ -750,6 +750,8 @@ const PricingSection = () => {
                   </div>
                 </>
               )}
+              </>
+              )}
 
               {/* Out-of-range warning */}
               {result.weekdayOutOfRange && (
