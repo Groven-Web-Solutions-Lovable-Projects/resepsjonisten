@@ -25,6 +25,7 @@ import {
   ClipboardList,
   Plane,
   Target,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -878,6 +879,20 @@ const PricingSection = () => {
                   price={PRICING.leadPackage.price}
                   checked={config.leadPackage}
                   onChange={(v) => update("leadPackage", v)}
+                />
+                <QuantityService
+                  icon={FileText}
+                  title={PRICING.callSummary.label}
+                  desc={`${PRICING.callSummary.pricePerUnit} kr per e-post`}
+                  info={PRICING.descriptions.callSummary}
+                  value={config.callSummaryCount}
+                  pricePerUnit={PRICING.callSummary.pricePerUnit}
+                  unitLabel={PRICING.callSummary.unitLabel}
+                  unitLabelPlural={PRICING.callSummary.unitLabelPlural}
+                  min={PRICING.callSummary.sliderMin}
+                  max={PRICING.callSummary.sliderMax}
+                  step={PRICING.callSummary.step}
+                  onChange={(v) => update("callSummaryCount", v)}
                 />
                 <QuantityService
                   icon={Calendar}

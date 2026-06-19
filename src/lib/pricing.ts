@@ -103,6 +103,8 @@ export const PRICING = {
       "Vi tar hånd om enkle administrative oppgaver som datainnlegging, oppfølging og rutinearbeid. 790 kr per time – velg estimert antall timer per måned.",
     leadPackage:
       "Grunnpakke for oppfølging av leads i kundens systemer. Vi følger opp når kunden mottar leads.",
+    callSummary:
+      "Taleopptaket mellom vår resepsjonist og brukerkunden gjøres om til en oppsummering som sendes ut som e-post til din bedrift.",
     vacationCover:
       "Vi dekker telefonen din ved ferie og sykefravær. 1990 kr/mnd inkluderer 60 minutter, deretter 16 kr per minutt.",
     contract:
@@ -152,6 +154,15 @@ export const PRICING = {
   forwarding: { label: "Samtaleoverføring", price: 99 },
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990, aiPrice: 990 },
   leadPackage: { label: "Grunnpakke Lead", price: 3990 },
+  callSummary: {
+    label: "Samtaleoppsummering med AI",
+    pricePerUnit: 25,
+    unitLabel: "e-post",
+    unitLabelPlural: "e-poster",
+    sliderMin: 0,
+    sliderMax: 200,
+    step: 5,
+  },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 750 },
   appointmentBooking: {
@@ -246,6 +257,7 @@ export type PricingConfig = {
   ai247: boolean;
   aircall: boolean;
   leadPackage: boolean;
+  callSummaryCount: number;
   appointmentBookingSystems: number;
   crmUpdates: number;
   aiSmsCount: number;
@@ -309,6 +321,7 @@ export const defaultConfig: PricingConfig = {
   ai247: true,
   aircall: false,
   leadPackage: false,
+  callSummaryCount: 0,
   appointmentBookingSystems: 0,
   crmUpdates: 0,
   aiSmsCount: 0,
@@ -429,6 +442,13 @@ export function calculatePrice(c: PricingConfig): PricingResult {
   }
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
   if (c.leadPackage) lines.push({ label: PRICING.leadPackage.label, amount: PRICING.leadPackage.price });
+  if (c.callSummaryCount > 0) {
+    const p = PRICING.callSummary;
+    lines.push({
+      label: `${p.label} (${c.callSummaryCount} ${c.callSummaryCount === 1 ? p.unitLabel : p.unitLabelPlural} × ${p.pricePerUnit} kr)`,
+      amount: c.callSummaryCount * p.pricePerUnit,
+    });
+  }
   if (c.appointmentBookingSystems > 0) {
     const p = PRICING.appointmentBooking;
     lines.push({
