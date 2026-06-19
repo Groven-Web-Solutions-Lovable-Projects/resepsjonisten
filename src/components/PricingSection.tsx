@@ -25,6 +25,7 @@ import {
   ClipboardList,
   Plane,
   Target,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
