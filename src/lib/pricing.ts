@@ -428,6 +428,7 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     lines.push({ label: PRICING.ai247.label, amount: price });
   }
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
+  if (c.leadPackage) lines.push({ label: PRICING.leadPackage.label, amount: PRICING.leadPackage.price });
   if (c.appointmentBookingSystems > 0) {
     const p = PRICING.appointmentBooking;
     lines.push({
