@@ -418,7 +418,10 @@ export function calculatePrice(c: PricingConfig): PricingResult {
 
   if (c.recording) lines.push({ label: PRICING.recording.label, amount: PRICING.recording.price });
   if (c.forwarding) lines.push({ label: PRICING.forwarding.label, amount: PRICING.forwarding.price });
-  if (c.ai247) lines.push({ label: PRICING.ai247.label, amount: PRICING.ai247.price });
+  if (c.ai247) {
+    const price = c.receptionistType === "ai" ? PRICING.ai247.aiPrice : PRICING.ai247.price;
+    lines.push({ label: PRICING.ai247.label, amount: price });
+  }
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
   if (c.appointmentBookingSystems > 0) {
     const p = PRICING.appointmentBooking;
