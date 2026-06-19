@@ -525,7 +525,7 @@ const PricingSection = () => {
                       className={cn(
                         "rounded-lg border px-2 py-2.5 text-xs sm:text-sm font-medium transition-colors text-center",
                         active
-                          ? "border-primary bg-primary/10 text-foreground"
+                          ? "border-transparent gradient-primary text-primary-foreground shadow-glow"
                           : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground",
                       )}
                     >
