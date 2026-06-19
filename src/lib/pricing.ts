@@ -151,6 +151,7 @@ export const PRICING = {
   recording: { label: "Lydopptak av samtaler", price: 490 },
   forwarding: { label: "Samtaleoverføring", price: 99 },
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990, aiPrice: 990 },
+  leadPackage: { label: "Grunnpakke Lead", price: 3990 },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 750 },
   appointmentBooking: {
