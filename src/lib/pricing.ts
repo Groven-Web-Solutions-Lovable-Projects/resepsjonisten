@@ -308,6 +308,7 @@ export const defaultConfig: PricingConfig = {
   forwarding: false,
   ai247: true,
   aircall: false,
+  leadPackage: false,
   appointmentBookingSystems: 0,
   crmUpdates: 0,
   aiSmsCount: 0,
