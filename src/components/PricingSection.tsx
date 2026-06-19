@@ -870,6 +870,15 @@ const PricingSection = () => {
                   checked={config.aircall}
                   onChange={(v) => update("aircall", v)}
                 />
+                <ToggleService
+                  icon={Target}
+                  title={PRICING.leadPackage.label}
+                  desc="Oppfølging av leads i kundens systemer"
+                  info={PRICING.descriptions.leadPackage}
+                  price={PRICING.leadPackage.price}
+                  checked={config.leadPackage}
+                  onChange={(v) => update("leadPackage", v)}
+                />
                 <QuantityService
                   icon={Calendar}
                   title={PRICING.appointmentBooking.label}
