@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -154,6 +155,7 @@ const ToggleService = ({
   priceText,
   checked,
   onChange,
+  disabled,
 }: {
   icon: typeof Mic;
   title: string;
@@ -163,11 +165,13 @@ const ToggleService = ({
   priceText?: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  disabled?: boolean;
 }) => (
   <div
     className={cn(
       "flex items-center justify-between gap-4 rounded-lg border bg-background p-3 transition-colors",
       checked ? "border-success bg-success/10" : "border-border hover:border-primary/40",
+      disabled && "opacity-90",
     )}
   >
     <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -191,7 +195,7 @@ const ToggleService = ({
       <span className="text-sm font-semibold text-foreground tabular-nums hidden sm:inline">
         {priceText ?? `+${formatKr(price)}`}
       </span>
-      <Switch checked={checked} onCheckedChange={onChange} aria-label={title} />
+      <Switch checked={checked} onCheckedChange={onChange} aria-label={title} disabled={disabled} />
     </div>
   </div>
 );
@@ -407,6 +411,16 @@ const PricingSection = () => {
 
   const update = <K extends keyof PricingConfig>(key: K, value: PricingConfig[K]) =>
     setConfig((c) => ({ ...c, [key]: value }));
+
+  // AI Resepsjonist: AI 24/7 låst på, helgevalg ikke tilgjengelig
+  useEffect(() => {
+    if (config.receptionistType === "ai") {
+      setWeekendsOpen(false);
+      setConfig((c) =>
+        c.ai247 && !c.saturday ? c : { ...c, ai247: true, saturday: false },
+      );
+    }
+  }, [config.receptionistType]);
 
   const extraHours = Math.max(0, result.maxWeekdayHours - PRICING.baseHours);
 
@@ -693,7 +707,9 @@ const PricingSection = () => {
                 {" "}{formatKr(PRICING.extraHourPrice)}/t/mnd.
               </p>
 
-              {/* Helgeåpent */}
+              {/* Helgeåpent — ikke tilgjengelig for AI Resepsjonist */}
+              {config.receptionistType !== "ai" && (
+              <>
               <div className="mt-4 flex items-start gap-3 rounded-lg border border-border bg-background p-3">
                 <Checkbox
                   id="helgeapent"
@@ -733,6 +749,8 @@ const PricingSection = () => {
                     </Button>
                   </div>
                 </>
+              )}
+              </>
               )}
 
               {/* Out-of-range warning */}
@@ -837,9 +855,10 @@ const PricingSection = () => {
                   title="AI utenom åpningstid (24/7)"
                   desc="Vi svarer kundene dine døgnet rundt"
                   info={PRICING.descriptions.ai247}
-                  price={PRICING.ai247.price}
+                  price={config.receptionistType === "ai" ? PRICING.ai247.aiPrice : PRICING.ai247.price}
                   checked={config.ai247}
                   onChange={(v) => update("ai247", v)}
+                  disabled={config.receptionistType === "ai"}
                 />
                 <ToggleService
                   icon={PhoneCall}
