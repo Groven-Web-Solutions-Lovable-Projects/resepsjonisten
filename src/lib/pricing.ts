@@ -151,7 +151,15 @@ export const PRICING = {
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990 },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 750 },
-  appointmentBooking: { label: "Timebestilling/avbestilling og utsettelse", price: 490 },
+  appointmentBooking: {
+    label: "Timebestilling/avbestilling og utsettelse",
+    pricePerUnit: 490,
+    unitLabel: "system",
+    unitLabelPlural: "systemer",
+    sliderMin: 1,
+    sliderMax: 10,
+    step: 1,
+  },
   crmUpdate: {
     label: "CRM-oppdatering",
     pricePerUnit: 39,
