@@ -90,7 +90,7 @@ export const PRICING = {
     aircall:
       "Ønsker du egen bruker i Aircall for å se dine egne statistikker, samt få tilgang til samtalelogg og relevant rapportering? Dette kan legges til som egen lisens etter behov.",
     appointmentBooking:
-      "Vi håndterer timebestilling, avbestilling og utsettelse i dine systemer. Prisen gjelder per bookingsystem.",
+      "Vi håndterer timebestilling, avbestilling og utsettelse i dine systemer. 490 kr per bookingsystem.",
     crmUpdate:
       "Vi oppdaterer kunde- og prospektdata i ditt CRM etter samtaler og henvendelser. 39 kr per oppdatering – velg estimert antall per måned.",
     aiSms:
@@ -151,7 +151,15 @@ export const PRICING = {
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990 },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 750 },
-  appointmentBooking: { label: "Timebestilling/avbestilling og utsettelse", price: 490 },
+  appointmentBooking: {
+    label: "Timebestilling/avbestilling og utsettelse",
+    pricePerUnit: 490,
+    unitLabel: "system",
+    unitLabelPlural: "systemer",
+    sliderMin: 1,
+    sliderMax: 10,
+    step: 1,
+  },
   crmUpdate: {
     label: "CRM-oppdatering",
     pricePerUnit: 39,
@@ -234,7 +242,7 @@ export type PricingConfig = {
   forwarding: boolean;
   ai247: boolean;
   aircall: boolean;
-  appointmentBooking: boolean;
+  appointmentBookingSystems: number;
   crmUpdates: number;
   aiSmsCount: number;
   aiEmailCount: number;
@@ -296,7 +304,7 @@ export const defaultConfig: PricingConfig = {
   forwarding: false,
   ai247: false,
   aircall: false,
-  appointmentBooking: false,
+  appointmentBookingSystems: 0,
   crmUpdates: 0,
   aiSmsCount: 0,
   aiEmailCount: 0,
@@ -412,7 +420,13 @@ export function calculatePrice(c: PricingConfig): PricingResult {
   if (c.forwarding) lines.push({ label: PRICING.forwarding.label, amount: PRICING.forwarding.price });
   if (c.ai247) lines.push({ label: PRICING.ai247.label, amount: PRICING.ai247.price });
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
-  if (c.appointmentBooking) lines.push({ label: PRICING.appointmentBooking.label, amount: PRICING.appointmentBooking.price });
+  if (c.appointmentBookingSystems > 0) {
+    const p = PRICING.appointmentBooking;
+    lines.push({
+      label: `${p.label} (${c.appointmentBookingSystems} ${c.appointmentBookingSystems === 1 ? p.unitLabel : p.unitLabelPlural} × ${p.pricePerUnit} kr)`,
+      amount: c.appointmentBookingSystems * p.pricePerUnit,
+    });
+  }
 
   if (c.crmUpdates > 0) {
     const p = PRICING.crmUpdate;

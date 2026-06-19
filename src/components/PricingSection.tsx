@@ -850,14 +850,19 @@ const PricingSection = () => {
                   checked={config.aircall}
                   onChange={(v) => update("aircall", v)}
                 />
-                <ToggleService
+                <QuantityService
                   icon={Calendar}
-                  title="Timebestilling/avbestilling og utsettelse"
-                  desc="Vi håndterer booking i dine systemer"
+                  title={PRICING.appointmentBooking.label}
+                  desc={`${PRICING.appointmentBooking.pricePerUnit} kr per system`}
                   info={PRICING.descriptions.appointmentBooking}
-                  price={PRICING.appointmentBooking.price}
-                  checked={config.appointmentBooking}
-                  onChange={(v) => update("appointmentBooking", v)}
+                  value={config.appointmentBookingSystems}
+                  pricePerUnit={PRICING.appointmentBooking.pricePerUnit}
+                  unitLabel={PRICING.appointmentBooking.unitLabel}
+                  unitLabelPlural={PRICING.appointmentBooking.unitLabelPlural}
+                  min={PRICING.appointmentBooking.sliderMin}
+                  max={PRICING.appointmentBooking.sliderMax}
+                  step={PRICING.appointmentBooking.step}
+                  onChange={(v) => update("appointmentBookingSystems", v)}
                 />
                 <QuantityService
                   icon={Database}
