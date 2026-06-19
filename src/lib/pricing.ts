@@ -90,7 +90,7 @@ export const PRICING = {
     aircall:
       "Ønsker du egen bruker i Aircall for å se dine egne statistikker, samt få tilgang til samtalelogg og relevant rapportering? Dette kan legges til som egen lisens etter behov.",
     appointmentBooking:
-      "Vi håndterer timebestilling, avbestilling og utsettelse i dine systemer. Prisen gjelder per bookingsystem.",
+      "Vi håndterer timebestilling, avbestilling og utsettelse i dine systemer. 490 kr per bookingsystem.",
     crmUpdate:
       "Vi oppdaterer kunde- og prospektdata i ditt CRM etter samtaler og henvendelser. 39 kr per oppdatering – velg estimert antall per måned.",
     aiSms:
