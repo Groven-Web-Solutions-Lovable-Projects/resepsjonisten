@@ -101,6 +101,8 @@ export const PRICING = {
       "Vi ringer ut for å booke møter med dine leads eller kunder. 790 kr per time – velg estimert antall timer per måned.",
     adminTasks:
       "Vi tar hånd om enkle administrative oppgaver som datainnlegging, oppfølging og rutinearbeid. 790 kr per time – velg estimert antall timer per måned.",
+    leadPackage:
+      "Grunnpakke for oppfølging av leads i kundens systemer. Vi følger opp når kunden mottar leads.",
     vacationCover:
       "Vi dekker telefonen din ved ferie og sykefravær. 1990 kr/mnd inkluderer 60 minutter, deretter 16 kr per minutt.",
     contract:
