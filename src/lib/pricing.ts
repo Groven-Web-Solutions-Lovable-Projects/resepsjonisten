@@ -101,6 +101,8 @@ export const PRICING = {
       "Vi ringer ut for å booke møter med dine leads eller kunder. 790 kr per time – velg estimert antall timer per måned.",
     adminTasks:
       "Vi tar hånd om enkle administrative oppgaver som datainnlegging, oppfølging og rutinearbeid. 790 kr per time – velg estimert antall timer per måned.",
+    leadPackage:
+      "Grunnpakke for oppfølging av leads i kundens systemer. Vi følger opp når kunden mottar leads.",
     vacationCover:
       "Vi dekker telefonen din ved ferie og sykefravær. 1990 kr/mnd inkluderer 60 minutter, deretter 16 kr per minutt.",
     contract:
@@ -149,6 +151,7 @@ export const PRICING = {
   recording: { label: "Lydopptak av samtaler", price: 490 },
   forwarding: { label: "Samtaleoverføring", price: 99 },
   ai247: { label: "AI utenom åpningstid (24/7)", price: 1990, aiPrice: 990 },
+  leadPackage: { label: "Grunnpakke Lead", price: 3990 },
   phoneSubscription: { label: "Telefonabonnement", price: 250 },
   aircall: { label: "AirCall lisens", price: 750 },
   appointmentBooking: {
@@ -242,6 +245,7 @@ export type PricingConfig = {
   forwarding: boolean;
   ai247: boolean;
   aircall: boolean;
+  leadPackage: boolean;
   appointmentBookingSystems: number;
   crmUpdates: number;
   aiSmsCount: number;
@@ -304,6 +308,7 @@ export const defaultConfig: PricingConfig = {
   forwarding: false,
   ai247: true,
   aircall: false,
+  leadPackage: false,
   appointmentBookingSystems: 0,
   crmUpdates: 0,
   aiSmsCount: 0,
@@ -423,6 +428,7 @@ export function calculatePrice(c: PricingConfig): PricingResult {
     lines.push({ label: PRICING.ai247.label, amount: price });
   }
   if (c.aircall) lines.push({ label: PRICING.aircall.label, amount: PRICING.aircall.price });
+  if (c.leadPackage) lines.push({ label: PRICING.leadPackage.label, amount: PRICING.leadPackage.price });
   if (c.appointmentBookingSystems > 0) {
     const p = PRICING.appointmentBooking;
     lines.push({
