@@ -154,6 +154,7 @@ const ToggleService = ({
   priceText,
   checked,
   onChange,
+  disabled,
 }: {
   icon: typeof Mic;
   title: string;
@@ -163,11 +164,13 @@ const ToggleService = ({
   priceText?: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  disabled?: boolean;
 }) => (
   <div
     className={cn(
       "flex items-center justify-between gap-4 rounded-lg border bg-background p-3 transition-colors",
       checked ? "border-success bg-success/10" : "border-border hover:border-primary/40",
+      disabled && "opacity-90",
     )}
   >
     <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -191,7 +194,7 @@ const ToggleService = ({
       <span className="text-sm font-semibold text-foreground tabular-nums hidden sm:inline">
         {priceText ?? `+${formatKr(price)}`}
       </span>
-      <Switch checked={checked} onCheckedChange={onChange} aria-label={title} />
+      <Switch checked={checked} onCheckedChange={onChange} aria-label={title} disabled={disabled} />
     </div>
   </div>
 );
