@@ -412,6 +412,16 @@ const PricingSection = () => {
   const update = <K extends keyof PricingConfig>(key: K, value: PricingConfig[K]) =>
     setConfig((c) => ({ ...c, [key]: value }));
 
+  // AI Resepsjonist: AI 24/7 låst på, helgevalg ikke tilgjengelig
+  useEffect(() => {
+    if (config.receptionistType === "ai") {
+      setWeekendsOpen(false);
+      setConfig((c) =>
+        c.ai247 && !c.saturday ? c : { ...c, ai247: true, saturday: false },
+      );
+    }
+  }, [config.receptionistType]);
+
   const extraHours = Math.max(0, result.maxWeekdayHours - PRICING.baseHours);
 
   const allowedStart = PRICING.openingHours.weekdayAllowedStart;
