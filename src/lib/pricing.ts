@@ -245,6 +245,7 @@ export type PricingConfig = {
   forwarding: boolean;
   ai247: boolean;
   aircall: boolean;
+  leadPackage: boolean;
   appointmentBookingSystems: number;
   crmUpdates: number;
   aiSmsCount: number;
