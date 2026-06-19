@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
