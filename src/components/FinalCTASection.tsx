@@ -33,6 +33,7 @@ const demoSchema = z.object({
 const FinalCTASection = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const { snapshot, clearSnapshot } = useCalculatorSnapshot();
 
   const handleSubmit = async (e: React.FormEvent) => {
