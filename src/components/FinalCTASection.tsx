@@ -253,8 +253,7 @@ const FinalCTASection = () => {
                   </p>
                 </form>
               </div>
-            )}
-          </motion.div>
+            </motion.div>
         </div>
       </div>
     </section>
