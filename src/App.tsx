@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
 import Personvern from "./pages/Personvern.tsx";
 import Kalkulator from "./pages/Kalkulator.tsx";
+import Takk from "./pages/Takk.tsx";
 
 const queryClient = new QueryClient();
 
