@@ -31,7 +31,6 @@ const demoSchema = z.object({
 });
 
 const FinalCTASection = () => {
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { snapshot, clearSnapshot } = useCalculatorSnapshot();
@@ -197,21 +196,7 @@ const FinalCTASection = () => {
             viewport={{ once: true }}
             className="lg:col-span-7"
           >
-            {submitted ? (
-              <div className="bg-white rounded-3xl p-10 text-center shadow-elevated">
-                <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-primary-foreground" />
-                </div>
-                <h3 className="text-2xl font-bold text-foreground">
-                  Takk for din henvendelse!
-                </h3>
-                <p className="mt-3 text-muted-foreground">
-                  Vi tar kontakt med deg innen kort tid for å sette opp din
-                  gratis demo.
-                </p>
-              </div>
-            ) : (
-              <div className="bg-white rounded-3xl p-7 sm:p-9 shadow-elevated">
+            <div className="bg-white rounded-3xl p-7 sm:p-9 shadow-elevated">
                 <h3 className="text-2xl font-bold text-foreground mb-1">
                   Book gratis demo
                 </h3>
