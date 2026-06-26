@@ -107,7 +107,7 @@ const FinalCTASection = () => {
     });
 
     clearSnapshot();
-    setSubmitted(true);
+    navigate("/takk");
   };
 
   return (
